@@ -38,7 +38,7 @@
  
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-	<appender name="LOGFILE" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="TAMA_LOGFILE" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/tama-server.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -49,7 +49,7 @@
 	
 	<logger name="org.motechproject.tama">
 		<level value="DEBUG" />
-		<appender-ref ref="LOGFILE" />
+		<appender-ref ref="TAMA_LOGFILE" />
 	</logger>
 
 </log4j:configuration>

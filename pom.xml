@@ -16,6 +16,26 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	
+	<repositories>
+		<repository>
+			<id>motech-repo</id>
+			<name>Motech Maven Repository</name>
+			<url>http://motech.rcg.usm.maine.edu/archiva/repository/all</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+	  <pluginRepository>
+	    <id>motech-repo</id>
+	    <name>Motech Maven Repository</name>
+	    <url>http://motech.rcg.usm.maine.edu/archiva/repository/all</url>
+	    <snapshots>
+	      <enabled>true</enabled>
+	    </snapshots>
+	  </pluginRepository>
+	  
+	</pluginRepositories>	
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

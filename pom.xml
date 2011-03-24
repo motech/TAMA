@@ -20,7 +20,7 @@
         <repository>
             <id>motech-repo</id>
             <name>Motech Maven Repository</name>
-            <url>http://motech.rcg.usm.maine.edu/archiva/repository/all</url>
+			<url>http://nexus.motechproject.org/content/repositories/all</url>
         </repository>
     </repositories>
 
@@ -28,7 +28,7 @@
         <pluginRepository>
             <id>motech-repo</id>
             <name>Motech Maven Repository</name>
-            <url>http://motech.rcg.usm.maine.edu/archiva/repository/all</url>
+			<url>http://nexus.motechproject.org/content/repositories/all</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -85,4 +85,27 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <activation>
+                <file>
+                    <exists>/var/lib/hudson/ci-server</exists>
+                </file>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>motech.nexus</id>
+                    <name>Motech Releases Repository</name>
+                    <url>http://nexus.motechproject.org/content/repositories/releases</url>
+                </repository>
+                <snapshotRepository>
+                    <id>motech.nexus</id>
+                    <name>Motech Snapshots Repository</name>
+                    <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>

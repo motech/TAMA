@@ -2,7 +2,8 @@
 .project
 .settings/
 target/
-WEB-INF/classes/
+web-app/WEB-INF/classes/
+plugins/
 .idea/
 *.iml
 *.ipr

@@ -14,23 +14,70 @@ html * {
 body {
     background: #fff;
     color: #333;
-    font: 11px verdana, arial, helvetica, sans-serif;
+    font: 12px arial, verdana, helvetica, sans-serif;
+    margin:10px 0px;
 }
-#grailsLogo {
-	padding:20px;
+
+#content{
+	float: left;
+	margin: 20px;
+	width:960px;
 }
 
 a:link, a:visited, a:hover {
-    color: #666;
+    color: #00456B;
     font-weight: bold;
-    text-decoration: none;
+    text-decoration: underline;
+}
+
+a.button{
+	display:block;
+	border-radius: 5px;
+	border:1px solid #CCCCCC;
+	color:#333333;
+	font-size:12px;
+	text-decoration: none;
+	background: #EEEEEE; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#DFDFE0'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#DFDFE0)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #FAFAFA,  #DFDFE0); /* for firefox 3.6+ */	
+	display:block;
+	line-height: 25px;
+	padding:0px 15px;
+}
+
+a.button:hover{
+	color:#000;
+	border-color:#999999;
+	background: #E9E9E9; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F9F9F9', endColorstr='#D3D3D3'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#F9F9F9), to(#D3D3D3)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #F9F9F9,  #D3D3D3); /* for firefox 3.6+ */	
+}
+
+.right{
+	float:right;
 }
 
 h1 {
-    color: #48802c;
-    font-weight: normal;
+    color: #00456B;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 10px 0px;
+}
+
+h2 {
+    color: #00456B;
+    font-weight: bold;
     font-size: 16px;
-    margin: .8em 0 .3em 0;
+    margin: 6px 0px;
+}
+
+h3 {
+    color: #00456B;
+    font-weight: bold;
+    font-size: 12px;
+    margin: 2px 0px;
 }
 
 ul {
@@ -40,7 +87,6 @@ ul {
 input, select, textarea {
     background-color: #fcfcfc;
     border: 1px solid #ccc;
-    font: 11px verdana, arial, helvetica, sans-serif;
     margin: 2px 0;
     padding: 2px 4px;
 }
@@ -57,19 +103,10 @@ input:focus, select:focus, textarea:focus {
     border: 1px solid #b2d1ff;
 }
 
-.body {
-    float: left;
-    margin: 0 15px 10px 15px;
-}
-
 /* NAVIGATION MENU */
 
 .nav {
-    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
-    border: 1px solid #ccc;
-    border-style: solid none solid none;
-    margin-top: 5px;
-    padding: 7px 12px;
+	height:25px;
 }
 
 .menuButton {
@@ -271,3 +308,108 @@ th.desc a {
     background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
     padding-left: 28px;
 }
+
+/*-----------------------Logo-----------------------*/
+#tama-logo {
+	width:150px;
+	height:68px;
+	margin:10px;
+	background: url(../images/TAMALogo.png) center no-repeat;
+}
+
+
+/*-----------------------Main Tab Navigation-----------------------*/
+#main-tab-container{
+	border-bottom: 2px solid #FDB813;
+	overflow: auto;
+}
+
+#main-tab-container ul{
+	display:block;
+	list-style:none; 
+	padding:0px 30px; 
+	margin:0px;
+}
+
+#main-tab-container li{
+	float:left;
+	margin:0px 10px;
+	min-width:160px;
+	text-align: center;
+}
+
+#main-tab-container a {
+	border-style:solid;
+	border-color:#CCCCCC;
+	border-width:1px 1px 0px 1px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	color:#5A5A5A;
+	font-size:14px;
+	text-decoration: none;
+	background: #EEEEEE; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#DFDFE0'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#DFDFE0)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #FAFAFA,  #DFDFE0); /* for firefox 3.6+ */	
+	display:block;
+	line-height: 30px;
+}
+
+#main-tab-container a:hover{
+	color:#000;
+	border-color:#999999;
+	background: #E9E9E9; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F9F9F9', endColorstr='#D3D3D3'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#F9F9F9), to(#D3D3D3)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #F9F9F9,  #D3D3D3); /* for firefox 3.6+ */	
+}
+
+#main-tab-container li.active a, #main-tab-container li.active a:hover{
+	color:#00456B;
+	border-color:#FDB813;
+	background: #FDB813; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF4D9', endColorstr='#FDB813'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#FFF4D9), to(#FDB813)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #FFF4D9,  #FDB813); /* for firefox 3.6+ */
+}
+
+/*-----------------------Sub Tab Navigation-----------------------*/
+#sub-tab-container{
+	margin-bottom:10px;
+	overflow: auto;
+}
+
+#sub-tab-container ul{
+	list-style:none; 
+	padding:0px; 
+	margin:0px;
+}
+
+#sub-tab-container li{
+	float:left;
+	min-width:137px;
+	text-align: center;
+}
+
+#sub-tab-container a {
+	border:1px solid #FDB813;
+	background: #FFF4D9;
+	display:block;
+	font-size:12px;
+	line-height: 20px;
+	color:#5A5A5A;
+	text-decoration: none;
+}
+
+#sub-tab-container a:hover{
+	color:#000000;
+	background: #FFEEC4; 
+	border-color:#E78F08;
+}
+
+#sub-tab-container li.active a, #sub-tab-container li.active a:hover{
+	color:#00456B;
+	border-color:#E78F08;
+	background: #FED36C; 
+}
+

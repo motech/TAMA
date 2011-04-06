@@ -3,21 +3,24 @@ package org.motechproject.tama
 class PatientController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	
+	def patientService
 
     def index = {
         redirect(action: "list", params: params)
     }
 
     def list = {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+		//patientService.serviceMethod()
+        //params.max = Math.min(params.max ? params.int('max') : 10, 100)
         //[patientInstanceList: Patient.list(params), patientInstanceTotal: Patient.count()]
         //FIXME
-		[patientInstanceList: [new Patient(clinicPatientId:'1001', dateOfBirth:new Date())], patientInstanceTotal: 1]
+    	def patients = patientService.listPatients()
+		[patientInstanceList: patients, patientInstanceTotal: patients.size()]
     }
 
     def create = {
         def patientInstance = new Patient()
-        patientInstance.properties = params
         return [patientInstance: patientInstance]
     }
 

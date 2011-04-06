@@ -5,10 +5,12 @@
 <head>
 <title>TAMA - <g:layoutTitle default="" /></title>
 <link rel="stylesheet" href="${resource(dir:'css',file:'main.css')}" />
+<link rel="stylesheet" href="${resource(dir:'css/custom-theme',file:'jquery-ui-1.8.11.custom.css')}" />
 <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
 <g:layoutHead />
 <g:javascript library="application" />
 <g:javascript src="jquery/jquery-1.5.1.min.js" />
+<g:javascript src="jquery/jquery-ui-1.8.11.custom.min.js" />
 <script type="text/javascript">
 	$(function(){
 		

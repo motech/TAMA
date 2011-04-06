@@ -1,7 +1,6 @@
 package org.motechproject.tama
 
 import grails.test.GrailsUnitTestCase
-import org.motechproject.model.Patient;
 
 class AppointmentScheduleServiceTests extends GrailsUnitTestCase {
     void testSomething() {

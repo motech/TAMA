@@ -51,6 +51,11 @@ grails.spring.bean.packages = []
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
 
+
+// TAMA configurations
+tama.n = 6
+tama.m = 2
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {

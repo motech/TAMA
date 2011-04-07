@@ -3,10 +3,10 @@ package org.motechproject.tama
 import grails.test.GrailsUnitTestCase
 
 class AppointmentScheduleServiceTests extends GrailsUnitTestCase {
+	def AppointmentScheduleService appointmentScheduleService
     void testSomething() {
 		Patient p = new Patient();
 		p.id = "0001";
-		AppointmentScheduleService appointmentScheduleService = new AppointmentScheduleService();
 		def apps = appointmentScheduleService.createCareSchedule(p, Calendar.instance.time);
 		assertNotNull(apps);
 		assertTrue(apps.size()>0);

@@ -14,7 +14,7 @@ html * {
 body {
     background: #fff;
     color: #333;
-    font: 12px arial, verdana, helvetica, sans-serif;
+    font: 13px arial, verdana, helvetica, sans-serif;
     margin:10px 0px;
 }
 
@@ -60,23 +60,23 @@ a.button:hover{
 }
 
 h1 {
-    color: #00456B;
+    color: #000;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 24px;
     margin: 10px 0px;
 }
 
 h2 {
-    color: #00456B;
+    color: #000;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 19px;
     margin: 6px 0px;
 }
 
 h3 {
-    color: #00456B;
+    color: #000;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 15px;
     margin: 2px 0px;
 }
 
@@ -173,14 +173,13 @@ td.errors textarea {
 /* TABLES */
 
 table {
-    border: 1px solid #ccc;
     width: 100%
 }
 tr {
     border: 0;
 }
 td, th {
-    font: 11px verdana, arial, helvetica, sans-serif;
+    font: 13px verdana, arial, helvetica, sans-serif;
     line-height: 12px;
     padding: 5px 6px;
     text-align: left;
@@ -265,33 +264,33 @@ th.desc a {
 }
 .prop .name {
     text-align: left;
-    width: 15%;
+    width: 50%;
     white-space: nowrap;
 }
 .prop .value {
     text-align: left;
-    width: 85%;
+    width: 50%;
 }
 
 /* ACTION BUTTONS */
 
 .buttons {
-    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    /*background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
     border: 1px solid #ccc;
     color: #666;
-    font-size: 10px;
+    font-size: 10px;*/
     margin-top: 5px;
     overflow: hidden;
     padding: 0;
 }
 
 .buttons input {
-    background: #fff;
+    /*background: #fff;
     border: 0;
     color: #333;
     cursor: pointer;
     font-size: 10px;
-    font-weight: bold;
+    font-weight: bold;*/
     margin-left: 3px;
     overflow: visible;
     padding: 2px 6px;
@@ -305,8 +304,25 @@ th.desc a {
     padding-left: 28px;
 }
 .buttons input.save {
-    background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
-    padding-left: 28px;
+    background: -moz-linear-gradient(center top , #FAFAFA, #DFDFE0) repeat scroll 0 0 transparent;
+    border: 1px solid #CCCCCC;
+    color: #333333;
+    display: block;
+    font-size: 12px;
+    line-height: 25px;
+    padding: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.fieldgroup {
+	border: 1px solid #000;
+	margin: 10px 0;
+	padding: 10px;	
+}
+table.innerTable tr td {
+	border: 1px solid #CCC;
+	cellspacing: 0;	
 }
 
 /*-----------------------Logo-----------------------*/

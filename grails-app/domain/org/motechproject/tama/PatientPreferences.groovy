@@ -1,8 +1,13 @@
 package org.motechproject.tama
 
-class PatientPreferences {
+import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.model.MotechAuditableDataObject;
 
-    boolean appointmentReminderEnabled; // Is the apointment reminder enabled
+class PatientPreferences extends MotechAuditableDataObject {
+
+	@TypeDiscriminator
+	String clinicPatientId
+    boolean appointmentReminderEnabled; // Is the appointment reminder enabled
 
     static constraints = {
     }

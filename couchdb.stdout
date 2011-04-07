@@ -1,0 +1,596 @@
+
+Apache CouchDB 1.0.2 (LogLevel=info) is starting.
+[error] [<0.95.0>] Unable to load crypto library. Failed with error:
+"load_failed, Failed to load NIF library: 'dlopen(/usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so, 2): Library not loaded: /opt/local/lib/libcrypto.1.0.0.dylib
+  Referenced from: /usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so
+  Reason: image not found'"
+OpenSSL might not be installed on this system.
+
+
+=ERROR REPORT==== 6-Apr-2011::17:08:15 ===
+Unable to load crypto library. Failed with error:
+"load_failed, Failed to load NIF library: 'dlopen(/usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so, 2): Library not loaded: /opt/local/lib/libcrypto.1.0.0.dylib
+  Referenced from: /usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so
+  Reason: image not found'"
+OpenSSL might not be installed on this system.
+[error] [<0.96.0>] The on_load function for module crypto returned {error,
+                                                 {load_failed,
+                                                  "Failed to load NIF library: 'dlopen(/usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so, 2): Library not loaded: /opt/local/lib/libcrypto.1.0.0.dylib\n  Referenced from: /usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so\n  Reason: image not found'"}}
+
+
+=ERROR REPORT==== 6-Apr-2011::17:08:15 ===
+The on_load function for module crypto returned {error,
+                                                 {load_failed,
+                                                  "Failed to load NIF library: 'dlopen(/usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so, 2): Library not loaded: /opt/local/lib/libcrypto.1.0.0.dylib\n  Referenced from: /usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so\n  Reason: image not found'"}}
+[error] [<0.97.0>] Unable to load crypto library. Failed with error:
+"load_failed, Failed to load NIF library: 'dlopen(/usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so, 2): Library not loaded: /opt/local/lib/libcrypto.1.0.0.dylib
+  Referenced from: /usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so
+  Reason: image not found'"
+OpenSSL might not be installed on this system.
+
+
+=ERROR REPORT==== 6-Apr-2011::17:08:15 ===
+Unable to load crypto library. Failed with error:
+"load_failed, Failed to load NIF library: 'dlopen(/usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so, 2): Library not loaded: /opt/local/lib/libcrypto.1.0.0.dylib
+  Referenced from: /usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so
+  Reason: image not found'"
+OpenSSL might not be installed on this system.
+[error] [<0.98.0>] The on_load function for module crypto returned {error,
+                                                 {load_failed,
+                                                  "Failed to load NIF library: 'dlopen(/usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so, 2): Library not loaded: /opt/local/lib/libcrypto.1.0.0.dylib\n  Referenced from: /usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so\n  Reason: image not found'"}}
+
+
+=ERROR REPORT==== 6-Apr-2011::17:08:15 ===
+The on_load function for module crypto returned {error,
+                                                 {load_failed,
+                                                  "Failed to load NIF library: 'dlopen(/usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so, 2): Library not loaded: /opt/local/lib/libcrypto.1.0.0.dylib\n  Referenced from: /usr/local/Cellar/erlang/R14B02/lib/erlang/lib/crypto-2.0.2.1/priv/lib/crypto.so\n  Reason: image not found'"}}
+[error] [<0.93.0>] {error_report,<0.30.0>,
+    {<0.93.0>,crash_report,
+     [[{initial_call,{couch_db,init,['Argument__1']}},
+       {pid,<0.93.0>},
+       {registered_name,[]},
+       {error_info,
+           {exit,
+               {{badmatch,
+                    {error,
+                        {undef,
+                            [{crypto,rand_bytes,[16]},
+                             {couch_uuids,random,0},
+                             {couch_file,delete,3},
+                             {couch_db_updater,init,1},
+                             {gen_server,init_it,6},
+                             {proc_lib,init_p_do_apply,3}]}}},
+                [{couch_db,init,1},
+                 {gen_server,init_it,6},
+                 {proc_lib,init_p_do_apply,3}]},
+               [{gen_server,init_it,6},{proc_lib,init_p_do_apply,3}]}},
+       {ancestors,[<0.91.0>]},
+       {messages,[]},
+       {links,[<0.91.0>,<0.94.0>]},
+       {dictionary,[]},
+       {trap_exit,false},
+       {status,running},
+       {heap_size,377},
+       {stack_size,24},
+       {reductions,124}],
+      [{neighbour,
+           [{pid,<0.91.0>},
+            {registered_name,[]},
+            {initial_call,{erlang,apply,2}},
+            {current_function,{proc_lib,sync_wait,2}},
+            {ancestors,[]},
+            {messages,
+                [{ack,<0.93.0>,
+                     {error,
+                         {{badmatch,
+                              {error,
+                                  {undef,
+                                      [{crypto,rand_bytes,[16]},
+                                       {couch_uuids,random,0},
+                                       {couch_file,delete,3},
+                                       {couch_db_updater,init,1},
+                                       {gen_server,init_it,6},
+                                       {proc_lib,init_p_do_apply,3}]}}},
+                          [{couch_db,init,1},
+                           {gen_server,init_it,6},
+                           {proc_lib,init_p_do_apply,3}]}}}]},
+            {links,[<0.92.0>,<0.93.0>,<0.83.0>]},
+            {dictionary,[]},
+            {trap_exit,false},
+            {status,runnable},
+            {heap_size,233},
+            {stack_size,9},
+            {reductions,50}]}]]}}
+
+=CRASH REPORT==== 6-Apr-2011::17:08:15 ===
+  crasher:
+    initial call: couch_db:init/1
+    pid: <0.93.0>
+    registered_name: []
+    exception exit: {{badmatch,
+                         {error,
+                             {undef,
+                                 [{crypto,rand_bytes,[16]},
+                                  {couch_uuids,random,0},
+                                  {couch_file,delete,3},
+                                  {couch_db_updater,init,1},
+                                  {gen_server,init_it,6},
+                                  {proc_lib,init_p_do_apply,3}]}}},
+                     [{couch_db,init,1},
+                      {gen_server,init_it,6},
+                      {proc_lib,init_p_do_apply,3}]}
+      in function  gen_server:init_it/6
+    ancestors: [<0.91.0>]
+    messages: []
+    links: [<0.91.0>,<0.94.0>]
+    dictionary: []
+    trap_exit: false
+    status: running
+    heap_size: 377
+    stack_size: 24
+    reductions: 124
+  neighbours:
+    neighbour: [{pid,<0.91.0>},
+                  {registered_name,[]},
+                  {initial_call,{erlang,apply,2}},
+                  {current_function,{proc_lib,sync_wait,2}},
+                  {ancestors,[]},
+                  {messages,
+                   [{ack,<0.93.0>,
+                     {error,
+                      {{badmatch,
+                        {error,
+                         {undef,
+                          [{crypto,rand_bytes,[16]},
+                           {couch_uuids,random,0},
+                           {couch_file,delete,3},
+                           {couch_db_updater,init,1},
+                           {gen_server,init_it,6},
+                           {proc_lib,init_p_do_apply,3}]}}},
+                       [{couch_db,init,1},
+                        {gen_server,init_it,6},
+                        {proc_lib,init_p_do_apply,3}]}}}]},
+                  {links,[<0.92.0>,<0.93.0>,<0.83.0>]},
+                  {dictionary,[]},
+                  {trap_exit,false},
+                  {status,runnable},
+                  {heap_size,233},
+                  {stack_size,9},
+                  {reductions,50}]
+[error] [<0.94.0>] {error_report,<0.30.0>,
+    {<0.94.0>,crash_report,
+     [[{initial_call,{couch_db_updater,init,['Argument__1']}},
+       {pid,<0.94.0>},
+       {registered_name,[]},
+       {error_info,
+           {exit,
+               {undef,
+                   [{crypto,rand_bytes,[16]},
+                    {couch_uuids,random,0},
+                    {couch_file,delete,3},
+                    {couch_db_updater,init,1},
+                    {gen_server,init_it,6},
+                    {proc_lib,init_p_do_apply,3}]},
+               [{gen_server,init_it,6},{proc_lib,init_p_do_apply,3}]}},
+       {ancestors,[<0.93.0>,<0.91.0>]},
+       {messages,[]},
+       {links,[<0.93.0>]},
+       {dictionary,[]},
+       {trap_exit,true},
+       {status,running},
+       {heap_size,610},
+       {stack_size,24},
+       {reductions,228}],
+      []]}}
+
+=CRASH REPORT==== 6-Apr-2011::17:08:15 ===
+  crasher:
+    initial call: couch_db_updater:init/1
+    pid: <0.94.0>
+    registered_name: []
+    exception exit: {undef,[{crypto,rand_bytes,[16]},
+                            {couch_uuids,random,0},
+                            {couch_file,delete,3},
+                            {couch_db_updater,init,1},
+                            {gen_server,init_it,6},
+                            {proc_lib,init_p_do_apply,3}]}
+      in function  gen_server:init_it/6
+    ancestors: [<0.93.0>,<0.91.0>]
+    messages: []
+    links: [<0.93.0>]
+    dictionary: []
+    trap_exit: true
+    status: running
+    heap_size: 610
+    stack_size: 24
+    reductions: 228
+  neighbours:
+[error] [<0.83.0>] Unexpected message, restarting couch_server: {'EXIT',<0.91.0>,
+                                              {{badmatch,
+                                                {error,
+                                                 {undef,
+                                                  [{crypto,rand_bytes,[16]},
+                                                   {couch_uuids,random,0},
+                                                   {couch_file,delete,3},
+                                                   {couch_db_updater,init,1},
+                                                   {gen_server,init_it,6},
+                                                   {proc_lib,init_p_do_apply,
+                                                    3}]}}},
+                                               [{couch_db,init,1},
+                                                {gen_server,init_it,6},
+                                                {proc_lib,init_p_do_apply,
+                                                 3}]}}
+[error] [<0.92.0>] ** Generic server <0.92.0> terminating 
+** Last message in was {'EXIT',<0.91.0>,
+                        {{badmatch,
+                          {error,
+                           {undef,
+                            [{crypto,rand_bytes,[16]},
+                             {couch_uuids,random,0},
+                             {couch_file,delete,3},
+                             {couch_db_updater,init,1},
+                             {gen_server,init_it,6},
+                             {proc_lib,init_p_do_apply,3}]}}},
+                         [{couch_db,init,1},
+                          {gen_server,init_it,6},
+                          {proc_lib,init_p_do_apply,3}]}}
+** When Server state == {file,{file_descriptor,prim_file,{#Port<0.1807>,14}},
+                              0,79}
+** Reason for termination == 
+** {{badmatch,{error,{undef,[{crypto,rand_bytes,[16]},
+                             {couch_uuids,random,0},
+                             {couch_file,delete,3},
+                             {couch_db_updater,init,1},
+                             {gen_server,init_it,6},
+                             {proc_lib,init_p_do_apply,3}]}}},
+    [{couch_db,init,1},{gen_server,init_it,6},{proc_lib,init_p_do_apply,3}]}
+
+
+=ERROR REPORT==== 6-Apr-2011::17:08:15 ===
+** Generic server <0.92.0> terminating 
+** Last message in was {'EXIT',<0.91.0>,
+                        {{badmatch,
+                          {error,
+                           {undef,
+                            [{crypto,rand_bytes,[16]},
+                             {couch_uuids,random,0},
+                             {couch_file,delete,3},
+                             {couch_db_updater,init,1},
+                             {gen_server,init_it,6},
+                             {proc_lib,init_p_do_apply,3}]}}},
+                         [{couch_db,init,1},
+                          {gen_server,init_it,6},
+                          {proc_lib,init_p_do_apply,3}]}}
+** When Server state == {file,{file_descriptor,prim_file,{#Port<0.1807>,14}},
+                              0,79}
+** Reason for termination == 
+** {{badmatch,{error,{undef,[{crypto,rand_bytes,[16]},
+                             {couch_uuids,random,0},
+                             {couch_file,delete,3},
+                             {couch_db_updater,init,1},
+                             {gen_server,init_it,6},
+                             {proc_lib,init_p_do_apply,3}]}}},
+    [{couch_db,init,1},{gen_server,init_it,6},{proc_lib,init_p_do_apply,3}]}
+[error] [<0.92.0>] {error_report,<0.30.0>,
+    {<0.92.0>,crash_report,
+     [[{initial_call,{couch_file,init,['Argument__1']}},
+       {pid,<0.92.0>},
+       {registered_name,[]},
+       {error_info,
+           {exit,
+               {{badmatch,
+                    {error,
+                        {undef,
+                            [{crypto,rand_bytes,[16]},
+                             {couch_uuids,random,0},
+                             {couch_file,delete,3},
+                             {couch_db_updater,init,1},
+                             {gen_server,init_it,6},
+                             {proc_lib,init_p_do_apply,3}]}}},
+                [{couch_db,init,1},
+                 {gen_server,init_it,6},
+                 {proc_lib,init_p_do_apply,3}]},
+               [{gen_server,terminate,6},{proc_lib,init_p_do_apply,3}]}},
+       {ancestors,[<0.91.0>]},
+       {messages,[]},
+       {links,[#Port<0.1807>]},
+       {dictionary,[]},
+       {trap_exit,true},
+       {status,running},
+       {heap_size,610},
+       {stack_size,24},
+       {reductions,713}],
+      []]}}
+
+=CRASH REPORT==== 6-Apr-2011::17:08:15 ===
+  crasher:
+    initial call: couch_file:init/1
+    pid: <0.92.0>
+    registered_name: []
+    exception exit: {{badmatch,
+                         {error,
+                             {undef,
+                                 [{crypto,rand_bytes,[16]},
+                                  {couch_uuids,random,0},
+                                  {couch_file,delete,3},
+                                  {couch_db_updater,init,1},
+                                  {gen_server,init_it,6},
+                                  {proc_lib,init_p_do_apply,3}]}}},
+                     [{couch_db,init,1},
+                      {gen_server,init_it,6},
+                      {proc_lib,init_p_do_apply,3}]}
+      in function  gen_server:terminate/6
+    ancestors: [<0.91.0>]
+    messages: []
+    links: [#Port<0.1807>]
+    dictionary: []
+    trap_exit: true
+    status: running
+    heap_size: 610
+    stack_size: 24
+    reductions: 713
+  neighbours:
+[error] [<0.83.0>] ** Generic server couch_server terminating 
+** Last message in was {'EXIT',<0.91.0>,
+                        {{badmatch,
+                          {error,
+                           {undef,
+                            [{crypto,rand_bytes,[16]},
+                             {couch_uuids,random,0},
+                             {couch_file,delete,3},
+                             {couch_db_updater,init,1},
+                             {gen_server,init_it,6},
+                             {proc_lib,init_p_do_apply,3}]}}},
+                         [{couch_db,init,1},
+                          {gen_server,init_it,6},
+                          {proc_lib,init_p_do_apply,3}]}}
+** When Server state == {server,"/usr/local/var/lib/couchdb",
+                            {re_pattern,0,0,
+                                <<69,82,67,80,124,0,0,0,16,0,0,0,1,0,0,0,0,0,
+                                  0,0,0,0,0,0,48,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,93,0,72,25,77,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,254,255,255,7,0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,77,0,0,0,0,16,171,255,3,0,0,0,
+                                  128,254,255,255,7,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                                  0,0,0,69,26,84,0,72,0>>},
+                            100,0,"Thu, 07 Apr 2011 00:08:15 GMT"}
+** Reason for termination == 
+** kill
+
+
+=ERROR REPORT==== 6-Apr-2011::17:08:15 ===
+** Generic server couch_server terminating 
+** Last message in was {'EXIT',<0.91.0>,
+                        {{badmatch,
+                          {error,
+                           {undef,
+                            [{crypto,rand_bytes,[16]},
+                             {couch_uuids,random,0},
+                             {couch_file,delete,3},
+                             {couch_db_updater,init,1},
+                             {gen_server,init_it,6},
+                             {proc_lib,init_p_do_apply,3}]}}},
+                         [{couch_db,init,1},
+                          {gen_server,init_it,6},
+                          {proc_lib,init_p_do_apply,3}]}}
+** When Server state == {server,"/usr/local/var/lib/couchdb",
+                            {re_pattern,0,0,
+                                <<69,82,67,80,124,0,0,0,16,0,0,0,1,0,0,0,0,0,
+                                  0,0,0,0,0,0,48,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,0,0,93,0,72,25,77,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,254,255,255,7,0,0,0,0,0,0,0,0,0,
+                                  0,0,0,0,0,0,0,77,0,0,0,0,16,171,255,3,0,0,0,
+                                  128,254,255,255,7,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                                  0,0,0,69,26,84,0,72,0>>},
+                            100,0,"Thu, 07 Apr 2011 00:08:15 GMT"}
+** Reason for termination == 
+** kill
+[error] [<0.83.0>] {error_report,<0.30.0>,
+              {<0.83.0>,crash_report,
+               [[{initial_call,{couch_server,init,['Argument__1']}},
+                 {pid,<0.83.0>},
+                 {registered_name,couch_server},
+                 {error_info,{exit,kill,
+                                   [{gen_server,terminate,6},
+                                    {proc_lib,init_p_do_apply,3}]}},
+                 {ancestors,[couch_primary_services,couch_server_sup,
+                             <0.31.0>]},
+                 {messages,[]},
+                 {links,[<0.78.0>]},
+                 {dictionary,[]},
+                 {trap_exit,true},
+                 {status,running},
+                 {heap_size,610},
+                 {stack_size,24},
+                 {reductions,1817}],
+                []]}}
+
+=CRASH REPORT==== 6-Apr-2011::17:08:15 ===
+  crasher:
+    initial call: couch_server:init/1
+    pid: <0.83.0>
+    registered_name: couch_server
+    exception exit: kill
+      in function  gen_server:terminate/6
+    ancestors: [couch_primary_services,couch_server_sup,<0.31.0>]
+    messages: []
+    links: [<0.78.0>]
+    dictionary: []
+    trap_exit: true
+    status: running
+    heap_size: 610
+    stack_size: 24
+    reductions: 1817
+  neighbours:
+[error] [<0.78.0>] {error_report,<0.30.0>,
+              {<0.78.0>,supervisor_report,
+               [{supervisor,{local,couch_primary_services}},
+                {errorContext,child_terminated},
+                {reason,kill},
+                {offender,[{pid,<0.83.0>},
+                           {name,couch_server},
+                           {mfargs,{couch_server,sup_start_link,[]}},
+                           {restart_type,permanent},
+                           {shutdown,1000},
+                           {child_type,worker}]}]}}
+
+=SUPERVISOR REPORT==== 6-Apr-2011::17:08:15 ===
+     Supervisor: {local,couch_primary_services}
+     Context:    child_terminated
+     Reason:     kill
+     Offender:   [{pid,<0.83.0>},
+                  {name,couch_server},
+                  {mfargs,{couch_server,sup_start_link,[]}},
+                  {restart_type,permanent},
+                  {shutdown,1000},
+                  {child_type,worker}]
+
+[error] [<0.87.0>] {error_report,<0.30.0>,
+    {<0.87.0>,crash_report,
+     [[{initial_call,{couch_auth_cache,init,['Argument__1']}},
+       {pid,<0.87.0>},
+       {registered_name,[]},
+       {error_info,
+           {exit,
+               {kill,
+                   {gen_server,call,
+                       [couch_server,
+                        {create,<<"_users">>,
+                            [{user_ctx,
+                                 {user_ctx,null,[<<"_admin">>],undefined}},
+                             sys_db]},
+                        infinity]}},
+               [{gen_server,init_it,6},{proc_lib,init_p_do_apply,3}]}},
+       {ancestors,[couch_secondary_services,couch_server_sup,<0.31.0>]},
+       {messages,[]},
+       {links,[<0.85.0>]},
+       {dictionary,[]},
+       {trap_exit,false},
+       {status,running},
+       {heap_size,377},
+       {stack_size,24},
+       {reductions,146}],
+      []]}}
+
+=CRASH REPORT==== 6-Apr-2011::17:08:15 ===
+  crasher:
+    initial call: couch_auth_cache:init/1
+    pid: <0.87.0>
+    registered_name: []
+    exception exit: {kill,
+                     {gen_server,call,
+                      [couch_server,
+                       {create,<<"_users">>,
+                        [{user_ctx,{user_ctx,null,[<<"_admin">>],undefined}},
+                         sys_db]},
+                       infinity]}}
+      in function  gen_server:init_it/6
+    ancestors: [couch_secondary_services,couch_server_sup,<0.31.0>]
+    messages: []
+    links: [<0.85.0>]
+    dictionary: []
+    trap_exit: false
+    status: running
+    heap_size: 377
+    stack_size: 24
+    reductions: 146
+  neighbours:
+[error] [<0.85.0>] {error_report,<0.30.0>,
+    {<0.85.0>,supervisor_report,
+     [{supervisor,{local,couch_secondary_services}},
+      {errorContext,start_error},
+      {reason,
+          {kill,
+              {gen_server,call,
+                  [couch_server,
+                   {create,<<"_users">>,
+                       [{user_ctx,{user_ctx,null,[<<"_admin">>],undefined}},
+                        sys_db]},
+                   infinity]}}},
+      {offender,
+          [{pid,undefined},
+           {name,auth_cache},
+           {mfargs,{couch_auth_cache,start_link,[]}},
+           {restart_type,permanent},
+           {shutdown,1000},
+           {child_type,worker}]}]}}
+
+=SUPERVISOR REPORT==== 6-Apr-2011::17:08:15 ===
+     Supervisor: {local,couch_secondary_services}
+     Context:    start_error
+     Reason:     {kill,
+                     {gen_server,call,
+                         [couch_server,
+                          {create,<<"_users">>,
+                              [{user_ctx,
+                                   {user_ctx,null,[<<"_admin">>],undefined}},
+                               sys_db]},
+                          infinity]}}
+     Offender:   [{pid,undefined},
+                  {name,auth_cache},
+                  {mfargs,{couch_auth_cache,start_link,[]}},
+                  {restart_type,permanent},
+                  {shutdown,1000},
+                  {child_type,worker}]
+
+[error] [<0.77.0>] {error_report,<0.30.0>,
+    {<0.77.0>,supervisor_report,
+     [{supervisor,{local,couch_server_sup}},
+      {errorContext,start_error},
+      {reason,shutdown},
+      {offender,
+          [{pid,undefined},
+           {name,couch_secondary_services},
+           {mfargs,{couch_server_sup,start_secondary_services,[]}},
+           {restart_type,permanent},
+           {shutdown,infinity},
+           {child_type,supervisor}]}]}}
+
+=SUPERVISOR REPORT==== 6-Apr-2011::17:08:15 ===
+     Supervisor: {local,couch_server_sup}
+     Context:    start_error
+     Reason:     shutdown
+     Offender:   [{pid,undefined},
+                  {name,couch_secondary_services},
+                  {mfargs,{couch_server_sup,start_secondary_services,[]}},
+                  {restart_type,permanent},
+                  {shutdown,infinity},
+                  {child_type,supervisor}]
+
+
+=CRASH REPORT==== 6-Apr-2011::17:08:15 ===
+  crasher:
+    initial call: application_master:init/4
+    pid: <0.30.0>
+    registered_name: []
+    exception exit: {bad_return,
+                        {{couch_app,start,
+                             [normal,
+                              ["/usr/local/etc/couchdb/default.ini",
+                               "/usr/local/etc/couchdb/local.ini"]]},
+                         {'EXIT',
+                             {{badmatch,{error,shutdown}},
+                              [{couch_server_sup,start_server,1},
+                               {application_master,start_it_old,4}]}}}}
+      in function  application_master:init/4
+    ancestors: [<0.29.0>]
+    messages: [{'EXIT',<0.31.0>,normal}]
+    links: [<0.29.0>,<0.7.0>]
+    dictionary: []
+    trap_exit: true
+    status: running
+    heap_size: 987
+    stack_size: 24
+    reductions: 161
+  neighbours:
+
+=INFO REPORT==== 6-Apr-2011::17:08:15 ===
+    application: couch
+    exited: {bad_return,{{couch_app,start,
+                                    [normal,
+                                     ["/usr/local/etc/couchdb/default.ini",
+                                      "/usr/local/etc/couchdb/local.ini"]]},
+                         {'EXIT',{{badmatch,{error,shutdown}},
+                                  [{couch_server_sup,start_server,1},
+                                   {application_master,start_it_old,4}]}}}}
+    type: temporary

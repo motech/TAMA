@@ -5,17 +5,12 @@ class PatientPreferencesController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index = {
-        redirect(action: "list", params: params)
-    }
-
-    def list = {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [patientPreferencesInstanceList: PatientPreferences.list(params), patientPreferencesInstanceTotal: PatientPreferences.count()]
+        redirect(action: "create", params: params)
     }
 
     def create = {
         def patientPreferencesInstance = new PatientPreferences()
-        patientPreferencesInstance.properties = params
+        //patientPreferencesInstance.properties = params	
         return [patientPreferencesInstance: patientPreferencesInstance]
     }
 
@@ -23,7 +18,7 @@ class PatientPreferencesController {
         def patientPreferencesInstance = new PatientPreferences(params)
         if (patientPreferencesInstance.save(flush: true)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'patientPreferences.label', default: 'PatientPreferences'), patientPreferencesInstance.id])}"
-            redirect(action: "show", id: patientPreferencesInstance.id)
+            redirect(action: "create", id: patientPreferencesInstance.id)
         }
         else {
             render(view: "create", model: [patientPreferencesInstance: patientPreferencesInstance])
@@ -34,7 +29,7 @@ class PatientPreferencesController {
         def patientPreferencesInstance = PatientPreferences.get(params.id)
         if (!patientPreferencesInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'patientPreferences.label', default: 'PatientPreferences'), params.id])}"
-            redirect(action: "list")
+            redirect(action: "create")
         }
         else {
             [patientPreferencesInstance: patientPreferencesInstance]

@@ -5,4 +5,6 @@ import org.motechproject.tama.Patient;
 
 public interface PatientDao extends BaseDao<Patient> {
 
+	public Patient findByClinicPatientId(String clinicId, String clinicPatientId);
+	
 }

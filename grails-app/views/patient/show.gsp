@@ -22,30 +22,9 @@
                     <tbody>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="patient.id.label" default="Id" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "id")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
                             <td valign="top" class="name"><g:message code="patient.clinicPatientId.label" default="Clinic Patient Id" /></td>
                             
                             <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "clinicPatientId")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="patient.dateOfBirth.label" default="Date Of Birth" /></td>
-                            
-                            <td valign="top" class="value"><g:formatDate date="${patientInstance?.dateOfBirth}" /></td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="patient.passcode.label" default="Passcode" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "passcode")}</td>
                             
                         </tr>
                     
@@ -55,6 +34,35 @@
                             <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "phoneNumber")}</td>
                             
                         </tr>
+                        
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="patient.gender.label" default="Gender" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "gender")}</td>
+                            
+                        </tr>
+
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="patient.dateOfBirth.label" default="Date Of Birth" /></td>
+                            
+                            <td valign="top" class="value"><g:formatDate format="dd-MM-yyyy" date="${patientInstance?.dateOfBirth}" /></td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="patient.passcode.label" default="Passcode" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "passcode")}</td>
+                            
+                        </tr>
+                        
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="patient.passcode.label" default="Passcode" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "passcode")}</td>
+                            
+                        </tr>
+                    
                     
                     </tbody>
                 </table>

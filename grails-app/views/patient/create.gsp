@@ -1,6 +1,6 @@
 
 
-<%@ page import="org.motechproject.tama.Patient" %>
+<%@ page import="org.motechproject.tama.Patient;org.motechproject.tama.Gender" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -38,10 +38,38 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
+                                    <label for="phoneNumber"><g:message code="patient.phoneNumber.label" default="Phone Number" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'phoneNumber', 'errors')}">
+                                    <g:textField name="phoneNumber" value="${patientInstance?.phoneNumber}" />
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="gender"><g:message code="patient.gender.label" default="Gender" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'gender', 'errors')}">
+                                    <g:select name="gender" value="${patientInstance?.gender}" from="${Gender.values()}" optionKey="key"/>
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
                                     <label for="dateOfBirth"><g:message code="patient.dateOfBirth.label" default="Date Of Birth" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'dateOfBirth', 'errors')}">
-                                    <g:datePicker name="dateOfBirth" precision="day" value="${patientInstance?.dateOfBirth}" />
+                                    <g:textField name="dateOfBirth" value="${patientInstance?.dateOfBirth}" />
+                                   	<script>
+									$(function() {
+										$( "#dateOfBirth" ).datepicker({
+											changeMonth: true,
+											changeYear: true,
+											dateFormat: DATE_FORMAT,
+											maxDate: 0
+										});
+									});
+									</script>
                                 </td>
                             </tr>
                         
@@ -53,15 +81,16 @@
                                     <g:textField name="passcode" value="${patientInstance?.passcode}" />
                                 </td>
                             </tr>
-                        
+
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="phoneNumber"><g:message code="patient.phoneNumber.label" default="Phone Number" /></label>
+                                    <label for="doctorId"><g:message code="patient.doctorId.label" default="Principal Doctor" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'phoneNumber', 'errors')}">
-                                    <g:textField name="phoneNumber" value="${patientInstance?.phoneNumber}" />
+                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'doctorId', 'errors')}">
+                                    <g:select name="doctorId" value="${patientInstance?.doctorId}" from="${doctors}" optionKey="id" optionValue="name"/>
                                 </td>
                             </tr>
+                        
                         
                         </tbody>
                     </table>

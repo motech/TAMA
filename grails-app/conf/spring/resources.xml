@@ -73,5 +73,5 @@
 		<constructor-arg ref="couchDbInstance" />
 	</bean>
 	<bean id="appointmentReminderPatientDAO" class="org.motechproject.appointmentreminder.dao.couchdb.PatientDAOImpl" />
-
+	
 </beans>

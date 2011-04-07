@@ -1,6 +1,0 @@
-
-heart_beat_kill_pid = 23860
-heart_beat_timeout = 11
-heart: Wed Apr  6 22:07:45 2011: heart-beat time-out.
-sh: /usr/local/Cellar/couchdb/1.0.2/bin/couchdb: No such file or directory
-heart: Wed Apr  6 22:07:46 2011: Executed "/usr/local/Cellar/couchdb/1.0.2/bin/couchdb -k". Terminating.

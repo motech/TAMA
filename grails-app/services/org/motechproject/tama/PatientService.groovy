@@ -85,4 +85,7 @@ class PatientService {
 		appointmentReminderPatientDAO.remove(arPatient)
 	}
 	
+	def findPatientByClinicPatientId(String clinicId, String clinicPatientId) {
+		return tamaPatientDao.findByClinicPatientId(clinicId, clinicPatientId);
+	}
 }

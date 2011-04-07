@@ -15,17 +15,17 @@ class BootStrap {
 	def ClinicDao tamaClinicDao
 	def PatientDao tamaPatientDao
 	def PatientService patientService
+	static String CLINIC_ID="1"
 
 	def init = { servletContext ->
 		//FIXME: delete these once we have UI for managing doctor, clinic, etc.
-		String clinicId="1"
 		String doctorXId="1"
 		String doctorYId="2"
 		String patientId="1"
 
-		if (!tamaClinicDao.contains(clinicId)){
+		if (!tamaClinicDao.contains(CLINIC_ID)){
 			Clinic clinic = new Clinic(
-					id: clinicId,
+					id: CLINIC_ID,
 					name:"Test Clinic"
 					)
 			tamaClinicDao.add(clinic)
@@ -34,7 +34,7 @@ class BootStrap {
 		if (!tamaDoctorDao.contains(doctorXId)){
 			Doctor doctorX = new Doctor(
 					id: doctorXId,
-					clinicId:clinicId,
+					clinicId:CLINIC_ID,
 					name:"Doctor X"
 					)
 			tamaDoctorDao.add(doctorX)
@@ -43,7 +43,7 @@ class BootStrap {
 		if (!tamaDoctorDao.contains(doctorYId)){
 			Doctor doctorY = new Doctor(
 					id: doctorYId,
-					clinicId:clinicId,
+					clinicId:CLINIC_ID,
 					name:"Doctor Y"
 					)
 			tamaDoctorDao.add(doctorY)
@@ -54,7 +54,7 @@ class BootStrap {
 				id:patientId,
 				clinicPatientId:"1234",
 				gender:Gender.MALE,
-				clinicId:clinicId,
+				clinicId:CLINIC_ID,
 				doctorId:doctorXId,
 				passcode:"passwd",
 				phoneNumber:"6046894123",

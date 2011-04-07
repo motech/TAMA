@@ -1,10 +1,15 @@
 package org.motechproject.tama
 
+import org.motechproject.tama.util.CustomPropertyEditorRegistrar
+
 class PatientController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	
 	def patientService
+	def doctorService
+	
+	def CustomPropertyEditorRegistrar customPropertyEditorRegistrar
 
     def index = {
         redirect(action: "list", params: params)
@@ -14,37 +19,45 @@ class PatientController {
 		//patientService.serviceMethod()
         //params.max = Math.min(params.max ? params.int('max') : 10, 100)
         //[patientInstanceList: Patient.list(params), patientInstanceTotal: Patient.count()]
-        //FIXME
+        //TODO: add pagination support
     	def patients = patientService.listPatients()
 		[patientInstanceList: patients, patientInstanceTotal: patients.size()]
     }
 
     def create = {
         def patientInstance = new Patient()
-        return [patientInstance: patientInstance]
+		def doctors = doctorService.findDoctorsByClinicId(session.clinicId)
+        return [patientInstance: patientInstance, doctors: doctors]
     }
 
     def save = {
-        def patientInstance = new Patient(params)
-        if (patientInstance.save(flush: true)) {
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'patient.label', default: 'Patient'), patientInstance.id])}"
-            redirect(action: "show", id: patientInstance.id)
+        def patient = new Patient()
+		bindData(patient, params)
+		patient.clinicId=session.clinicId
+		
+		//TODO: add error handling
+        if (patientService.createPatient(patient)) {
+            flash.message = "${message(code: 'default.created.message', args: [message(code: 'patient.label', default: 'Patient'), patient.id])}"
+            redirect(action: "show", id: patient.clinicId)
         }
         else {
-            render(view: "create", model: [patientInstance: patientInstance])
+            render(view: "create", model: [patientInstance: patient])
         }
     }
 
     def show = {
 //        def patientInstance = Patient.get(params.id)
 		//FIXME: get the patient instance from the database
-		def patientInstance = new Patient(clinicPatientId:'1001', dateOfBirth:new Date())
+		def clinicId = session.clinicId
+		def clinicPatientId = params.id
+		def patientInstance = patientService.findPatientByClinicPatientId(clinicId, clinicPatientId)
         if (!patientInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'patient.label', default: 'Patient'), params.id])}"
             redirect(action: "list")
         }
         else {
-            [patientInstance: patientInstance]
+			def doctor = doctorService.findDoctorById(patientInstance.doctorId)
+            [patientInstance: patientInstance, doctor:doctor]
         }
     }
 

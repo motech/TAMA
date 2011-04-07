@@ -1,6 +1,10 @@
 package org.motechproject.tama.dao.couchdb;
 
+import java.util.List;
+
 import org.ektorp.CouchDbConnector;
+import org.ektorp.ViewQuery;
+import org.ektorp.support.View;
 import org.motechproject.dao.MotechAuditableRepository;
 import org.motechproject.tama.Patient;
 import org.motechproject.tama.dao.PatientDao;
@@ -14,6 +18,16 @@ public class PatientDaoImpl extends MotechAuditableRepository<Patient> implement
         super(Patient.class, db);
         initStandardDesignDocument();
     }
-	
+
+	@Override
+	@View( name = "findByClinicPatientId", map = "function(doc) {if (doc.clinicPatientId) {emit(doc.clinicId+':'+doc.clinicPatientId, doc._id);}}")
+	public Patient findByClinicPatientId(String clinicId, String clinicPatientId) {
+		ViewQuery q = createQuery("findByClinicPatientId").key(clinicId + ":" + clinicPatientId).includeDocs(true);
+		List<Patient> patients = db.queryView(q, Patient.class);
+		if (patients.size()>0) {
+			return patients.get(0);
+		}
+		return null;
+	}
 	
 }

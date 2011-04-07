@@ -4,6 +4,7 @@ import grails.test.*
 
 import org.ektorp.CouchDbInstance
 import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
+import org.motechproject.tama.dao.AppointmentDao;
 import org.motechproject.tama.dao.ClinicDao
 import org.motechproject.tama.dao.DoctorDao
 import org.motechproject.tama.dao.PatientDao
@@ -16,6 +17,7 @@ class PersonServiceIntegrationTests extends GroovyTestCase  {
 	def PatientService patientService
 	def ARPatientDAO appointmentReminderPatientDAO
 	def PatientDao tamaPatientDao
+	def AppointmentDao tamaAppointmentDao
 
 	static CLINIC_ID = "1234-test-clinic"
 	static DOCTOR_ID = "1234-test-doctor"
@@ -44,6 +46,7 @@ class PersonServiceIntegrationTests extends GroovyTestCase  {
 	protected void tearDown() {
 		tamaClinicDao.remove(clinic)
 		tamaDoctorDao.remove(doctor)
+//		tamaAppointmentDao.getAll().each { tamaAppointmentDao.remove(it)   }
 		super.tearDown()
 	}
 
@@ -56,6 +59,11 @@ class PersonServiceIntegrationTests extends GroovyTestCase  {
 			doctorId:DOCTOR_ID
 			)
 		patientService.createPatient(patient)
+		
+		// check if there are any appointments in the schedule
+		assertTrue 0<tamaAppointmentDao.findByPatientId(patient.id).size()
+		
+		
 		assertTrue tamaPatientDao.contains(PATIENT_ID)
 		assertTrue appointmentReminderPatientDAO.contains(patient.id)
 
@@ -72,6 +80,8 @@ class PersonServiceIntegrationTests extends GroovyTestCase  {
 
 		patientService.deletePatient(patient)
 		assertFalse tamaPatientDao.contains(patient.id)
+		// check if there are any appointments in the schedule
+		assertTrue 0==tamaAppointmentDao.findByPatientId(patient.id).size()
 	}
 
 	void testFindPatientByClinicPatientId() {

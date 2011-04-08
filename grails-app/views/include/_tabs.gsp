@@ -10,7 +10,8 @@
 
 <div id="sub-tab-container">
 	<ul>
-		<li class="${controllersForPatientsTab.contains(controllerName)?'active':'inactive'}"><a href="#tabs-1">Overview of Patient</a>
+		<li class="${controllersForPatientsTab.contains(controllerName)?'active':'inactive'}">
+			<g:link controller="patient" action="show" id="${clinicPatientId}">Overview of Patient</g:link>
 		</li>
 		<li class="${controllersForVisitsTab.contains(controllerName)?'active':'inactive'}"><a href="#tabs-2">Clinic Visits</a>
 		</li>

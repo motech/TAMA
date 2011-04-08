@@ -15,8 +15,7 @@ class Patient extends MotechAuditableDataObject{
 	Gender gender
 	String passcode
 	String phoneNumber
-	InterventionProgram interventionProgram
+	InterventionProgram interventionProgram = InterventionProgram.PROGRAM
 	Date dateOfBirth
-	Status status
-	
+	Status status = Status.ACTIVE
 }

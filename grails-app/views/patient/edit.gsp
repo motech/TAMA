@@ -1,6 +1,4 @@
-
-
-<%@ page import="org.motechproject.tama.Patient" %>
+<%@ page import="org.motechproject.tama.Patient;org.motechproject.tama.Gender" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -8,8 +6,11 @@
         <g:set var="entityName" value="${message(code: 'patient.label', default: 'Patient')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
     </head>
+        <div class="nav">
+            <g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link>
+        </div>    
         <div class="body">
-            <h1><g:message code="default.edit.label" args="[entityName]" /></h1>
+            <h1>Patient ${patientInstance?.clinicPatientId}</h1>
             <g:render template="tabs" />
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
@@ -21,14 +22,14 @@
             </g:hasErrors>
             <g:form method="post" >
                 <g:hiddenField name="id" value="${patientInstance?.id}" />
-                <g:hiddenField name="version" value="${patientInstance?.version}" />
+                <g:hiddenField name="revision" value="${patientInstance?.revision}" />
                 <div class="dialog">
                     <table>
                         <tbody>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="clinicPatientId"><g:message code="patient.clinicPatientId.label" default="Clinic Patient Id" /></label>
+                                    <label for="clinicPatientId"><g:message code="patient.clinicPatientId.label" default="Clinic Patient Id" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'clinicPatientId', 'errors')}">
                                     <g:textField name="clinicPatientId" value="${patientInstance?.clinicPatientId}" />
@@ -37,30 +38,59 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="dateOfBirth"><g:message code="patient.dateOfBirth.label" default="Date Of Birth" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'dateOfBirth', 'errors')}">
-                                    <g:datePicker name="dateOfBirth" precision="day" value="${patientInstance?.dateOfBirth}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="passcode"><g:message code="patient.passcode.label" default="Passcode" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'passcode', 'errors')}">
-                                    <g:textField name="passcode" value="${patientInstance?.passcode}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="phoneNumber"><g:message code="patient.phoneNumber.label" default="Phone Number" /></label>
+                                    <label for="phoneNumber"><g:message code="patient.phoneNumber.label" default="Phone Number" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'phoneNumber', 'errors')}">
                                     <g:textField name="phoneNumber" value="${patientInstance?.phoneNumber}" />
                                 </td>
                             </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="gender"><g:message code="patient.gender.label" default="Gender" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'gender', 'errors')}">
+                                    <g:select name="gender" value="${patientInstance?.gender}" from="${Gender.values()}" optionKey="key"/>
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="dateOfBirth"><g:message code="patient.dateOfBirth.label" default="Date Of Birth" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'dateOfBirth', 'errors')}">
+                                    <g:textField name="dateOfBirth" value="${formatDate(format:'dd-MM-yyyy', date:patientInstance?.dateOfBirth)}" />
+                                   	<script>
+									$(function() {
+										$( "#dateOfBirth" ).datepicker({
+											changeMonth: true,
+											changeYear: true,
+											dateFormat: DATE_FORMAT,
+											maxDate: 0
+										});
+									});
+									</script>
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="passcode"><g:message code="patient.passcode.label" default="Passcode" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'passcode', 'errors')}">
+                                    <g:textField name="passcode" value="${patientInstance?.passcode}" />
+                                </td>
+                            </tr>
+
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="doctorId"><g:message code="patient.doctorId.label" default="Principal Doctor" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'doctorId', 'errors')}">
+                                    <g:select name="doctorId" value="${patientInstance?.doctorId}" from="${doctors}" optionKey="id" optionValue="name"/>
+                                </td>
+                            </tr>
+                        
                         
                         </tbody>
                     </table>

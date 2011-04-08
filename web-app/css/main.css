@@ -188,7 +188,7 @@ td, th {
 }
 th {
     background: #fff url(../images/skin/shadow.jpg);
-    color: #666;
+    color: #333;
     font-size: 11px;
     font-weight: bold;
     line-height: 17px;
@@ -228,7 +228,7 @@ th.desc a {
     border-left: 1px solid #ddd;
 }
 .list th:hover, .list tr:hover {
-    background: #b2d1ff;
+    background: #FFEEC4;
 }
 
 /* PAGINATION */
@@ -267,6 +267,7 @@ th.desc a {
     text-align: left;
     width: 15%;
     white-space: nowrap;
+    height:40px;
 }
 .prop .value {
     text-align: left;

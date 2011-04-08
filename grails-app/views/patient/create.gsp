@@ -1,5 +1,3 @@
-
-
 <%@ page import="org.motechproject.tama.Patient;org.motechproject.tama.Gender" %>
 <html>
     <head>
@@ -96,7 +94,7 @@
                     </table>
                 </div>
                 <div class="buttons">
-                    <span class="button"><g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
+                    <span class="button"><g:submitButton id="create-btn" name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
                 </div>
             </g:form>
         </div>

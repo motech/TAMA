@@ -10,7 +10,7 @@
     </head>
         <div class="body">
             <h1><g:message code="default.edit.label" args="[entityName]" /></h1>
-            <g:render template="tabs" />
+            <g:render template="/include/tabs" model="${['clinicPatientId': patientInstance.clinicPatientId]}" />
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>

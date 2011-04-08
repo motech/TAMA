@@ -62,10 +62,16 @@
 		<constructor-arg value="tama_doctors" />
 		<constructor-arg ref="couchDbInstance" />
 	</bean>	
+
+	<bean id="tamaPatientPreferenceDatabase" class="org.ektorp.impl.StdCouchDbConnector">
+		<constructor-arg value="tama_patient_preferences" />
+		<constructor-arg ref="couchDbInstance" />
+	</bean>	
 	
 	<bean id="tamaClinicDao" class="org.motechproject.tama.dao.couchdb.ClinicDaoImpl" />
 	<bean id="tamaPatientDao" class="org.motechproject.tama.dao.couchdb.PatientDaoImpl" />
 	<bean id="tamaDoctorDao" class="org.motechproject.tama.dao.couchdb.DoctorDaoImpl" />
+	<bean id="tamaPatientPreferencesDao" class="org.motechproject.tama.dao.couchdb.PatientPreferencesDaoImpl" />
 	
 	
 	<bean id="appointmentReminderDatabase" class="org.ektorp.impl.StdCouchDbConnector">

@@ -320,6 +320,9 @@ th.desc a {
 	margin: 10px 0;
 	padding: 10px;	
 }
+.fieldgroup div {
+	margin: 10px 0 0 0;	
+}
 table.innerTable tr td {
 	border: 1px solid #CCC;
 	cellspacing: 0;	

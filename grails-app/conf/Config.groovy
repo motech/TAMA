@@ -56,6 +56,11 @@ grails.exceptionresolver.params.exclude = ['password']
 tama.n = 6
 tama.m = 2
 
+// Until spring security is integrated we need to assume that the clinic id 
+// ie When you log in you are associated with a clinic and therefore that will 
+//    be placed in your session.
+tama.defaultClinicId = "1234"  
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {

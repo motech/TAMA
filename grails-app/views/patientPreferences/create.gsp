@@ -10,8 +10,8 @@
     </head>
     <body>
         <div class="body">
-            <h1>Patient [Clinic Patient Id]</h1>
-            <g:render template="../patient/tabs" />
+            <h1>Patient ${patientPreferencesInstance?.clinicPatientId}</h1>
+            <g:render template="/include/tabs" model="${['clinicPatientId': patientPreferencesInstance.clinicId]}"  />
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
@@ -22,6 +22,7 @@
             </g:hasErrors>
             <h2>Patient Preferences</h2>
             <g:form action="save" >
+            	<g:hiddenField name="clinicPatientId" value="${patientPreferencesInstance.clinicPatientId}" />
                 <div class="dialog">
                 	<div class="fieldgroup">
 	                	<h3>Which types of calls would the patient like to receive:</h3>
@@ -44,10 +45,8 @@
 	                	<h3>When is the most convenient time for the patient to receive calls from the IVR?</h3>
 	                	<div>Please explain to the patient that TAMA is not a person, just a computer system, so it can call the patient at any time day or night, whenever it is most convenient to the patient.</div>
 						<div>
-	                        <g:select name="bestTimeToCallHour" value="${patientPreferencesInstance?.bestTimeToCallHour}"  />
-	                        <g:select name="bestTimeToCallMinute" value="${patientPreferencesInstance?.bestTimeToCallMinute}"  />
-	                        <g:select name="bestTimeToCallAMPM" value="${patientPreferencesInstance?.bestTimeToCallAMPM}"  /> 
-	                        <label for="bestTimeToCall"><g:message code="patientPreferences.bestTimeToCall.label" default="Best time to call" /></label>
+	                        <g:select name="bestTimeToCallHour" value="" from="${0..23}" value="${patientPreferencesInstance?.bestTimeToCallHour}"  /> : 
+	                        <g:select name="bestTimeToCallMinute" value="" from="${[00, 10, 20, 30, 40, 50]}"  value="${patientPreferencesInstance?.bestTimeToCallMinute}"  />
 						</div>
 	                    <div>NB: The IVR will always call the patient at the selected time, except for the "Pill Reminder" calls, which will happen whenever the patient is due to take their pill(s).</div>
                     </div>

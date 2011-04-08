@@ -7,8 +7,11 @@ class PatientPreferences extends MotechAuditableDataObject {
 
 	@TypeDiscriminator
 	String clinicPatientId
-    boolean appointmentReminderEnabled; // Is the appointment reminder enabled
-
+	String clinicId
+    Boolean appointmentReminderEnabled; // Is the appointment reminder enabled
+	Integer bestTimeToCallHour;
+	Integer bestTimeToCallMinute;
+	
     static constraints = {
     }
 }

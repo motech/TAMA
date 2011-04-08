@@ -170,6 +170,15 @@ td.errors textarea {
     border: 1px solid red;
 }
 
+label.error {
+	margin-left:5px;
+	color: #cc0000;
+}
+
+input.error{
+	border:1px solid red;
+}
+
 /* TABLES */
 
 table {

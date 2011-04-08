@@ -49,12 +49,14 @@
                             
                         </tr>
                     
-                        <tr class="prop">
+						<%-- 
+                       <tr class="prop">
                             <td valign="top" class="name"><g:message code="patient.passcode.label" default="Passcode" /></td>
                             
                             <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "passcode")}</td>
                             
                         </tr>
+                        --%>
                         
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="patient.doctor.label" default="Principal Doctor" /></td>
@@ -68,9 +70,12 @@
                 </table>
             </div>
             <div class="buttons">
-                <g:form>
+                <g:form id="${patientInstance?.clinicPatientId}" action="edit">
                     <g:hiddenField name="clinicPatientId" value="${patientInstance?.clinicPatientId}" />
                     <span class="button"><g:actionSubmit class="edit" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" /></span>
+                </g:form>
+                <g:form id="${patientInstance?.clinicPatientId}" action="delete">
+                    <g:hiddenField name="clinicPatientId" value="${patientInstance?.clinicPatientId}" />
                     <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
                 </g:form>
             </div>

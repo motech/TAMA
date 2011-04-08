@@ -23,11 +23,7 @@ class Patient extends MotechAuditableDataObject{
 	String phoneNumber
 	InterventionProgram interventionProgram = InterventionProgram.PROGRAM
 	Date dateOfBirth
-<<<<<<< HEAD
 	Status status = Status.ACTIVE
-=======
-	Status status
 	@DocumentReferences(fetch = FetchType.LAZY, descendingSortOrder = true, orderBy = "windowStartDate", backReference = "patientId" )
 	Set<Appointment> appointments;
->>>>>>> 7129df390a417ecad9d2a5a5b2ae829612ab7c60
 }

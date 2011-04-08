@@ -71,7 +71,9 @@
 	<bean id="tamaClinicDao" class="org.motechproject.tama.dao.couchdb.ClinicDaoImpl" />
 	<bean id="tamaPatientDao" class="org.motechproject.tama.dao.couchdb.PatientDaoImpl" />
 	<bean id="tamaDoctorDao" class="org.motechproject.tama.dao.couchdb.DoctorDaoImpl" />
+
 	<bean id="tamaPatientPreferencesDao" class="org.motechproject.tama.dao.couchdb.PatientPreferencesDaoImpl" />
+	<bean id="tamaAppointmentDao" class="org.motechproject.tama.dao.couchdb.AppointmentDaoImpl" />
 	
 	
 	<bean id="appointmentReminderDatabase" class="org.ektorp.impl.StdCouchDbConnector">

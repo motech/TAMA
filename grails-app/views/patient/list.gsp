@@ -19,33 +19,34 @@
 	            <table>
 	                <thead>
 	                    <tr>
-	                    
-	                        <g:sortableColumn property="id" title="${message(code: 'patient.id.label', default: 'Id')}" />
-	                    
+	                    	<th>Clinic Patient Id</th>
+	                    	<th>Phone Number</th>
+	                    	<th>Gender</th>
+	                    	<th>Date Of Birth</th>
+	                    	<th>Principal Doctor</th>
+	                    <%--
 	                        <g:sortableColumn property="clinicPatientId" title="${message(code: 'patient.clinicPatientId.label', default: 'Clinic Patient Id')}" />
-	                    
-	                        <g:sortableColumn property="dateOfBirth" title="${message(code: 'patient.dateOfBirth.label', default: 'Date Of Birth')}" />
-	                    
-	                        <g:sortableColumn property="passcode" title="${message(code: 'patient.passcode.label', default: 'Passcode')}" />
-	                    
 	                        <g:sortableColumn property="phoneNumber" title="${message(code: 'patient.phoneNumber.label', default: 'Phone Number')}" />
-	                    
+	                        <g:sortableColumn property="gender" title="${message(code: 'patient.gender.label', default: 'Gender')}" />
+	                        <g:sortableColumn property="dateOfBirth" title="${message(code: 'patient.dateOfBirth.label', default: 'Date Of Birth')}" />
+	                        <g:sortableColumn property="doctor" title="${message(code: 'patient.doctor.label', default: 'Principal Doctor')}" />
+	                    --%>
 	                    </tr>
 	                </thead>
 	                <tbody>
 	                <g:each in="${patientInstanceList}" status="i" var="patientInstance">
 	                    <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
 	                    
-	                        <td><g:link action="show" id="${patientInstance.id}">${fieldValue(bean: patientInstance, field: "id")}</g:link></td>
-	                    
 	                        <td><g:link action="show" id="${patientInstance.clinicPatientId}">${fieldValue(bean: patientInstance, field: "clinicPatientId")}</g:link></td>
 	                    
-	                        <td><g:formatDate date="${patientInstance.dateOfBirth}" /></td>
-	                    
-	                        <td>${fieldValue(bean: patientInstance, field: "passcode")}</td>
-	                    
 	                        <td>${fieldValue(bean: patientInstance, field: "phoneNumber")}</td>
+	                        
+	                        <td>${fieldValue(bean: patientInstance, field: "gender")}</td>
+
+	                        <td><g:formatDate format="dd-MM-yyyy" date="${patientInstance.dateOfBirth}" /></td>
 	                    
+	                        <td><%=doctors.find{it.id==patientInstance.doctorId}.name%></td>
+	                        
 	                    </tr>
 	                </g:each>
 	                </tbody>

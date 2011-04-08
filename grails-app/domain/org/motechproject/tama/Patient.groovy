@@ -1,6 +1,12 @@
 package org.motechproject.tama
 
+import java.util.Set;
+
+import org.ektorp.docref.CascadeType;
+import org.ektorp.docref.DocumentReferences;
+import org.ektorp.docref.FetchType;
 import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.appointmentreminder.model.Appointment;
 import org.motechproject.model.MotechAuditableDataObject;
 
 class Patient extends MotechAuditableDataObject{
@@ -15,8 +21,9 @@ class Patient extends MotechAuditableDataObject{
 	Gender gender
 	String passcode
 	String phoneNumber
-	InterventionProgram interventionProgram
+	InterventionProgram interventionProgram = InterventionProgram.PROGRAM
 	Date dateOfBirth
-	Status status
-	
+	Status status = Status.ACTIVE
+	@DocumentReferences(fetch = FetchType.LAZY, descendingSortOrder = true, orderBy = "windowStartDate", backReference = "patientId" )
+	Set<Appointment> appointments;
 }

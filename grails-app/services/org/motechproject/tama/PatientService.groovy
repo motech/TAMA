@@ -4,6 +4,7 @@ import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
 import org.motechproject.appointmentreminder.model.Doctor as ARDoctor
 import org.motechproject.appointmentreminder.model.Patient as ARPatient
 import org.motechproject.appointmentreminder.model.Clinic as ARClinic
+import org.motechproject.tama.dao.AppointmentDao;
 import org.motechproject.tama.dao.ClinicDao
 import org.motechproject.tama.dao.DoctorDao
 import org.motechproject.tama.dao.PatientDao
@@ -15,8 +16,10 @@ class PatientService {
 	def PatientDao tamaPatientDao
 	def DoctorDao tamaDoctorDao
 	def ClinicDao tamaClinicDao
+	def AppointmentDao tamaAppointmentDao
 	
 	def ARPatientDAO appointmentReminderPatientDAO
+	def AppointmentScheduleService appointmentScheduleService
 
     def listPatients() {
 		//TODO: add pagination support
@@ -29,6 +32,9 @@ class PatientService {
 	
 	def createPatient(Patient patient){
 		tamaPatientDao.add(patient)
+
+		// Create Care Schedule and add Appointments to Patient database
+		appointmentScheduleService.createCareSchedule(patient, new Date()).each { tamaAppointmentDao.add(it) }
 		
 		Clinic clinic = tamaClinicDao.get(patient.clinicId)
 		Doctor doctor = tamaDoctorDao.get(patient.doctorId)
@@ -80,6 +86,7 @@ class PatientService {
 	}
 	
 	def deletePatient(Patient patient){
+		tamaAppointmentDao.findByPatientId(patient.id).each { tamaAppointmentDao.remove(it)   }
 		tamaPatientDao.remove(patient)
 		ARPatient arPatient = appointmentReminderPatientDAO.get(patient.id)
 		appointmentReminderPatientDAO.remove(arPatient)

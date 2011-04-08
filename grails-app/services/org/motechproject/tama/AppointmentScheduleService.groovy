@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool.Config;
 import org.codehaus.groovy.grails.commons.ConfigurationHolder;
-import org.motechproject.appointmentreminder.model.Appointment;
 
 /**
  * Service responsible for generation of appointment schedule

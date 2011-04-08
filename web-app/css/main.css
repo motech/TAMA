@@ -170,6 +170,15 @@ td.errors textarea {
     border: 1px solid red;
 }
 
+label.error {
+	margin-left:5px;
+	color: #cc0000;
+}
+
+input.error{
+	border:1px solid red;
+}
+
 /* TABLES */
 
 table {
@@ -187,7 +196,7 @@ td, th {
 }
 th {
     background: #fff url(../images/skin/shadow.jpg);
-    color: #666;
+    color: #333;
     font-size: 11px;
     font-weight: bold;
     line-height: 17px;
@@ -227,7 +236,7 @@ th.desc a {
     border-left: 1px solid #ddd;
 }
 .list th:hover, .list tr:hover {
-    background: #b2d1ff;
+    background: #FFEEC4;
 }
 
 /* PAGINATION */
@@ -257,6 +266,7 @@ th.desc a {
 
 .dialog table {
     padding: 5px 0;
+    width:auto;
 }
 
 .prop {
@@ -266,6 +276,8 @@ th.desc a {
     text-align: left;
     width: 50%;
     white-space: nowrap;
+    height:40px;
+    font-weight: bold;
 }
 .prop .value {
     text-align: left;
@@ -284,35 +296,39 @@ th.desc a {
     padding: 0;
 }
 
-.buttons input {
-    /*background: #fff;
-    border: 0;
-    color: #333;
+.buttons input {   
+	display:block;
+	border-radius: 5px;
+	border:1px solid #CCCCCC;
+	color:#333333;
+	font-size:12px;
+	text-decoration: none;
+	background: #EEEEEE; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#DFDFE0'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#DFDFE0)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #FAFAFA,  #DFDFE0); /* for firefox 3.6+ */	
+	display:block;
+	line-height: 25px;
+	height:25px;
+	padding:0px 15px;      
+    font-weight: bold;
+    float:left;
+    margin-right:30px;
     cursor: pointer;
-    font-size: 10px;
-    font-weight: bold;*/
-    margin-left: 3px;
-    overflow: visible;
-    padding: 2px 6px;
+}
+.buttons input:hover{
+	color:#000;
+	border-color:#999999;
+	background: #E9E9E9; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F9F9F9', endColorstr='#D3D3D3'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#F9F9F9), to(#D3D3D3)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #F9F9F9,  #D3D3D3); /* for firefox 3.6+ */	
 }
 .buttons input.delete {
-    background: transparent url(../images/skin/database_delete.png) 5px 50% no-repeat;
-    padding-left: 28px;
 }
 .buttons input.edit {
-    background: transparent url(../images/skin/database_edit.png) 5px 50% no-repeat;
-    padding-left: 28px;
 }
 .buttons input.save {
-    background: -moz-linear-gradient(center top , #FAFAFA, #DFDFE0) repeat scroll 0 0 transparent;
-    border: 1px solid #CCCCCC;
-    color: #333333;
-    display: block;
-    font-size: 12px;
-    line-height: 25px;
-    padding: 0 15px;
-    text-decoration: none;
-    font-weight: bold;
 }
 
 .fieldgroup {

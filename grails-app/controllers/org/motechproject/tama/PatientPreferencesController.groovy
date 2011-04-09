@@ -36,7 +36,7 @@ class PatientPreferencesController {
 
     def save = {
 		// Check that the patient exists (not url hacking)
-		def patientInstance = patientService.findPatientByClinicPatientId(session.clinicId, params.id)
+		def patientInstance = patientService.findPatientByClinicPatientId(session.clinicId, params.clinicPatientId)
 		
 		if (!patientInstance) {
 			flash.message = "${message(code: 'default.patient.notfound', args: [], defaultMessage: 'Patient Not Found')}"

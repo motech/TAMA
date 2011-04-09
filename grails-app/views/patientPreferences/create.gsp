@@ -11,7 +11,7 @@
     <body>
         <div class="body">
             <h1>Patient ${patientPreferencesInstance?.clinicPatientId}</h1>
-            <g:render template="/include/tabs" model="${['clinicPatientId': patientPreferencesInstance.clinicId]}"  />
+            <g:render template="/include/tabs" model="${['clinicPatientId': patientPreferencesInstance.clinicPatientId]}"  />
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>

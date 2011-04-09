@@ -263,7 +263,9 @@ th.desc a {
 }
 
 /* DIALOG */
-
+.dialog {
+	clear:both;
+}
 .dialog table {
     padding: 5px 0;
     width:auto;
@@ -411,7 +413,7 @@ table.innerTable tr td {
 /*-----------------------Sub Tab Navigation-----------------------*/
 #sub-tab-container{
 	margin-bottom:10px;
-	overflow: auto;
+	display: table;
 }
 
 #sub-tab-container ul{

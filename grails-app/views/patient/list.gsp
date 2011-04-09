@@ -45,7 +45,7 @@
 
 	                        <td><g:formatDate format="dd-MM-yyyy" date="${patientInstance.dateOfBirth}" /></td>
 	                    
-	                        <td><%=doctors.find{it.id==patientInstance.doctorId}.name%></td>
+	                        <td><%=doctors.find{it.id==patientInstance.doctorId}?.name%></td>
 	                        
 	                    </tr>
 	                </g:each>

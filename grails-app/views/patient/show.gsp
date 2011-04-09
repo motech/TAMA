@@ -8,9 +8,6 @@
         <title><g:message code="default.show.label" args="[entityName]" /></title>
     </head>
     <body>
-        <div class="nav">
-            <g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link>
-        </div>
         <div class="body">
             <h1>Patient ${patientInstance?.clinicPatientId}</h1>
             <g:render template="/include/tabs" model="${['clinicPatientId': patientInstance.clinicPatientId]}" />

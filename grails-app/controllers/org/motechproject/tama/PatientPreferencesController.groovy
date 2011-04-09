@@ -62,7 +62,7 @@ class PatientPreferencesController {
 	
 				// TODO GLUE CODE for integrating with modules (Appointment Reminder, Pill Reminder, etc...)	
 				
-	            flash.message = "${message(code: 'default.created.message', args: [message(code: 'patientPreferences.label', default: 'PatientPreferences'), patientPreferencesInstance.id])}"
+	            flash.message = "${message(code: 'default.created.message', args: [message(code: 'patientPreferences.label', default: 'PatientPreferences'), patientPreferencesInstance.clinicPatientId])}"
 	            redirect(action: "create", id: patientPreferencesInstance.clinicPatientId)
 	        }
 	        else {

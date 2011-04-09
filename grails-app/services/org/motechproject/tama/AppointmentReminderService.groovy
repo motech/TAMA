@@ -6,7 +6,7 @@ import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDao
 import org.motechproject.eventgateway.EventGateway
 import org.motechproject.model.MotechEvent
 
-class ApointmentReminderActivationService {
+class AppointmentReminderService {
 
     static transactional = false
 

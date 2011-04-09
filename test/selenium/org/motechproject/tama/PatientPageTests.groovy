@@ -31,7 +31,7 @@ class PatientPageTests extends GroovyTestCase {
         selenium.select("doctorId", "label=Doctor Y")
         selenium.clickAndWaitAndWait("id=create-btn")
 		assertTrue(selenium.isTextPresent("Patient ${clinicPatientId} created"))
-		selenium.clickAndWaitAndWait("link=Patient List")
+		selenium.clickAndWaitAndWait("link=Patients")
 		
 		//READ
 		selenium.clickAndWaitAndWait("link=${clinicPatientId}")

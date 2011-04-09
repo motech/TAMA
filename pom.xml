@@ -295,6 +295,19 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+        <dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-jms</artifactId>
+			<version>2.0.3.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+			<version>5.4.2</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -328,11 +341,11 @@
 			<name>Java Dev Net Repository</name>
 			<url>http://download.java.net/maven/2/</url>
 		</repository>
-		<repository>
+		<!--<repository>
 			<id>motech-repo</id>
 			<name>Motech Maven Repository</name>
 			<url>http://nexus.motechproject.org/content/repositories/public</url>
-		</repository>
+		</repository>-->
 	</repositories>
 
 	<build>

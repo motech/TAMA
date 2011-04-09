@@ -45,19 +45,23 @@ class AppointmentReminderService {
             String jobId = UUID.randomUUID().toString()
             it.reminderScheduledJobId = jobId
 
-            appointmentReminderPatientDao.addAppointment(it)
+            //TODO add/update Appointment to the AppointmentReminder DB
+            //if an appointment already in the db - update otherwise - add
+            //appointmentReminderPatientDao.addAppointment(it)
 
-            //TODO set the following variables properly
-            String eventType = "???" // schedule appointment job event type - constant should be somewhere in the code
-            String patientIdKey =  "???" // constant should be somewhere in the code
-            String appointmentIdKey = "???" // constant should be somewhere in the code
+            //TODO get the values of the following variables from constants specified in motech code
+            String eventType = "ScheduleAppointmentReminder"
+            String patientIdKey =  "PatientID"
+            String appointmentIdKey = "AppointmentID"
 
-            eventParameters = [patientIdKey: it.patientId, appointmentIdKey: it.id];
-
+            Map eventParameters = new HashMap()
+            eventParameters.put(patientIdKey, it.patientId);
+            eventParameters.put(appointmentIdKey, it.id);
 
 
             MotechEvent motechEvent = new MotechEvent(jobId, eventType, eventParameters);
 
+            log.info("Sending message to schedule appointment reminder: " + it + " job ID: " + jobId)
             eventGateway.sendEventMessage(motechEvent)
         }
 
@@ -65,17 +69,23 @@ class AppointmentReminderService {
 
     def unschedulePatientAppointmentReminders(String patientId) {
 
+        log.info("Unscheduling appointment reminders for the patient ID: " + patientId)
+
+
         appointmentReminderPatientDao.get(patientId).appointments.each {
 
 
-             //TODO set the following variables properly
-            String eventType = "???" // unschedule job event type - constant should be somewhere in the code
+             //TODO set eventType from a constant specified in motech code
+            String eventType = "UnscheduleAppointmentReminder"
 
 
             MotechEvent motechEvent = new MotechEvent(it.reminderScheduledJobId, eventType, null);
+
+            log.info("Sending message to unschedule appointment reminder: " + it + " job ID: " + jobId)
             eventGateway.sendEventMessage(motechEvent)
 
-            appointmentReminderPatientDao.removeAppointment(it)
+             log.info("Removing from the Appointment Reminder database appointment reminder: " + it)
+            appointmentReminderPatientDAO.removeAppointment(it)
         }
     }
 }

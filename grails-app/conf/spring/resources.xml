@@ -45,6 +45,7 @@
 		 http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
  	<import resource="classpath:applicationCommon.xml" />
+    <import resource="classpath:integrationCommon.xml" />
 
  	<context:annotation-config />
 	

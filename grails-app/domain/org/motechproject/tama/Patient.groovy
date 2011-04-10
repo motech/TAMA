@@ -6,7 +6,6 @@ import org.ektorp.docref.CascadeType;
 import org.ektorp.docref.DocumentReferences;
 import org.ektorp.docref.FetchType;
 import org.ektorp.support.TypeDiscriminator;
-import org.motechproject.appointmentreminder.model.Appointment;
 import org.motechproject.model.MotechAuditableDataObject;
 
 class Patient extends MotechAuditableDataObject{

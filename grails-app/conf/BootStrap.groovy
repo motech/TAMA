@@ -21,7 +21,7 @@ class BootStrap {
 		//FIXME: delete these once we have UI for managing doctor, clinic, etc.
 		String doctorXId="1"
 		String doctorYId="2"
-		String patientId="1"
+		String patientId="10"
 
 		if (!tamaClinicDao.contains(CLINIC_ID)){
 			Clinic clinic = new Clinic(

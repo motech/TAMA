@@ -1,15 +1,20 @@
 package org.motechproject.tama
 
-import java.util.Map;
-
-import org.motechproject.appointmentreminder.model.Preferences;
-import org.motechproject.appointmentreminder.model.Appointment;
-import org.motechproject.appointmentreminder.model.Patient;
+import java.util.List
+import org.motechproject.appointmentreminder.model.Patient
+import org.motechproject.appointmentreminder.model.Preferences
+import org.motechproject.appointmentreminder.model.Doctor
+import org.motechproject.appointmentreminder.model.Clinic
+import org.motechproject.appointmentreminder.model.Appointment
+import org.motechproject.tama.Appointment as TamaAppointment
+import org.motechproject.tama.Clinic as TamaClinic
+import org.motechproject.tama.Doctor as TamaDoctor
+import org.motechproject.tama.Patient as TamaPatient
+import org.motechproject.tama.PatientPreferences as TamaPreferences
 import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
 import org.motechproject.eventgateway.EventGateway
 import org.motechproject.model.MotechEvent
-import org.codehaus.groovy.grails.commons.ConfigurationHolder;
-
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 class AppointmentReminderService {
 
@@ -21,45 +26,62 @@ class AppointmentReminderService {
 	def config = ConfigurationHolder.config
 
 	def enableAppointmentReminder(Preferences preferences, List<Appointment> appointments) {
-		
+		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
+		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
+		schedulePatientAppointmentReminders (appointments)
+		patient.preferences = preferences
+		appointmentReminderPatientDAO.update(patient)
+		log.info("Completed the enabling of appointment reminder for patient id = " + preferences.patientId)
 	}
-	
-	def disableAppointmentReminder(String patientId) {
-		
+
+	def disableAppointmentReminder(Preferences preferences) {
+		log.info("Attempting to disable appointment reminder for patient id = " + preferences.patientId)
+		unschedulePatientAppointmentReminders (preferences.patientId)
+		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
+		patient.preferences = preferences 
+		appointmentReminderPatientDAO.update(patient)
+		log.info("Completed the disabling of appointment reminders for patient id = " + preferences.patientId)
 	}
-	
+
 	/**
 	 * Add a patient's preferences
 	 */
 	def addPreferences(Preferences preferences) {
-		
+		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
+		patient.preferences = preferences
+		appointmentReminderPatientDAO.update (patient)
 	}
-	
+
 	/**
 	 * Add a set of appointments
 	 */
 	def addAppointments(List<Appointment> appointments) {
-		
+		for(Appointment appointment in appointments) {
+			appointmentReminderPatientDAO.addAppointment(appointment);
+		}
 	}
-	
 
-    def schedulePatientAppointmentReminders(String patientId) {
-		Patient p = appointmentReminderPatientDAO.get(patientId)
-        appointmentReminderPatientDAO.get(patientId).appointments.each {
 
-			// TODO: Need to refactor PatientService to move job id creation here instead of in PatientService
-//            String jobId = UUID.randomUUID().toString()
-//            it.reminderScheduledJobId = jobId
-//
-//            appointmentReminderPatientDAO.addAppointment(it)
+    def schedulePatientAppointmentReminders(List<Appointment> appointments) {
+
+        appointments.each {
+
+
+            String jobId = UUID.randomUUID().toString()
+            it.reminderScheduledJobId = jobId
+
+            appointmentReminderPatientDAO.addAppointment(it)
 
             String eventType = config.tama.appointmentreminder.event.type.schedule.key
             String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
             String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
 
-            Map<String, Object> eventParameters = [patientIdKey: it.patientId, appointmentIdKey: it.id];
+            Map eventParameters = new HashMap()
+            eventParameters.put(patientIdKey, it.patientId);
+            eventParameters.put(appointmentIdKey, it.id);
 
-            MotechEvent motechEvent = new MotechEvent(it.reminderScheduledJobId, eventType, eventParameters);
+
+            MotechEvent motechEvent = new MotechEvent(jobId, eventType, eventParameters);
 
             log.info("Sending message to schedule appointment reminder: " + it + " job ID: " + jobId)
             eventGateway.sendEventMessage(motechEvent)
@@ -67,21 +89,72 @@ class AppointmentReminderService {
 
     }
 
-    def unschedulePatientAppointmentReminders(String patientId) {
+    private unschedulePatientAppointmentReminders(String patientId) {
 
-        appointmentReminderPatientDAO.get(patientId).appointments.each {
         log.info("Unscheduling appointment reminders for the patient ID: " + patientId)
 
+
         appointmentReminderPatientDAO.get(patientId).appointments.each {
-            String eventType = config.tama.appointmentreminder.event.type.unschedule.key // unschedule job event type - constant should be somewhere in the code
+
+            String eventType = config.tama.appointmentreminder.event.type.unschedule.key
+
             MotechEvent motechEvent = new MotechEvent(it.reminderScheduledJobId, eventType, null);
 
-            log.info("Sending message to unschedule appointment reminder: " + it + " job ID: " + jobId)
+            log.info("Sending message to unschedule appointment reminder: " + it + " job ID: " + it.reminderScheduledJobId)
             eventGateway.sendEventMessage(motechEvent)
 
-			// TODO: Remove reminder job id from the appointment
-            //log.info("Removing from the Appointment Reminder database appointment reminder: " + it)
-            //appointmentReminderPatientDAO.removeAppointment(it)
+             log.info("Removing from the Appointment Reminder database appointment reminder: " + it)
+            appointmentReminderPatientDAO.removeAppointment(it)
         }
     }
+	
+	/**
+	 * Convert a Tama Patient into an Appointment Reminder Patient
+	 * @param patient TAMA patient object
+	 * @param clinic TAMA clinic object
+	 * @param doctor TAMA doctor
+	 * @return Appointment Reminder Patient object
+	 */
+	def convertToAppointmentReminderPatient(TamaPatient patient, TamaClinic clinic, TamaDoctor doctor){
+		Clinic arClinic = new Clinic(id:clinic.id, name:clinic.name)
+		Doctor arDoctor = new Doctor(id:doctor.id, name:doctor.name, clinic:arClinic)
+		
+		Patient arPatient = new Patient(
+			id:patient.id,
+			clinicPatientId:patient.clinicPatientId,
+			gender:patient.gender.toString(),
+			clinic:arClinic,
+			doctor:arDoctor,
+			phoneNumber:patient.phoneNumber
+			)
+		
+		return arPatient
+	}
+	
+	/**
+	 * Convert from org.motech.tama.Appointment to org.motechproject.appointmentreminder.model.Appointment
+	 * @param appointments A list of TAMA Appointment objects
+	 * @return A list of Appointment Reminder Appointment Objects
+	 */
+	def convertToAppointmentReminderAppointments(List<TamaAppointment> appointments) {
+		List<Appointment> arAppointments = new ArrayList<Appointment>()
+		for(TamaAppointment a in appointments) {
+			arAppointments.add ( new Appointment(id:a.id, patientId:a.patientId, reminderWindowStart: a.reminderWindowStart, 
+				reminderWindowEnd:a.reminderWindowEnd, date: a.date) )
+		}
+		
+		return arAppointments
+	}
+	
+	/**
+	 * Convert the TAMA Patient Preferences into Appointment Reminder Preferences
+	 * @param preferences TAMA Patient Preferences
+	 * @param patientId Patient Id
+	 * @return Appointment Reminder Preferences
+	 */
+	def convertToAppointmentReminderPreferences(TamaPreferences preferences, String patientId) {
+		// FIXME: best time to call is not only the hour but also the minute
+		return new Preferences(enabled: preferences.appointmentReminderEnabled, patientId:patientId, bestTimeToCall: preferences.bestTimeToCallHour)
+	}
+
 }

@@ -24,7 +24,6 @@ class PatientPreferencesService {
 	ClinicDao tamaClinicDao
 	AppointmentDao tamaAppointmentDao
 	ARPatientDAO appointmentReminderPatientDAO
-	
 	AppointmentReminderService appointmentReminderService
 	
 	/**
@@ -74,93 +73,117 @@ class PatientPreferencesService {
 	 */
     private void moduleAppointmentReminder(PatientPreferences previous, PatientPreferences updated) {
 	
+		// Determine:
+		// A) has the module been enabled/disabled in this post
+		// OR
+		// B) is it enabled and has the best time to call changed
+		
 	   if (previous == null  || updated.appointmentReminderEnabled != previous.appointmentReminderEnabled) {
-		   if (updated.appointmentReminderEnabled == true) {
+		   if (updated.appointmentReminderEnabled != null && updated.appointmentReminderEnabled == Boolean.TRUE) {
 			   // Appointment Reminder has been enabled so we need to
-			   // - Store appointment and patient preferences into appointment reminder database
-			   Patient patient = tamaPatientDao.findByClinicPatientId(updated.clinicId, updated.clinicPatientId)
-			   
-			   ARPatient arPatient = appointmentReminderPatientDAO.get(patient.id)
-			   List<Appointment> appointments = tamaAppointmentDao.findByPatientId (patient.id)
-			   Set<ARAppointment> arAppointments = convertToAppointmentReminderAppointments (appointments)
-			   arPatient.appointments = arAppointments
-			   ARPreferences arPreferences = convertToAppointmentReminderPreferences(updated, patient.id)
-			   arPatient.preferences = arPreferences
-			   appointmentReminderPatientDAO.update (arPatient) // Add the patient object to the database
-			   
-			   // - Schedule appointment reminders for all appointments to occur in the future (eg if they enable it after 2 appointments we won't schedule old appointments)
-			   appointmentReminderService.schedulePatientAppointmentReminders(patient.id)
-			   
-		   } else if (previous != null && previous.appointmentReminderEnabled == true && updated.appointmentReminderEnabled == false){
+		   	   enableAppointmentReminder (previous, updated)
+		   } else if (previous != null && (previous.appointmentReminderEnabled != null && previous.appointmentReminderEnabled == Boolean.TRUE) && 
+		   				(updated.appointmentReminderEnabled == null || updated.appointmentReminderEnabled == Boolean.FALSE)){
 			   // Appointment Reminder has been disabled (when it was previously enabled) so we need to
-			   // - Unschedule appointment reminders for all appointments to occur in the future (eg if they enable it after 2 appointments we won't schedule old appointments)
-		   	   appointmentReminderService.unschedulePatientAppointmentReminders(patient.id)
-			   // - Update patient preferences accordingly
-			   Patient patient = tamaPatientDao.findByClinicPatientId(updated.clinicId, updated.clinicPatientId)
+			   disableAppointmentReminder (previous, updated)
 			   
-			   ARPatient arPatient = appointmentReminderPatientDAO.get(patient.id)
-			   ARPreferences arPreferences = convertToAppointmentReminderPreferences(updated, patient.id)
-			   arPatient.preferences = arPreferences
-			   appointmentReminderPatientDAO.update (arPatient) // Add the patient object to the database
-			   
+		   } else if (previous != null && (updated.appointmentReminderEnabled != null && updated.appointmentReminderEnabled == Boolean.TRUE) && 
+		   				(previous.bestTimeToCallHour != updated.bestTimeToCallHour || 
+							   previous.bestTimeToCallMinute != updated.bestTimeToCallMinute )) {
+			   // Best time to call has changed (and appointment reminder is enabled) so we need to disable appointment 
+			   // reminder and re-enable it with the new times
+			   // Disable
+		   	   disableAppointmentReminder (previous, updated)
+			   // Re-Enable
+			   enableAppointmentReminder (previous, updated)
+
 		   } else {
 		   	   // Just update the patient's preferences since appointment reminder was and still is disabled
 			   Patient patient = tamaPatientDao.findByClinicPatientId(updated.clinicId, updated.clinicPatientId)
 			   
 			   ARPatient arPatient = appointmentReminderPatientDAO.get(patient.id)
-			   ARPreferences arPreferences = convertToAppointmentReminderPreferences(updated, patient.id)
+			   ARPreferences arPreferences = appointmentReminderService.convertToAppointmentReminderPreferences(updated, patient.id)
 			   arPatient.preferences = arPreferences
 			   appointmentReminderPatientDAO.update (arPatient) // Add the patient object to the database
 
 		   }
-	   }
+	   } else if (previous != null && (updated.appointmentReminderEnabled != null && updated.appointmentReminderEnabled == Boolean.TRUE) &&
+	   				(previous.bestTimeToCallHour != updated.bestTimeToCallHour ||
+				     previous.bestTimeToCallMinute != updated.bestTimeToCallMinute )) {
+			// Best time to call has changed (and appointment reminder is enabled) so we need to disable appointment
+			// reminder and re-enable it with the new times
+			// Disable
+			disableAppointmentReminder (previous, updated)
+			// Re-Enable
+			enableAppointmentReminder (previous, updated)
+		}
     }
 	
-	private convertToAppointmentReminderPatient(Patient patient, Clinic clinic, Doctor doctor){
-		ARClinic arClinic = new ARClinic(id:clinic.id, name:clinic.name)
-		ARDoctor arDoctor = new ARDoctor(id:doctor.id, name:doctor.name, clinic:arClinic)
+	private void enableAppointmentReminder(PatientPreferences previous, PatientPreferences updated) {
+		// - Schedule appointment reminders
+		Patient patient = tamaPatientDao.findByClinicPatientId(updated.clinicId, updated.clinicPatientId)
 		
-		ARPatient arPatient = new ARPatient(
-			id:patient.id,
-			clinicPatientId:patient.clinicPatientId,
-			gender:patient.gender.toString(),
-			clinic:arClinic,
-			doctor:arDoctor,
-			phoneNumber:patient.phoneNumber
-			)
+		List<Appointment> appointments = tamaAppointmentDao.findByPatientId (patient.id)
+		List<ARAppointment> arAppointments = appointmentReminderService.convertToAppointmentReminderAppointments(appointments)
+		ARPreferences arPreferences = appointmentReminderService.convertToAppointmentReminderPreferences(updated, patient.id)
 		
-		return arPatient
+		appointmentReminderService.enableAppointmentReminder(arPreferences, arAppointments)
+
 	}
 	
-	/**
-	 * Convert from org.motech.tama.Appointment to org.motechproject.appointmentreminder.model.Appointment
-	 * @param appointments A list of TAMA Appointment objects
-	 * @return A list of Appointment Reminder Appointment Objects
-	 */
-	private convertToAppointmentReminderAppointments(List<Appointment> appointments) {
-		Set<ARAppointment> arAppointments = new ArrayList<ARAppointment>()
-		for(Appointment a in appointments) {
-			arAppointments.add ( new ARAppointment(id:a.id, patientId:a.patientId, reminderWindowStart: a.reminderWindowStart, 
-				reminderWindowEnd:a.reminderWindowEnd, date: a.date, reminderScheduledJobId: UUID.randomUUID().toString()) )
-		}
-		
-		return arAppointments
+	private void disableAppointmentReminder(PatientPreferences previous, PatientPreferences updated) {
+		// - Unschedule appointment reminders for all appointments to occur in the future (eg if they enable it after 2 appointments we won't schedule old appointments)
+		Patient patient = tamaPatientDao.findByClinicPatientId(updated.clinicId, updated.clinicPatientId)
+		ARPreferences arPreferences = appointmentReminderService.convertToAppointmentReminderPreferences(updated, patient.id)
+		appointmentReminderService.disableAppointmentReminder(arPreferences)
 	}
 	
-	/**
-	 * Convert the TAMA Patient Preferences into Appointment Reminder Preferences
-	 * @param preferences TAMA Patient Preferences
-	 * @param patientId Patient Id
-	 * @return Appointment Reminder Preferences
-	 */
-	private convertToAppointmentReminderPreferences(PatientPreferences preferences, String patientId) {
-		// FIXME: best time to call is not only the hour but also the minute
-//		ARPreferences arPreferences = new ARPreferences();
-//		arPreferences.enabled = preferences.appointmentReminderEnabled
-//		arPreferences.patientId = patientId
-//		arPreferences.bestTimeToCall = preferences.bestTimeToCallHour
-//		return arPreferences
-		return new ARPreferences(enabled: preferences.appointmentReminderEnabled, patientId:patientId, bestTimeToCall: preferences.bestTimeToCallHour)
-	}
+	
+//	private convertToAppointmentReminderPatient(Patient patient, Clinic clinic, Doctor doctor){
+//		ARClinic arClinic = new ARClinic(id:clinic.id, name:clinic.name)
+//		ARDoctor arDoctor = new ARDoctor(id:doctor.id, name:doctor.name, clinic:arClinic)
+//		
+//		ARPatient arPatient = new ARPatient(
+//			id:patient.id,
+//			clinicPatientId:patient.clinicPatientId,
+//			gender:patient.gender.toString(),
+//			clinic:arClinic,
+//			doctor:arDoctor,
+//			phoneNumber:patient.phoneNumber
+//			)
+//		
+//		return arPatient
+//	}
+//	
+//	/**
+//	 * Convert from org.motech.tama.Appointment to org.motechproject.appointmentreminder.model.Appointment
+//	 * @param appointments A list of TAMA Appointment objects
+//	 * @return A list of Appointment Reminder Appointment Objects
+//	 */
+//	private convertToAppointmentReminderAppointments(List<Appointment> appointments) {
+//		Set<ARAppointment> arAppointments = new ArrayList<ARAppointment>()
+//		for(Appointment a in appointments) {
+//			arAppointments.add ( new ARAppointment(id:a.id, patientId:a.patientId, reminderWindowStart: a.reminderWindowStart, 
+//				reminderWindowEnd:a.reminderWindowEnd, date: a.date, reminderScheduledJobId: UUID.randomUUID().toString()) )
+//		}
+//		
+//		return arAppointments
+//	}
+//	
+//	/**
+//	 * Convert the TAMA Patient Preferences into Appointment Reminder Preferences
+//	 * @param preferences TAMA Patient Preferences
+//	 * @param patientId Patient Id
+//	 * @return Appointment Reminder Preferences
+//	 */
+//	private convertToAppointmentReminderPreferences(PatientPreferences preferences, String patientId) {
+//		// FIXME: best time to call is not only the hour but also the minute
+////		ARPreferences arPreferences = new ARPreferences();
+////		arPreferences.enabled = preferences.appointmentReminderEnabled
+////		arPreferences.patientId = patientId
+////		arPreferences.bestTimeToCall = preferences.bestTimeToCallHour
+////		return arPreferences
+//		return new ARPreferences(enabled: preferences.appointmentReminderEnabled, patientId:patientId, bestTimeToCall: preferences.bestTimeToCallHour)
+//	}
 
 }

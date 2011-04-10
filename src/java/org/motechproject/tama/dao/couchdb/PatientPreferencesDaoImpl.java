@@ -20,7 +20,7 @@ public class PatientPreferencesDaoImpl extends MotechAuditableRepository<Patient
         initStandardDesignDocument();
     }
 	
-	@View( name = "findByClinicPatientId", map = "function(doc) {if (doc.clinicPatientId) {emit(doc.clinicId+':'+doc.clinicPatientId, doc._id);}}")
+	@View( name = "findByClinicPatientId", map = "function(doc) {if (doc.clinicPatientId) {emit(doc.clinicId+':'+doc.clinicPatientId	, doc._id);}}")
 	public PatientPreferences findByClinicPatientId(String clinicId, String clinicPatientId) {
 		ViewQuery q = createQuery("findByClinicPatientId").key(clinicId + ":" + clinicPatientId).includeDocs(true);
 		List<PatientPreferences> patientPrefs = db.queryView(q, PatientPreferences.class);

@@ -41,7 +41,7 @@ class PatientPreferencesController {
 			flash.message = "${message(code: 'default.patient.notfound', args: [], defaultMessage: 'Patient Not Found')}"
 			redirect(controller: "patient", action: "index" )
 		} else {
-			PatientPreferences patientPreferencesInstance = patientPreferencesService.findByClinicPatientId(session.clinicId, params.id)
+			PatientPreferences patientPreferencesInstance = patientPreferencesService.findByClinicPatientId(session.clinicId, params.clinicPatientId)
 			if (patientPreferencesInstance == null) {
 				patientPreferencesInstance = new PatientPreferences()
 				
@@ -51,7 +51,7 @@ class PatientPreferencesController {
 			}
 			
 			// Copy over preferences
-			patientPreferencesInstance.appointmentReminderEnabled = params.appointmentReminderEnabled
+			patientPreferencesInstance.appointmentReminderEnabled = (params.appointmentReminderEnabled != null ? params.appointmentReminderEnabled : Boolean.FALSE)
 			patientPreferencesInstance.bestTimeToCallHour =  new Integer(params.bestTimeToCallHour) 
 			patientPreferencesInstance.bestTimeToCallMinute =  new Integer(params.bestTimeToCallMinute) 
 	
@@ -59,8 +59,6 @@ class PatientPreferencesController {
 			if ( (patientPreferencesInstance.id == null && patientPreferencesService.createPatientPreferences( patientPreferencesInstance )) ||
 				 (patientPreferencesInstance.id != null && patientPreferencesService.updatePatientPreferences( patientPreferencesInstance )) ) {
 	
-				// TODO GLUE CODE for integrating with modules (Appointment Reminder, Pill Reminder, etc...)	
-				
 	            flash.message = "${message(code: 'default.created.message', args: [message(code: 'patientPreferences.label', default: 'PatientPreferences'), patientPreferencesInstance.clinicPatientId])}"
 	            redirect(action: "create", id: patientPreferencesInstance.clinicPatientId)
 	        }

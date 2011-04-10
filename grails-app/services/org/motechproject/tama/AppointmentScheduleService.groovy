@@ -6,8 +6,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool.Config;
 import org.codehaus.groovy.grails.commons.ConfigurationHolder;
+import org.motechproject.tama.dao.AppointmentDao;
+import org.motechproject.tama.Patient;
 
 /**
  * Service responsible for generation of appointment schedule
@@ -16,6 +19,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder;
  */
 class AppointmentScheduleService {
 	static transactional = false
+	def AppointmentDao tamaAppointmentDao
 	def config = ConfigurationHolder.config
 	/**
 	 * N is constant used to determine the start of the window (Start = End - N)
@@ -27,23 +31,18 @@ class AppointmentScheduleService {
 	 * @param registrationDate
 	 */
 	private List<Appointment> createCareSchedule(String patientId, Date registrationDate) {
-		List<Integer> offsets = Arrays.asList(7,4*7,12*7,24*7,36*7,48*7);
-		List<Appointment> careSchedule = new ArrayList<Appointment>();
-		for(int days : offsets) {
+		Appointment.Followup.values().collect {
 			Appointment appointment = new Appointment();
 			appointment.setPatientId(patientId);
+			appointment.setFollowup(it);
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(registrationDate);
-			// TODO should we set the time to 12:00 AM
-			//			cal.set(Calendar.HOUR, 0);
-			//			cal.set(Calendar.MINUTE, 0);
-			cal.add(Calendar.DATE, +days);
+			cal.setTime(DateUtils.truncate(registrationDate, Calendar.DATE));
+			cal.add(Calendar.DATE, it.days);
 			appointment.setReminderWindowEnd(cal.getTime());
 			cal.add(Calendar.DATE, -N);
 			appointment.setReminderWindowStart(cal.getTime());
-			careSchedule.add(appointment);
+			appointment
 		}
-		return careSchedule;
 	}
 
 	/**
@@ -52,7 +51,10 @@ class AppointmentScheduleService {
 	 * @param registrationDate
 	 * @return
 	 */
-	def createCareSchedule(patient, Date registrationDate) {
+	def createCareSchedule(Patient patient, Date registrationDate) {
 		return createCareSchedule(patient.id, registrationDate)
+	}
+	def findByPatient(Patient patient) {
+		return tamaAppointmentDao.findByPatientId(patient.id)
 	}
 }

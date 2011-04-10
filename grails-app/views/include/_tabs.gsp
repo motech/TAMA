@@ -1,6 +1,6 @@
 <%
 	def controllersForPatientsTab = ['patient']
-	def controllersForVisitsTab = ['visit']
+	def controllersForVisitsTab = ['appointment']
 	def controllersForIvrTab = []
 	def controllersForAlertsTab = []
 	def controllersForRegimenTab = []
@@ -13,7 +13,8 @@
 		<li class="${controllersForPatientsTab.contains(controllerName)?'active':'inactive'}">
 			<g:link controller="patient" action="show" id="${clinicPatientId}">Overview of Patient</g:link>
 		</li>
-		<li class="${controllersForVisitsTab.contains(controllerName)?'active':'inactive'}"><a href="#tabs-2">Clinic Visits</a>
+		<li class="${controllersForVisitsTab.contains(controllerName)?'active':'inactive'}">
+			<g:link controller="appointment" action="list" id="${clinicPatientId}">Clinic Visits</g:link>
 		</li>
 		<li class="${controllersForIvrTab.contains(controllerName)?'active':'inactive'}"><a href="#tabs-3">Interactions with IVR</a>
 		</li>

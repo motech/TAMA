@@ -153,8 +153,7 @@ class AppointmentReminderService {
 	 * @return Appointment Reminder Preferences
 	 */
 	def convertToAppointmentReminderPreferences(TamaPreferences preferences, String patientId) {
-		// FIXME: best time to call is not only the hour but also the minute
-		return new Preferences(enabled: preferences.appointmentReminderEnabled, patientId:patientId, bestTimeToCall: preferences.bestTimeToCallHour)
+		return new Preferences(enabled: preferences.appointmentReminderEnabled, patientId:patientId, bestTimeToCallHour: preferences.bestTimeToCallHour, bestTimeToCallMinute:preferences.bestTimeToCallMinute)
 	}
 
 }

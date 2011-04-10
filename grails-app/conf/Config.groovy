@@ -53,7 +53,7 @@ grails.exceptionresolver.params.exclude = ['password']
 
 
 // TAMA configurations
-tama.n = 6
+tama.n = 7
 tama.m = 2
 tama.appointmentreminder.event.type.schedule.key = "scheduleappointmentremindereventtype"
 tama.appointmentreminder.event.type.unschedule.key = "unscheduleappointmentremindereventtype"

@@ -18,7 +18,7 @@ class PatientPreferencesController {
 		def patientInstance = patientService.findPatientByClinicPatientId(session.clinicId, params.id)
 		
 		if (!patientInstance) {
-			flash.message = "${message(code: 'default.patient.notfound', args: [], defaultMessage: 'Patient Not Found')}"
+			flash.message = "${message(code: 'patient.notfound', args: [], defaultMessage: 'Patient Not Found')}"
 			redirect(controller: "patient", action: "index" )
 		} else {
 
@@ -38,7 +38,7 @@ class PatientPreferencesController {
 		def patientInstance = patientService.findPatientByClinicPatientId(session.clinicId, params.clinicPatientId)
 		
 		if (!patientInstance) {
-			flash.message = "${message(code: 'default.patient.notfound', args: [], defaultMessage: 'Patient Not Found')}"
+			flash.message = "${message(code: 'patient.notfound', args: [], defaultMessage: 'Patient Not Found')}"
 			redirect(controller: "patient", action: "index" )
 		} else {
 			PatientPreferences patientPreferencesInstance = patientPreferencesService.findByClinicPatientId(session.clinicId, params.clinicPatientId)
@@ -59,7 +59,7 @@ class PatientPreferencesController {
 			if ( (patientPreferencesInstance.id == null && patientPreferencesService.createPatientPreferences( patientPreferencesInstance )) ||
 				 (patientPreferencesInstance.id != null && patientPreferencesService.updatePatientPreferences( patientPreferencesInstance )) ) {
 	
-	            flash.message = "${message(code: 'default.created.message', args: [message(code: 'patientPreferences.label', default: 'PatientPreferences'), patientPreferencesInstance.clinicPatientId])}"
+	            flash.message = "${message(code: 'preferences.updated')}"
 	            redirect(action: "create", id: patientPreferencesInstance.clinicPatientId)
 	        }
 	        else {

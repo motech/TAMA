@@ -346,6 +346,10 @@ table.innerTable tr td {
 	cellspacing: 0;	
 }
 
+#twelvehour {
+	margin: 0 0 0 10px;
+}
+
 /*-----------------------Logo-----------------------*/
 #tama-logo {
 	width:150px;

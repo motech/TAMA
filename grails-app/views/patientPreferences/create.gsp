@@ -45,9 +45,33 @@
 	                	<h3>When is the most convenient time for the patient to receive calls from the IVR?</h3>
 	                	<div>Please explain to the patient that TAMA is not a person, just a computer system, so it can call the patient at any time day or night, whenever it is most convenient to the patient.</div>
 						<div>
-	                        <g:select name="bestTimeToCallHour" value="" from="${0..23}" value="${patientPreferencesInstance?.bestTimeToCallHour}"  /> : 
-	                        <g:select name="bestTimeToCallMinute" value="" from="${[00, 10, 20, 30, 40, 50]}"  value="${patientPreferencesInstance?.bestTimeToCallMinute}"  />
+	                        <g:select name="bestTimeToCallHour" value="" from="${0..23}" value="${patientPreferencesInstance?.bestTimeToCallHour}" onchange="convertTo12HourFormat();"  /> : 
+	                        <g:select name="bestTimeToCallMinute" value="" from="${[00, 10, 20, 30, 40, 50]}"  value="${patientPreferencesInstance?.bestTimeToCallMinute}"  onchange="convertTo12HourFormat();"  />
+	                        <span id="twelvehour"></span>
 						</div>
+						<script type="text/javascript">
+							function convertTo12HourFormat() {
+								var bestTimeToCallHour = $("#bestTimeToCallHour").val();
+								var bestTimeToCallMinute = $("#bestTimeToCallMinute").val();
+								var ampm = "";
+								if (bestTimeToCallHour == 0) {
+									bestTimeToCallHour = 12;
+									ampm = "AM";
+								} else if (bestTimeToCallHour > 12) {
+									bestTimeToCallHour = bestTimeToCallHour - 12;
+									ampm = "PM";
+								} else if (bestTimeToCallHour == 12) {
+									ampm = "PM";
+								} else {
+									ampm = "AM";
+								}
+
+								$("#twelvehour").text(bestTimeToCallHour + ":" + bestTimeToCallMinute + " " + ampm);
+							}
+							$(document).ready(function(){
+								convertTo12HourFormat();
+								});
+						</script>
 	                    <div>NB: The IVR will always call the patient at the selected time, except for the "Pill Reminder" calls, which will happen whenever the patient is due to take their pill(s).</div>
                     </div>
                 </div>

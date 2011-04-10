@@ -55,7 +55,10 @@ grails.exceptionresolver.params.exclude = ['password']
 // TAMA configurations
 tama.n = 6
 tama.m = 2
-
+tama.appointmentreminder.event.type.schedule.key = "scheduleappointmentremindereventtype"
+tama.appointmentreminder.event.type.unschedule.key = "unscheduleappointmentremindereventtype"
+tama.appointmentreminder.event.type.schedule.patientid.key = "PatientID"
+tama.appointmentreminder.event.type.schedule.appointmentid.key = "AppointmentID"
 // Until spring security is integrated we need to assume that the clinic id 
 // ie When you log in you are associated with a clinic and therefore that will 
 //    be placed in your session.

@@ -1,6 +1,6 @@
 package org.motechproject.tama
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder;
+import org.motechproject.tama.PatientPreferences
 
 
 class PatientPreferencesController {
@@ -8,7 +8,6 @@ class PatientPreferencesController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 	PatientPreferencesService patientPreferencesService
 	PatientService patientService
-	def config = ConfigurationHolder.config
 	
     def index = {
         redirect(action: "create", params: params)
@@ -70,7 +69,7 @@ class PatientPreferencesController {
 	        }
 		}
     }
-
+	
 /*    def show = {
         def patientPreferencesInstance = PatientPreferences.get(params.id)
         if (!patientPreferencesInstance) {

@@ -1,18 +1,24 @@
 package org.motechproject.tama
 
+import java.util.Map;
+
 import org.motechproject.appointmentreminder.model.Preferences;
 import org.motechproject.appointmentreminder.model.Appointment;
-import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDao
+import org.motechproject.appointmentreminder.model.Patient;
+import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
 import org.motechproject.eventgateway.EventGateway
 import org.motechproject.model.MotechEvent
+import org.codehaus.groovy.grails.commons.ConfigurationHolder;
+
 
 class AppointmentReminderService {
 
     static transactional = false
 
-    def ARPatientDao appointmentReminderPatientDao
+    ARPatientDAO appointmentReminderPatientDAO
     def EventGateway eventGateway
     def PatientService patientService
+	def config = ConfigurationHolder.config
 
 	def enableAppointmentReminder(Preferences preferences, List<Appointment> appointments) {
 		
@@ -38,25 +44,24 @@ class AppointmentReminderService {
 	
 
     def schedulePatientAppointmentReminders(String patientId) {
+		Patient p = appointmentReminderPatientDAO.get(patientId)
+        appointmentReminderPatientDAO.get(patientId).appointments.each {
 
-        patientService.getPatient(patientId).appointments.each {
+			// TODO: Need to refactor PatientService to move job id creation here instead of in PatientService
+//            String jobId = UUID.randomUUID().toString()
+//            it.reminderScheduledJobId = jobId
+//
+//            appointmentReminderPatientDAO.addAppointment(it)
 
+            String eventType = config.tama.appointmentreminder.event.type.schedule.key
+            String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
+            String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
 
-            String jobId = UUID.randomUUID().toString()
-            it.reminderScheduledJobId = jobId
-
-            appointmentReminderPatientDao.addAppointment(it)
-
-            //TODO set the following variables properly
-            String eventType = "???" // schedule appointment job event type - constant should be somewhere in the code
-            String patientIdKey =  "???" // constant should be somewhere in the code
-            String appointmentIdKey = "???" // constant should be somewhere in the code
-
-            eventParameters = [patientIdKey: it.patientId, appointmentIdKey: it.id];
-
+            Map<String, Object> eventParameters = [patientIdKey: it.patientId, appointmentIdKey: it.id];
 
 
-            MotechEvent motechEvent = new MotechEvent(jobId, eventType, eventParameters);
+
+            MotechEvent motechEvent = new MotechEvent(it.reminderScheduledJobId, eventType, eventParameters);
 
             eventGateway.sendEventMessage(motechEvent)
         }
@@ -65,17 +70,18 @@ class AppointmentReminderService {
 
     def unschedulePatientAppointmentReminders(String patientId) {
 
-        appointmentReminderPatientDao.get(patientId).appointments.each {
+        appointmentReminderPatientDAO.get(patientId).appointments.each {
 
 
              //TODO set the following variables properly
-            String eventType = "???" // unschedule job event type - constant should be somewhere in the code
+            String eventType = config.tama.appointmentreminder.event.type.unschedule.key // unschedule job event type - constant should be somewhere in the code
 
 
             MotechEvent motechEvent = new MotechEvent(it.reminderScheduledJobId, eventType, null);
             eventGateway.sendEventMessage(motechEvent)
 
-            appointmentReminderPatientDao.removeAppointment(it)
+			// TODO: Remove reminder job id from the appointment
+            //appointmentReminderPatientDAO.removeAppointment(it)
         }
     }
 }

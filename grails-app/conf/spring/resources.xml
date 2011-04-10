@@ -77,9 +77,11 @@
 	
 	
 	<bean id="appointmentReminderDatabase" class="org.ektorp.impl.StdCouchDbConnector">
-		<constructor-arg value="appointments" />
+		<constructor-arg value="appointment_reminder_patients" />
 		<constructor-arg ref="couchDbInstance" />
 	</bean>
-	<bean id="appointmentReminderPatientDAO" class="org.motechproject.appointmentreminder.dao.couchdb.PatientDAOImpl" />
+	
+	<bean id="appointmentReminderPatientDAO" class="org.motechproject.appointmentreminder.dao.couchdb.PatientDAOImpl"/>
+	
 	
 </beans>

@@ -83,7 +83,7 @@ class PatientService {
 		arPatient.gender = patient.gender.toString()
 		arPatient.clinic = arClinic
 		arPatient.doctor = arDoctor
-		arPatient.phoneNumber = arPatient.phoneNumber
+		arPatient.phoneNumber = patient.phoneNumber
 		appointmentReminderPatientDAO.update(arPatient)
 		return arPatient
 	}

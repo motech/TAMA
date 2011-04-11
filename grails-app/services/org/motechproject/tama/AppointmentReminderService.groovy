@@ -28,9 +28,9 @@ class AppointmentReminderService {
 	def enableAppointmentReminder(Preferences preferences, List<Appointment> appointments) {
 		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
 		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
-		schedulePatientAppointmentReminders (appointments)
 		patient.preferences = preferences
 		appointmentReminderPatientDAO.update(patient)
+		schedulePatientAppointmentReminders (appointments)
 		log.info("Completed the enabling of appointment reminder for patient id = " + preferences.patientId)
 	}
 

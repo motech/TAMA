@@ -37,10 +37,14 @@ class AppointmentScheduleService {
 			appointment.setFollowup(it);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(DateUtils.truncate(registrationDate, Calendar.DATE));
-			cal.add(Calendar.DATE, it.days);
-			appointment.setReminderWindowEnd(cal.getTime());
-			cal.add(Calendar.DATE, -N);
-			appointment.setReminderWindowStart(cal.getTime());
+			if(it==Appointment.Followup.REGISTERED) {
+				appointment.setDate(cal.getTime());
+			} else {
+				cal.add(Calendar.DATE, it.days);
+				appointment.setReminderWindowEnd(cal.getTime());
+				cal.add(Calendar.DATE, -N);
+				appointment.setReminderWindowStart(cal.getTime());
+			}
 			appointment
 		}
 	}

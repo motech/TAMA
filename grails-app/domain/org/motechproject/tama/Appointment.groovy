@@ -8,7 +8,6 @@ import org.motechproject.model.MotechAuditableDataObject;
 
 class Appointment extends MotechAuditableDataObject {
 	String patientId;
-	@TypeDiscriminator
 	Date reminderWindowStart;
 	Date reminderWindowEnd;
 	Date date;
@@ -38,6 +37,7 @@ class Appointment extends MotechAuditableDataObject {
 			this.days
 		}
 	}
+	@TypeDiscriminator
 	Followup followup;
 	
 	static constraints = {

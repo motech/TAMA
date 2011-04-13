@@ -1,5 +1,5 @@
 
-<%@ page import="org.motechproject.tama.Patient;org.motechproject.tama.Constants" %>
+<%@ page import="org.motechproject.tama.Patient" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -42,7 +42,7 @@
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="patient.dateOfBirth.label" default="Date Of Birth" /></td>
                             
-                            <td valign="top" class="value"><g:formatDate format="${Constants.DATE_FORMAT}" date="${patientInstance?.dateOfBirth}" /></td>
+                            <td valign="top" class="value"><g:formatDate date="${patientInstance?.dateOfBirth}" /></td>
                             
                         </tr>
                     

@@ -25,7 +25,7 @@ class PatientPageTests extends GroovyTestCase {
         selenium.type("clinicPatientId", clinicPatientId)
         selenium.type("phoneNumber", "1234123412")
         selenium.type("confirmPhoneNumber", "1234123412")
-        selenium.type("dateOfBirth", "03-02-2000")
+        selenium.type("dateOfBirth", "03-Feb-2000")
         selenium.type("passcode", "222222")
         selenium.type("confirmPasscode", "222222")
         selenium.select("doctorId", "label=Doctor Y")
@@ -37,7 +37,7 @@ class PatientPageTests extends GroovyTestCase {
 		selenium.clickAndWaitAndWait("link=${clinicPatientId}")
 		selenium.isTextPresent(clinicPatientId)
 		selenium.isTextPresent("1234123412")
-		selenium.isTextPresent("03-02-2000")
+		selenium.isTextPresent("03-Feb-2000")
 		
 		//UPDATE
 		selenium.clickAndWaitAndWait("_action_edit")

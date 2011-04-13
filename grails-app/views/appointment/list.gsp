@@ -46,11 +46,11 @@
                             --%>
 
             				<td>${fieldValue(bean: appointmentInstance, field: "followup")}</td>
-                            <td><g:formatDate format="dd-MM-yyyy" date="${appointmentInstance.reminderWindowStart}" /></td>
-                            <td><g:formatDate format="dd-MM-yyyy" date="${appointmentInstance.reminderWindowEnd}" /></td>
+                            <td><g:formatDate date="${appointmentInstance.reminderWindowStart}" /></td>
+                            <td><g:formatDate date="${appointmentInstance.reminderWindowEnd}" /></td>
                             <td>
                             	<g:if test="${appointmentInstance.date}">
-		                            <g:formatDate format="dd-MM-yyyy" date="${appointmentInstance.date}" name="dateOfBirth"/>
+		                            <g:formatDate date="${appointmentInstance.date}" name="dateOfBirth"/>
 								</g:if>
 								<g:else>
 									<g:link elementId="appointmentDate" id="${patientInstance?.clinicPatientId}" action="list" params="[appointmentInstance:appointmentInstance]">Schedule</g:link>

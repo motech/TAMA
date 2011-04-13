@@ -1,1 +1,1 @@
-var DATE_FORMAT="dd-mm-yy"
+var DATE_FORMAT="dd-M-yy"

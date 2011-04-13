@@ -9,6 +9,6 @@ import org.springframework.beans.PropertyEditorRegistry;
 
 public class CustomPropertyEditorRegistrar implements PropertyEditorRegistrar {
 	  public void registerCustomEditors(PropertyEditorRegistry registry) {
-	      registry.registerCustomEditor(Date.class, new StructuredDateEditor(new SimpleDateFormat("dd-MM-yyyy"), true));
+	      registry.registerCustomEditor(Date.class, new StructuredDateEditor(new SimpleDateFormat("dd-MMM-yyyy"), true));
 	  }
 	} 

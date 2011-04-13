@@ -73,7 +73,7 @@
 				<td valign="top"
 					class="value ${hasErrors(bean: patientInstance, field: 'dateOfBirth', 'errors')}">
 					<g:textField name="dateOfBirth"
-						value="${formatDate(format:'dd-MM-yyyy', date:patientInstance?.dateOfBirth)}" /> 
+						value="${formatDate(date:patientInstance?.dateOfBirth)}" /> 
 						<script>
 						$(function() {
 							$( "#dateOfBirth" ).datepicker({

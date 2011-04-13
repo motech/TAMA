@@ -1,10 +1,11 @@
 package org.motechproject.tama
 
+import org.apache.commons.logging.LogFactory
 import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
+import org.motechproject.appointmentreminder.model.Clinic as ARClinic
 import org.motechproject.appointmentreminder.model.Doctor as ARDoctor
 import org.motechproject.appointmentreminder.model.Patient as ARPatient
-import org.motechproject.appointmentreminder.model.Clinic as ARClinic
-import org.motechproject.tama.dao.AppointmentDao;
+import org.motechproject.tama.dao.AppointmentDao
 import org.motechproject.tama.dao.ClinicDao
 import org.motechproject.tama.dao.DoctorDao
 import org.motechproject.tama.dao.PatientDao
@@ -12,6 +13,8 @@ import org.motechproject.tama.dao.PatientDao
 class PatientService {
 
     static transactional = false
+	
+	static final log = LogFactory.getLog(this)
 	
 	def PatientDao tamaPatientDao
 	def DoctorDao tamaDoctorDao
@@ -35,6 +38,8 @@ class PatientService {
 			patient.id = generateId()
 		}
 		tamaPatientDao.add(patient)
+		
+		log.info("Created ${patient}")
 
 		// Create Care Schedule and add Appointments to Patient database
 		appointmentScheduleService.createCareSchedule(patient, new Date()).each { tamaAppointmentDao.add(it) }
@@ -61,11 +66,16 @@ class PatientService {
 			)
 		
 		appointmentReminderPatientDAO.add(arPatient)
+		
+		log.debug("Created AR patient [id=${patient.id}]")
+		
 		return arPatient
 	}
 		
 	def updatePatient(Patient patient){
 		tamaPatientDao.update(patient)
+		
+		log.debug("Updated ${patient}")
 		
 		Clinic clinic = tamaClinicDao.get(patient.clinicId)
 		Doctor doctor = tamaDoctorDao.get(patient.doctorId)
@@ -85,14 +95,19 @@ class PatientService {
 		arPatient.doctor = arDoctor
 		arPatient.phoneNumber = patient.phoneNumber
 		appointmentReminderPatientDAO.update(arPatient)
+		
+		log.debug("Updated AR patient [id=${patient.id}]")
+		
 		return arPatient
 	}
 	
 	def deletePatient(Patient patient){
 		tamaAppointmentDao.findByPatientId(patient.id).each { tamaAppointmentDao.remove(it)   }
 		tamaPatientDao.remove(patient)
+		log.info("Deleted ${patient}")
 		ARPatient arPatient = appointmentReminderPatientDAO.get(patient.id)
 		appointmentReminderPatientDAO.remove(arPatient)
+		log.debug("Deleted AR patient [id=${patient.id}]")
 	}
 	
 	def findPatientByClinicPatientId(String clinicId, String clinicPatientId) {

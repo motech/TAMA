@@ -1,10 +1,13 @@
 package org.motechproject.tama
 
 import org.motechproject.tama.util.CustomPropertyEditorRegistrar
+import org.slf4j.LoggerFactory
 
 class PatientController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+	
+	static final log = LoggerFactory.getLogger(this)
 
 	def patientService
 	def doctorService
@@ -50,7 +53,7 @@ class PatientController {
 		def clinicId = session.clinicId
 		def clinicPatientId = params.id
 		def patientInstance = patientService.findPatientByClinicPatientId(clinicId, clinicPatientId)
-        if (!patientInstance) {
+		if (!patientInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'patient.label', default: 'Patient'), params.clinicPatientId])}"
             redirect(action: "list")
         }

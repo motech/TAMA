@@ -25,4 +25,10 @@ class Patient extends MotechAuditableDataObject{
 	Status status = Status.ACTIVE
 	@DocumentReferences(fetch = FetchType.LAZY, descendingSortOrder = true, orderBy = "windowStartDate", backReference = "patientId" )
 	Set<Appointment> appointments;
+	
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", clinicPatientId=" + clinicPatientId + ", clinicId=" + clinicId + "]";
+	}
+	
 }

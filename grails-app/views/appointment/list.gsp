@@ -16,9 +16,7 @@
             <h1>Patient ${patientInstance?.clinicPatientId}</h1><%--
             <h1><g:message code="default.list.label" args="[entityName]" /></h1>
             --%><g:render template="/include/tabs" model="${['clinicPatientId': patientInstance.clinicPatientId]}" />
-            <g:if test="${flash.message}">
-            <div class="message">${flash.message}</div>
-            </g:if>
+            <div id="message-container" class="empty-message"></div>
             <div id="visit-list" class="list">
                 <table>
                     <thead>
@@ -30,9 +28,9 @@
                             --%>
                             
                             <g:sortableColumn property="followup" title="${message(code: 'appointment.followup.label', default: 'Followup')}" />
-                            <g:sortableColumn property="reminderWindowStart" title="${message(code: 'appointment.reminderWindowStart.label', default: 'Reminder Window Start')}" />
-                            <g:sortableColumn property="reminderWindowEnd" title="${message(code: 'appointment.reminderWindowEnd.label', default: 'Reminder Window End')}" />
-                            <g:sortableColumn property="date" title="${message(code: 'appointment.date.label', default: 'Date')}" />
+                            <g:sortableColumn property="reminderWindowStart" title="${message(code: 'appointment.reminderWindowStart.label', default: 'Window Starts')}" />
+                            <g:sortableColumn property="reminderWindowEnd" title="${message(code: 'appointment.reminderWindowEnd.label', default: 'Window Ends')}" />
+                            <g:sortableColumn property="date" title="${message(code: 'appointment.date.label', default: 'Appointment Set For')}" />
                         
                         </tr>
                     </thead>
@@ -98,6 +96,7 @@
 														 	$("#save-${appointmentInstance.id}").addClass("hide");
 														 	//update the prev- so that we can use it for reset
 														 	$("#prev-${appointmentInstance.id}").val($("#text-${appointmentInstance.id}").val());
+														 	showMessage("${appointmentInstance.followup} is set for " + $("#text-${appointmentInstance.id}").val() + ".");
 														 }
 													 }
 											);
@@ -105,6 +104,14 @@
 										});										
 										
 									});
+
+									function showMessage(msg){
+									 	if (!$("#message-container").hasClass("message")){
+									 		$("#message-container").addClass("message");
+									 		$("#message-container").removeClass("empty-message");
+									    }
+									 	$("#message-container").html(msg);
+									}
 									</script>
 								</div>
                             </td>

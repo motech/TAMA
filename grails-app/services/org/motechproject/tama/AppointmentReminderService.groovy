@@ -17,6 +17,7 @@ import org.motechproject.eventgateway.EventGateway
 import org.motechproject.model.MotechEvent
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
+
 class AppointmentReminderService {
 
     static transactional = false
@@ -25,6 +26,7 @@ class AppointmentReminderService {
     def EventGateway eventGateway
     def PatientService patientService
 	def config = ConfigurationHolder.config
+	
 
 	def enableAppointmentReminder(Preferences preferences, List<Appointment> appointments) {
 		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
@@ -159,7 +161,18 @@ class AppointmentReminderService {
 	def convertToAppointmentReminderPreferences(TamaPreferences preferences, String patientId) {
 		return new Preferences(enabled: preferences.appointmentReminderEnabled, patientId:patientId, bestTimeToCallHour: preferences.bestTimeToCallHour, bestTimeToCallMinute:preferences.bestTimeToCallMinute)
 	}
-
+	
+	/**
+	 * AR service methods to save appointment date
+	 * @param appointmentId
+	 * @param date
+	 * @return
+	 */
+	def saveAppointmentDate(String appointmentId, Date date){
+		TamaAppointment appointment = tamaAppointmentDao.get(appointmentId);
+		appointment.date = date;
+		saveAppointmentDate(appointment)
+	}
 		
 	/**
 	 * Implement AR service methods to save appointment date (no need to unschedule previous appointment since scheduler automatically does this by JobID)
@@ -168,25 +181,29 @@ class AppointmentReminderService {
 	 */
 	def saveAppointmentDate(TamaAppointment appointment) {
 		// update appointment objects
-		Appointment arAppointment = appointmentReminderPatientDAO.getAppointment(appointment.id)
-		arAppointment.date = appointment.date
 		tamaAppointmentDao.update(appointment)
-		appointmentReminderPatientDAO.updateAppointment(arAppointment)
 		
-		// fire off message to AR Handler
-		String eventType = config.tama.appointmentreminder.event.type.scheduleappointment.key
-		String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
-		String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
-
-		Map eventParameters = new HashMap()
-		eventParameters.put(patientIdKey, appointment.patientId);
-		eventParameters.put(appointmentIdKey, appointment.id);
-
-
-		MotechEvent motechEvent = new MotechEvent(arAppointment.reminderScheduledJobId, eventType, eventParameters);
-
-		log.info("Sending message to schedule concrete appointment reminder: " + appointment + " job ID: " + arAppointment.reminderScheduledJobId)
-		eventGateway.sendEventMessage(motechEvent)
+		//FIXME: would not schedule appointments when appointment reminder is enabled later
+		if (appointmentReminderPatientDAO.contains(appointment.id)){
+			Appointment arAppointment = appointmentReminderPatientDAO.getAppointment(appointment.id)
+			arAppointment.date = appointment.date
+			appointmentReminderPatientDAO.updateAppointment(arAppointment)
+			
+			// fire off message to AR Handler
+			String eventType = config.tama.appointmentreminder.event.type.scheduleappointment.key
+			String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
+			String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
+	
+			Map eventParameters = new HashMap()
+			eventParameters.put(patientIdKey, appointment.patientId);
+			eventParameters.put(appointmentIdKey, appointment.id);
+	
+	
+			MotechEvent motechEvent = new MotechEvent(arAppointment.reminderScheduledJobId, eventType, eventParameters);
+	
+			log.info("Sending message to schedule concrete appointment reminder: " + appointment + " job ID: " + arAppointment.reminderScheduledJobId)
+			eventGateway.sendEventMessage(motechEvent)
+		}
 	}
 
 }

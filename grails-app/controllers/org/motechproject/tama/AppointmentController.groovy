@@ -1,6 +1,8 @@
 package org.motechproject.tama
 
-import org.motechproject.tama.dao.AppointmentDao;
+import grails.converters.JSON
+
+import org.motechproject.tama.dao.AppointmentDao
 
 class AppointmentController {
 
@@ -9,6 +11,8 @@ class AppointmentController {
 	def AppointmentDao tamaAppointmentDao
 	def PatientService patientService
 	def AppointmentScheduleService appointmentScheduleService
+	def AppointmentReminderService appointmentReminderService
+	
 	
     def index = {
         redirect(action: "list", params: params)
@@ -31,20 +35,17 @@ class AppointmentController {
         return [appointmentInstance: appointmentInstance]
     }
 
-    def save = {
+	/**
+	 * ajax call
+	 */
+    def saveAppointmentDate = {
         def appointmentInstance = new Appointment()
 		bindData(appointmentInstance, params)
-		tamaAppointmentDao.update(appointmentInstance)
-		// error handling
-        if (true) {
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'appointment.label', default: 'Appointment'), appointmentInstance.id])}"
-            redirect(action: "show", id: appointmentInstance.id)
-        }
-        else {
-            render(view: "create", model: [appointmentInstance: appointmentInstance])
-        }
+		appointmentReminderService.saveAppointmentDate(appointmentInstance.id, appointmentInstance.date)
+		//error handling
+		render Boolean.TRUE;
     }
-
+	
     def show = {
         def appointmentInstance = Appointment.get(params.id)
         if (!appointmentInstance) {

@@ -59,6 +59,10 @@ a.button:hover{
 	float:right;
 }
 
+.hide{
+	display:none !important;
+}
+
 h1 {
     color: #000;
     font-weight: bold;

@@ -6,6 +6,7 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'patience.label', default: 'Appointment')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
+        <link rel="stylesheet" href="${resource(dir:'css',file:'clinic-visits.css')}" />
     </head>
     <body><%--
         <div class="nav">
@@ -18,7 +19,7 @@
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
-            <div class="list">
+            <div id="visit-list" class="list">
                 <table>
                     <thead>
                         <tr><%--
@@ -49,22 +50,63 @@
                             <td><g:formatDate date="${appointmentInstance.reminderWindowStart}" /></td>
                             <td><g:formatDate date="${appointmentInstance.reminderWindowEnd}" /></td>
                             <td>
-                            	<g:if test="${appointmentInstance.date}">
-		                            <g:formatDate date="${appointmentInstance.date}" name="dateOfBirth"/>
-								</g:if>
-								<g:else>
-									<g:link elementId="appointmentDate" id="${patientInstance?.clinicPatientId}" action="list" params="[appointmentInstance:appointmentInstance]">Schedule</g:link>
+	                            <div class="schedule-container">
+	                            	<g:if test="${appointmentInstance.date}">
+			                            <g:set var="textValue" value="${formatDate(date:appointmentInstance.date)}" />
+			                            <g:set var="deleteShowHide" value=""/>
+									</g:if>
+									<g:else>
+			                            <g:set var="textValue" value="Schedule it now" />
+			                            <g:set var="deleteShowHide" value="hide"/>
+									</g:else>
+									<input id="text-${appointmentInstance.id}" type="text" value="${textValue}"  class="schedule"/>
+									<input id="prev-${appointmentInstance.id}" type="hidden" value="${textValue}"  class="schedule"/>
+									<a id="save-${appointmentInstance.id}" class="save hide"> </a>
+									<a id="delete-${appointmentInstance.id}" class="delete ${deleteShowHide}"> </a>
 									<script>
 									$(function() {
-										$( "#appointmentDate" ).datepicker({
+										$("#text-${appointmentInstance.id}").datepicker({
 											changeMonth: true,
-											changeYear: true,2
+											changeYear: true,
 											dateFormat: DATE_FORMAT,
-											maxDate: 0
+											maxDate: 0,
+											onSelect:function(dateText, inst) {
+												$("#save-${appointmentInstance.id}").removeClass("hide");
+												$("#delete-${appointmentInstance.id}").removeClass("hide");
+											}
 										});
+
+										$("#delete-${appointmentInstance.id}").click(function(){
+											if (!$("#save-${appointmentInstance.id}").hasClass("hide")){
+												$("#save-${appointmentInstance.id}").addClass("hide");
+												if ($("#prev-${appointmentInstance.id}").val() == "Schedule it now"){
+													$("#delete-${appointmentInstance.id}").addClass("hide");
+												}
+												$("#text-${appointmentInstance.id}").val($("#prev-${appointmentInstance.id}").val());
+											} else {
+												//TODO: ajax call
+											}
+											return false;
+										});
+
+										$("#save-${appointmentInstance.id}").click(function(){
+											$.post("${createLink(action:'saveAppointmentDate')}", 
+													{id:'${appointmentInstance.id}', 
+													 date:$("#text-${appointmentInstance.id}").val()},
+													 function(data){
+														 if (data == 'true'){
+														 	$("#save-${appointmentInstance.id}").addClass("hide");
+														 	//update the prev- so that we can use it for reset
+														 	$("#prev-${appointmentInstance.id}").val($("#text-${appointmentInstance.id}").val());
+														 }
+													 }
+											);
+											return false;
+										});										
+										
 									});
 									</script>
-								</g:else>
+								</div>
                             </td>
                         
                         </tr>

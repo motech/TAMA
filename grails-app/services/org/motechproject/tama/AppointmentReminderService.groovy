@@ -7,6 +7,7 @@ import org.motechproject.appointmentreminder.model.Doctor
 import org.motechproject.appointmentreminder.model.Clinic
 import org.motechproject.appointmentreminder.model.Appointment
 import org.motechproject.tama.Appointment as TamaAppointment
+import org.motechproject.tama.dao.AppointmentDao as TamaAppointmentDao
 import org.motechproject.tama.Clinic as TamaClinic
 import org.motechproject.tama.Doctor as TamaDoctor
 import org.motechproject.tama.Patient as TamaPatient
@@ -19,7 +20,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class AppointmentReminderService {
 
     static transactional = false
-
+	def TamaAppointmentDao tamaAppointmentDao
     def ARPatientDAO appointmentReminderPatientDAO
     def EventGateway eventGateway
     def PatientService patientService
@@ -139,8 +140,11 @@ class AppointmentReminderService {
 	def convertToAppointmentReminderAppointments(List<TamaAppointment> appointments) {
 		List<Appointment> arAppointments = new ArrayList<Appointment>()
 		for(TamaAppointment a in appointments) {
-			arAppointments.add ( new Appointment(id:a.id, patientId:a.patientId, reminderWindowStart: a.reminderWindowStart, 
-				reminderWindowEnd:a.reminderWindowEnd, date: a.date) )
+			// exclude initial registration appointment
+			if(a.followup!=TamaAppointment.Followup.REGISTERED) {
+				arAppointments.add ( new Appointment(id:a.id, patientId:a.patientId, reminderWindowStart: a.reminderWindowStart, 
+					reminderWindowEnd:a.reminderWindowEnd, date: a.date) )
+			}
 		}
 		
 		return arAppointments
@@ -154,6 +158,35 @@ class AppointmentReminderService {
 	 */
 	def convertToAppointmentReminderPreferences(TamaPreferences preferences, String patientId) {
 		return new Preferences(enabled: preferences.appointmentReminderEnabled, patientId:patientId, bestTimeToCallHour: preferences.bestTimeToCallHour, bestTimeToCallMinute:preferences.bestTimeToCallMinute)
+	}
+
+		
+	/**
+	 * Implement AR service methods to save appointment date (no need to unschedule previous appointment since scheduler automatically does this by JobID)
+	 * @param appointment
+	 * @return
+	 */
+	def saveAppointmentDate(TamaAppointment appointment) {
+		// update appointment objects
+		Appointment arAppointment = appointmentReminderPatientDAO.getAppointment(appointment.id)
+		arAppointment.date = appointment.date
+		tamaAppointmentDao.update(appointment)
+		appointmentReminderPatientDAO.updateAppointment(arAppointment)
+		
+		// fire off message to AR Handler
+		String eventType = config.tama.appointmentreminder.event.type.scheduleappointment.key
+		String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
+		String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
+
+		Map eventParameters = new HashMap()
+		eventParameters.put(patientIdKey, appointment.patientId);
+		eventParameters.put(appointmentIdKey, appointment.id);
+
+
+		MotechEvent motechEvent = new MotechEvent(arAppointment.reminderScheduledJobId, eventType, eventParameters);
+
+		log.info("Sending message to schedule concrete appointment reminder: " + appointment + " job ID: " + arAppointment.reminderScheduledJobId)
+		eventGateway.sendEventMessage(motechEvent)
 	}
 
 }

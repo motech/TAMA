@@ -83,7 +83,7 @@ class ClinicVisitPageTests extends GroovyTestCase {
 		
 		//cancel the schedule
 		selenium.click(xpathToDelete)
-		selenium.click("//div[div[span='4 week follow-up']]/div[3]/div/button[1]")
+		selenium.click("//div[div[span='" + followup + "']]/div[3]/div/button[1]")
 		selenium.waitForTextPresent(followup + " is cancelled")
 		assertEquals("Schedule it now", selenium.getValue(xpathToDateInput))
     }

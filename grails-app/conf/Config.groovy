@@ -57,8 +57,6 @@ tama.n = 7
 tama.m = 2
 tama.appointmentreminder.event.type.schedule.key = "scheduleappointmentremindereventtype"
 tama.appointmentreminder.event.type.unschedule.key = "unscheduleappointmentremindereventtype"
-tama.appointmentreminder.event.type.scheduleappointment.key = "scheduleconcreteappointmentremindereventtype"
-tama.appointmentreminder.event.type.unscheduleappointment.key = "unscheduleconcreteappointmentremindereventtype"
 tama.appointmentreminder.event.type.schedule.patientid.key = "PatientID"
 tama.appointmentreminder.event.type.schedule.appointmentid.key = "AppointmentID"
 // Until spring security is integrated we need to assume that the clinic id 

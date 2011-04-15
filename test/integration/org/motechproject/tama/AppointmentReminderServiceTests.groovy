@@ -1,6 +1,9 @@
 package org.motechproject.tama
 
 import java.util.List;
+
+import org.apache.commons.lang.time.DateUtils;
+import org.codehaus.groovy.grails.commons.ConfigurationHolder;
 import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
 import org.motechproject.tama.dao.AppointmentDao;
 import org.motechproject.tama.dao.ClinicDao;
@@ -18,6 +21,11 @@ class AppointmentReminderServiceTests extends GroovyTestCase {
 	def ClinicDao tamaClinicDao
 	def DoctorDao tamaDoctorDao
 	def ARPatientDAO appointmentReminderPatientDAO
+	def config = ConfigurationHolder.config
+	/**
+	 * M is constant used to determine the start of the actual appointment window (Start = End - M)
+	 */
+	private int M = config.tama.m;
 
 	static CLINIC_ID = "1234-test-clinic"
 	static DOCTOR_ID = "1234-test-doctor"
@@ -27,6 +35,8 @@ class AppointmentReminderServiceTests extends GroovyTestCase {
 	def clinic
 	def doctor
 	def patient
+	
+	List<Appointment> arAppointments
 	
 	protected void setUp() {
 		super.setUp()
@@ -50,32 +60,42 @@ class AppointmentReminderServiceTests extends GroovyTestCase {
 				doctorId:DOCTOR_ID
 		)
 		patientService.createPatient(patient)
+
+		// Schedule Window Reminders
+		List<TamaAppointment> appointments = tamaAppointmentDao.findByPatientId(patient.id)
+		assertTrue(appointments.size()>0)
+		arAppointments = appointmentReminderService.convertToAppointmentReminderAppointments(appointments)
+		assertTrue(arAppointments.size()>0)
+		appointmentReminderService.schedulePatientAppointmentReminders(arAppointments)
 	}
 
 	protected void tearDown() {
+		appointmentReminderService.unschedulePatientAppointmentReminders(patient.id)
 		patientService.deletePatient(patient)
 		tamaClinicDao.remove(clinic)
 		tamaDoctorDao.remove(doctor)
 		super.tearDown()
 	}
 
-    void testSaveAppointmentDate() {
-		// Schedule Window Reminders
-		List<TamaAppointment> appointments = tamaAppointmentDao.findByPatientId(patient.id)
-		assertTrue(appointments.size()>0)
-		List<Appointment> arAppointments = appointmentReminderService.convertToAppointmentReminderAppointments(appointments)
-		assertTrue(arAppointments.size()>0)
-//		assertTrue(appointments.size()>arAppointments.size())
-		appointmentReminderService.schedulePatientAppointmentReminders(arAppointments)
+    void testCreateDeleteAppointmentDate() {
 
-		// Create Concrete Appointments
 		for(Appointment it : arAppointments) {
+			// Create Concrete Appointments
 			TamaAppointment ta = tamaAppointmentDao.getAt(it.id)
-			Date now = new Date()
+			Date now = DateUtils.truncate(new Date(), Calendar.DATE)
 			ta.date = now
 			appointmentReminderService.saveAppointmentDate(ta)
 			Appointment arAppointment = appointmentReminderPatientDAO.getAppointment(it.id)
 			assertEquals(now, arAppointment.date)
+			assertEquals(now, arAppointment.reminderWindowEnd)
+			assertEquals(DateUtils.addDays(now, -M), arAppointment.reminderWindowStart)
+			// Delete Concrete Appointment
+			ta.date = null
+			appointmentReminderService.saveAppointmentDate(ta)
+			arAppointment = appointmentReminderPatientDAO.getAppointment(it.id)
+			assertEquals(null, arAppointment.date)
+			assertEquals(ta.reminderWindowEnd, arAppointment.reminderWindowEnd)
+			assertEquals(ta.reminderWindowStart, arAppointment.reminderWindowStart)
 		}
     }
 }

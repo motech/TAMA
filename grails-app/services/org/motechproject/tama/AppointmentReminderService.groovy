@@ -173,6 +173,16 @@ class AppointmentReminderService {
 		appointment.date = date;
 		saveAppointmentDate(appointment)
 	}
+	
+	/**
+	 * @param appointmentId
+	 * @return
+	 */
+	def deleteAppointmentDate(String appointmentId){
+		TamaAppointment appointment = tamaAppointmentDao.get(appointmentId);
+		appointment.date = null;
+		saveAppointmentDate(appointment)
+	}
 		
 	/**
 	 * Implement AR service methods to save appointment date (no need to unschedule previous appointment since scheduler automatically does this by JobID)

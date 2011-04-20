@@ -79,16 +79,17 @@ class AppointmentReminderService {
 
             appointmentReminderPatientDAO.addAppointment(it)
 
-            String eventType = config.tama.appointmentreminder.event.type.schedule.key
+            String subject = config.tama.appointmentreminder.event.schedule.subject
             String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
             String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
+            String jobIdKey = config.motech.scheduler.event.type.schedule.jobid.key;
 
             Map eventParameters = new HashMap()
             eventParameters.put(patientIdKey, it.patientId);
             eventParameters.put(appointmentIdKey, it.id);
+            eventParameters.put(jobIdKey, jobId);
 
-
-            MotechEvent motechEvent = new MotechEvent(jobId, eventType, eventParameters);
+            MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
 
             log.info("Sending message to schedule appointment reminder: " + it + " job ID: " + jobId)
             eventGateway.sendEventMessage(motechEvent)
@@ -103,9 +104,11 @@ class AppointmentReminderService {
 
         appointmentReminderPatientDAO.get(patientId).appointments.each {
 
-            String eventType = config.tama.appointmentreminder.event.type.unschedule.key
+            String subject = config.tama.appointmentreminder.event.unschedule.subject
 
-            MotechEvent motechEvent = new MotechEvent(it.reminderScheduledJobId, eventType, null);
+            Map eventParameters = new HashMap()
+            eventParameters.put(config.motech.scheduler.event.type.schedule.jobid.key, it.reminderScheduledJobId);
+            MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
 
             log.info("Sending message to unschedule appointment reminder: " + it + " job ID: " + it.reminderScheduledJobId)
             eventGateway.sendEventMessage(motechEvent)
@@ -216,15 +219,17 @@ class AppointmentReminderService {
 			appointmentReminderPatientDAO.updateAppointment(arAppointment)
 			
 			// fire off message to AR Handler
-			String eventType = config.tama.appointmentreminder.event.type.schedule.key
+			String eventType = config.tama.appointmentreminder.event.schedule.subject
 			String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
 			String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
+			String jobIdKey = config.tama.appointmentreminder.event.type.schedule.jobid.key
 
 			Map eventParameters = new HashMap()
 			eventParameters.put(patientIdKey, appointment.patientId);
 			eventParameters.put(appointmentIdKey, appointment.id);
-	
-			MotechEvent motechEvent = new MotechEvent(arAppointment.reminderScheduledJobId, eventType, eventParameters);
+			eventParameters.put(jobIdKey, arAppointment.reminderScheduledJobId);
+
+			MotechEvent motechEvent = new MotechEvent(eventType, eventParameters);
 	
 			log.info("Sending message to schedule appointment reminder: " + arAppointment + " job ID: " + arAppointment.reminderScheduledJobId)
 			eventGateway.sendEventMessage(motechEvent)

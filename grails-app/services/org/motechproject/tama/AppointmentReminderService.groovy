@@ -36,7 +36,7 @@ class AppointmentReminderService {
 		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
 		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
         patient.preferences = preferences
-        scheduleIvrCall(patient);
+        scheduleIvrCall(patient, preferences);
 		appointmentReminderPatientDAO.update(patient)
 		schedulePatientAppointmentReminders (appointments)
 		log.info("Completed the enabling of appointment reminder for patient id = " + preferences.patientId)
@@ -46,8 +46,8 @@ class AppointmentReminderService {
 		log.info("Attempting to disable appointment reminder for patient id = " + preferences.patientId)
 		unschedulePatientAppointmentReminders (preferences.patientId)
 		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
-		unscheduleIvrCall(patient);
-		patient.preferences = preferences 
+        patient.preferences = preferences
+		unscheduleIvrCall(patient, preferences);
 		appointmentReminderPatientDAO.update(patient)
 		log.info("Completed the disabling of appointment reminders for patient id = " + preferences.patientId)
 	}
@@ -75,8 +75,7 @@ class AppointmentReminderService {
 	 * @param preferences
 	 * @return
 	 */
-	def scheduleIvrCall(Patient patient) {
-        preferences = patient.preferences
+	def scheduleIvrCall(Patient patient, Preferences preferences) {
 		preferences.ivrCallJobId = UUID.randomUUID().toString()
 		String subject = config.tama.outbox.event.schedule.execution
 		String phoneNumberKey =  config.tama.outbox.event.phonenumber.key
@@ -104,11 +103,10 @@ class AppointmentReminderService {
 	 * @param preferences
 	 * @return
 	 */
-	def unscheduleIvrCall(Patient patient) {
+	def unscheduleIvrCall(Patient patient, Preferences preferences) {
 		String subject = config.tama.outbox.event.unschedule.execution
 		String jobIdKey = config.tama.outbox.event.schedule.jobid.key;
 
-        Preferences preferences = patient.preferences
 		Map eventParameters = new HashMap()
 		eventParameters.put(jobIdKey, preferences.ivrCallJobId);
 		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);

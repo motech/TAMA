@@ -44,9 +44,9 @@ class AppointmentReminderService {
 
 	def disableAppointmentReminder(Preferences preferences) {
 		log.info("Attempting to disable appointment reminder for patient id = " + preferences.patientId)
-		unscheduleIvrCall(preferences);
 		unschedulePatientAppointmentReminders (preferences.patientId)
 		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
+		unscheduleIvrCall(patient.preferences);
 		patient.preferences = preferences 
 		appointmentReminderPatientDAO.update(patient)
 		log.info("Completed the disabling of appointment reminders for patient id = " + preferences.patientId)

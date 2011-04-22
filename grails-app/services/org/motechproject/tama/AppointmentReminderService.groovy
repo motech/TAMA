@@ -34,6 +34,7 @@ class AppointmentReminderService {
 
 	def enableAppointmentReminder(Preferences preferences, List<Appointment> appointments) {
 		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
+		scheduleIvrCall(preferences);
 		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
 		patient.preferences = preferences
 		appointmentReminderPatientDAO.update(patient)
@@ -43,6 +44,7 @@ class AppointmentReminderService {
 
 	def disableAppointmentReminder(Preferences preferences) {
 		log.info("Attempting to disable appointment reminder for patient id = " + preferences.patientId)
+		unscheduleIvrCall(preferences);
 		unschedulePatientAppointmentReminders (preferences.patientId)
 		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
 		patient.preferences = preferences 
@@ -68,6 +70,48 @@ class AppointmentReminderService {
 		}
 	}
 
+	/**
+	 * Schedule IVR Call at best time 
+	 * @param preferences
+	 * @return
+	 */
+	def scheduleIvrCall(Preferences preferences) {
+		preferences.ivrCallJobId = UUID.randomUUID().toString()
+		String subject = config.tama.outbox.event.schedule.ivrcall
+		String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
+		String jobIdKey = config.motech.scheduler.event.type.schedule.jobid.key;
+		String bestHourKey = config.tama.outbox.event.ivrcall.besttimetocallhour.key
+		String bestMinuteKey = config.tama.outbox.event.ivrcall.besttimetocallminute.key
+
+		Map eventParameters = new HashMap()
+		eventParameters.put(patientIdKey, preferences.patientId);
+		eventParameters.put(jobIdKey, preferences.ivrCallJobId);
+		eventParameters.put(bestHourKey, preferences.bestTimeToCallHour);
+		eventParameters.put(bestMinuteKey, preferences.bestTimeToCallMinute);
+		
+		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
+
+		log.info("Sending message to schedule IVR Call: " + motechEvent)
+		eventGateway.sendEventMessage(motechEvent)
+	}
+	
+	
+	/**
+	 * Unschedule IVR Call
+	 * @param preferences
+	 * @return
+	 */
+	def unscheduleIvrCall(Preferences preferences) {
+		String subject = config.tama.outbox.event.unschedule.ivrcall
+		String jobIdKey = config.motech.scheduler.event.type.schedule.jobid.key;
+		
+		Map eventParameters = new HashMap()
+		eventParameters.put(jobIdKey, preferences.ivrCallJobId);
+		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
+
+		log.info("Sending message to unschedule IVR Call: " + motechEvent)
+		eventGateway.sendEventMessage(motechEvent)
+	}
 
     def schedulePatientAppointmentReminders(List<Appointment> appointments) {
 

@@ -60,6 +60,10 @@ tama.appointmentreminder.event.unschedule.subject = "org.motechproject.server.ap
 tama.appointmentreminder.event.type.schedule.patientid.key = "PatientID"
 tama.appointmentreminder.event.type.schedule.appointmentid.key = "AppointmentID"
 tama.appointmentreminder.event.type.schedule.jobid.key = "JobID"
+tama.outbox.event.schedule.ivrcall = "org.motechproject.server.outbox.schedule-ivr-call"
+tama.outbox.event.unschedule.ivrcall = "org.motechproject.server.outbox.unschedule-ivr-call"
+tama.outbox.event.ivrcall.besttimetocallhour.key = "org.motechproject.server.outbox.event.ivrcall.besttimetocallhour.key"
+tama.outbox.event.ivrcall.besttimetocallminute.key = "org.motechproject.server.outbox.event.ivrcall.besttimetocallminute.key"
 
 // Until spring security is integrated we need to assume that the clinic id 
 // ie When you log in you are associated with a clinic and therefore that will 

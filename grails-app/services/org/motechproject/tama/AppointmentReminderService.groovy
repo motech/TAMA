@@ -34,9 +34,9 @@ class AppointmentReminderService {
 
 	def enableAppointmentReminder(Preferences preferences, List<Appointment> appointments) {
 		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
-		scheduleIvrCall(preferences);
 		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
-		patient.preferences = preferences
+        patient.preferences = preferences
+        scheduleIvrCall(patient);
 		appointmentReminderPatientDAO.update(patient)
 		schedulePatientAppointmentReminders (appointments)
 		log.info("Completed the enabling of appointment reminder for patient id = " + preferences.patientId)
@@ -46,7 +46,7 @@ class AppointmentReminderService {
 		log.info("Attempting to disable appointment reminder for patient id = " + preferences.patientId)
 		unschedulePatientAppointmentReminders (preferences.patientId)
 		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
-		unscheduleIvrCall(patient.preferences);
+		unscheduleIvrCall(patient);
 		patient.preferences = preferences 
 		appointmentReminderPatientDAO.update(patient)
 		log.info("Completed the disabling of appointment reminders for patient id = " + preferences.patientId)
@@ -75,16 +75,19 @@ class AppointmentReminderService {
 	 * @param preferences
 	 * @return
 	 */
-	def scheduleIvrCall(Preferences preferences) {
+	def scheduleIvrCall(Patient patient) {
+        preferences = patient.preferences
 		preferences.ivrCallJobId = UUID.randomUUID().toString()
-		String subject = config.tama.outbox.event.schedule.ivrcall
-		String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
-		String jobIdKey = config.motech.scheduler.event.type.schedule.jobid.key;
-		String bestHourKey = config.tama.outbox.event.ivrcall.besttimetocallhour.key
-		String bestMinuteKey = config.tama.outbox.event.ivrcall.besttimetocallminute.key
+		String subject = config.tama.outbox.event.schedule.execution
+		String phoneNumberKey =  config.tama.outbox.event.phonenumber.key
+		String partyIDKey = config.tama.outbox.event.partyid.key
+		String jobIdKey = config.tama.outbox.event.schedule.jobid.key;
+		String bestHourKey = config.tama.outbox.event.besttimetocallhour.key
+		String bestMinuteKey = config.tama.outbox.event.besttimetocallminute.key
 
 		Map eventParameters = new HashMap()
-		eventParameters.put(patientIdKey, preferences.patientId);
+		eventParameters.put(phoneNumberKey, patient.phoneNumber);
+		eventParameters.put(partyIDKey, preferences.patientId);
 		eventParameters.put(jobIdKey, preferences.ivrCallJobId);
 		eventParameters.put(bestHourKey, preferences.bestTimeToCallHour);
 		eventParameters.put(bestMinuteKey, preferences.bestTimeToCallMinute);
@@ -101,10 +104,11 @@ class AppointmentReminderService {
 	 * @param preferences
 	 * @return
 	 */
-	def unscheduleIvrCall(Preferences preferences) {
-		String subject = config.tama.outbox.event.unschedule.ivrcall
-		String jobIdKey = config.motech.scheduler.event.type.schedule.jobid.key;
-		
+	def unscheduleIvrCall(Patient patient) {
+		String subject = config.tama.outbox.event.unschedule.execution
+		String jobIdKey = config.tama.outbox.event.schedule.jobid.key;
+
+        Preferences preferences = patient.preferences
 		Map eventParameters = new HashMap()
 		eventParameters.put(jobIdKey, preferences.ivrCallJobId);
 		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);

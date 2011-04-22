@@ -55,15 +55,20 @@ grails.exceptionresolver.params.exclude = ['password']
 // TAMA configurations
 tama.n = 7
 tama.m = 2
-tama.appointmentreminder.event.schedule.subject = "org.motechproject.server.appointmentreminder.schedule-reminder-call"
-tama.appointmentreminder.event.unschedule.subject = "org.motechproject.server.appointmentreminder.unschedule-reminder-call"
+tama.appointmentreminder.event.schedule.subject = "org.motechproject.server.appointmentreminder.schedule-reminder"
+tama.appointmentreminder.event.unschedule.subject = "org.motechproject.server.appointmentreminder.unschedule-reminder"
 tama.appointmentreminder.event.type.schedule.patientid.key = "PatientID"
 tama.appointmentreminder.event.type.schedule.appointmentid.key = "AppointmentID"
 tama.appointmentreminder.event.type.schedule.jobid.key = "JobID"
-tama.outbox.event.schedule.ivrcall = "org.motechproject.server.outbox.schedule-ivr-call"
-tama.outbox.event.unschedule.ivrcall = "org.motechproject.server.outbox.unschedule-ivr-call"
-tama.outbox.event.ivrcall.besttimetocallhour.key = "org.motechproject.server.outbox.event.ivrcall.besttimetocallhour.key"
-tama.outbox.event.ivrcall.besttimetocallminute.key = "org.motechproject.server.outbox.event.ivrcall.besttimetocallminute.key"
+
+tama.outbox.event.schedule.execution = "org.motechproject.server.outbox.schedule-execution"
+tama.outbox.event.unschedule.execution = "org.motechproject.server.outbox.unschedule-execution"
+tama.outbox.event.besttimetocallhour.key = "CallHour"
+tama.outbox.event.besttimetocallminute.key = "CallMinute"
+tama.outbox.event.phonenumber.key = "PhoneNumber"
+tama.outbox.event.partyid.key = "PartyID"
+tama.outbox.event.schedule.jobid.key = "JobID"
+
 
 // Until spring security is integrated we need to assume that the clinic id 
 // ie When you log in you are associated with a clinic and therefore that will 

@@ -5,6 +5,7 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.dependency.resolution = {
 	
 	pom true
+	useOrigin true
 	
     // inherit Grails' default dependencies
     inherits("global") {

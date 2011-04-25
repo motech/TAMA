@@ -38,7 +38,8 @@ class AppointmentScheduleService {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(DateUtils.truncate(registrationDate, Calendar.DATE));
 			if(it==Appointment.Followup.REGISTERED) {
-				appointment.setDate(cal.getTime());
+				//TODO: For REGISTERED, we should set a visit date, not an appoitment date
+				//appointment.setDate(cal.getTime());
 			} else {
 				cal.add(Calendar.DATE, it.days);
 				appointment.setReminderWindowEnd(cal.getTime());

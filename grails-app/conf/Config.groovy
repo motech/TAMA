@@ -55,16 +55,27 @@ grails.exceptionresolver.params.exclude = ['password']
 // TAMA configurations
 tama.n = 7
 tama.m = 2
-tama.appointmentreminder.event.type.schedule.key = "scheduleappointmentremindereventtype"
-tama.appointmentreminder.event.type.unschedule.key = "unscheduleappointmentremindereventtype"
-tama.appointmentreminder.event.type.scheduleappointment.key = "scheduleconcreteappointmentremindereventtype"
-tama.appointmentreminder.event.type.unscheduleappointment.key = "unscheduleconcreteappointmentremindereventtype"
+tama.appointmentreminder.event.schedule.subject = "org.motechproject.server.appointmentreminder.schedule-reminder"
+tama.appointmentreminder.event.unschedule.subject = "org.motechproject.server.appointmentreminder.unschedule-reminder"
 tama.appointmentreminder.event.type.schedule.patientid.key = "PatientID"
 tama.appointmentreminder.event.type.schedule.appointmentid.key = "AppointmentID"
+tama.appointmentreminder.event.type.schedule.jobid.key = "JobID"
+
+tama.outbox.event.schedule.execution = "org.motechproject.server.outbox.schedule-execution"
+tama.outbox.event.unschedule.execution = "org.motechproject.server.outbox.unschedule-execution"
+tama.outbox.event.besttimetocallhour.key = "CallHour"
+tama.outbox.event.besttimetocallminute.key = "CallMinute"
+tama.outbox.event.phonenumber.key = "PhoneNumber"
+tama.outbox.event.partyid.key = "PartyID"
+tama.outbox.event.schedule.jobid.key = "JobID"
+
+
 // Until spring security is integrated we need to assume that the clinic id 
 // ie When you log in you are associated with a clinic and therefore that will 
 //    be placed in your session.
-tama.defaultClinicId = "1234"  
+tama.defaultClinicId = "1234"
+
+motech.scheduler.event.type.schedule.jobid.key = "JobID"
 
 // set per-environment serverURL stem for creating absolute links
 environments {

@@ -46,13 +46,16 @@
 	                	<div>Please explain to the patient that TAMA is not a person, just a computer system, so it can call the patient at any time day or night, whenever it is most convenient to the patient.</div>
 						<div>
 	                        <g:select name="bestTimeToCallHour" value="" from="${0..23}" value="${patientPreferencesInstance?.bestTimeToCallHour}" onchange="convertTo12HourFormat();"  /> : 
-	                        <g:select name="bestTimeToCallMinute" value="" from="${[00, 10, 20, 30, 40, 50]}"  value="${patientPreferencesInstance?.bestTimeToCallMinute}"  onchange="convertTo12HourFormat();"  />
+	                        <g:select name="bestTimeToCallMinute" value="" from="${['00', '10', '20', '30', '40', '50']}"  value="${patientPreferencesInstance?.bestTimeToCallMinute}"  onchange="convertTo12HourFormat();"  />
 	                        <span id="twelvehour"></span>
 						</div>
 						<script type="text/javascript">
 							function convertTo12HourFormat() {
 								var bestTimeToCallHour = $("#bestTimeToCallHour").val();
 								var bestTimeToCallMinute = $("#bestTimeToCallMinute").val();
+								if (bestTimeToCallMinute == 0) {
+									bestTimeToCallMinute = "00";
+								} 
 								var ampm = "";
 								if (bestTimeToCallHour == 0) {
 									bestTimeToCallHour = 12;

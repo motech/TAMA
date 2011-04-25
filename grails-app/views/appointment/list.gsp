@@ -70,6 +70,10 @@
                             <td><g:formatDate date="${appointmentInstance.reminderWindowStart}" /></td>
                             <td><g:formatDate date="${appointmentInstance.reminderWindowEnd}" /></td>
                             <td>
+                            <g:if test="${appointmentInstance.followup.equals(Appointment.Followup.REGISTERED)}">
+                            	-
+                            </g:if>
+                            <g:else>
 	                            <div class="schedule-container">
 	                            	<g:if test="${appointmentInstance.date}">
 			                            <g:set var="textValue" value="${formatDate(date:appointmentInstance.date)}" />
@@ -160,6 +164,7 @@
 									});
 									</script>
 								</div>
+							</g:else>
                             </td>
                         
                         </tr>

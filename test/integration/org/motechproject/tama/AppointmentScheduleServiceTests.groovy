@@ -12,12 +12,11 @@ class AppointmentScheduleServiceTests extends GrailsUnitTestCase {
 		assertTrue(apps.size()>0);
 		for(a in apps) {
 			assertTrue(a.patientId==p.id);
+			assertNull(a.date);
 			if (a.followup==Appointment.Followup.REGISTERED) {
-				assertNotNull(a.date);
 				assertNull(a.reminderWindowStart);
 				assertNull(a.reminderWindowEnd);
 			} else {
-				assertNull(a.date);
 				assertTrue(a.reminderWindowStart.before(a.reminderWindowEnd));
 			}
 		}

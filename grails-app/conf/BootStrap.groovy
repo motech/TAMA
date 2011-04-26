@@ -1,19 +1,20 @@
-import org.motechproject.tama.Clinic
-import org.motechproject.tama.Doctor
-import org.motechproject.tama.Gender
-import org.motechproject.tama.InterventionProgram
-import org.motechproject.tama.Patient
 import org.motechproject.tama.PatientService
-import org.motechproject.tama.Status
-import org.motechproject.tama.dao.ClinicDao
-import org.motechproject.tama.dao.DoctorDao
-import org.motechproject.tama.dao.PatientDao
+
+import org.motechproject.tama.dao.ClinicDAO
+import org.motechproject.tama.dao.DoctorDAO
+import org.motechproject.tama.dao.PatientDAO
+import org.motechproject.tama.model.Clinic
+import org.motechproject.tama.model.Doctor
+import org.motechproject.tama.model.Patient
+import org.motechproject.tama.model.Patient.InterventionProgram
+import org.motechproject.tama.model.Patient.Status
 
 class BootStrap {
 
-	def DoctorDao tamaDoctorDao
-	def ClinicDao tamaClinicDao
-	def PatientDao tamaPatientDao
+	def PatientDAO patientDao
+	def DoctorDAO doctorDao
+	def ClinicDAO clinicDao
+
 	def PatientService patientService
 	static String CLINIC_ID="1"
 
@@ -23,33 +24,33 @@ class BootStrap {
 		String doctorYId="2"
 		String patientId="10"
 
-		if (!tamaClinicDao.contains(CLINIC_ID)){
+		if (!clinicDao.contains(CLINIC_ID)){
 			Clinic clinic = new Clinic(
 					id: CLINIC_ID,
 					name:"Test Clinic"
 					)
-			tamaClinicDao.add(clinic)
+			clinicDao.add(clinic)
 		}
 
-		if (!tamaDoctorDao.contains(doctorXId)){
+		if (!doctorDao.contains(doctorXId)){
 			Doctor doctorX = new Doctor(
 					id: doctorXId,
 					clinicId:CLINIC_ID,
 					name:"Doctor X"
 					)
-			tamaDoctorDao.add(doctorX)
+			doctorDao.add(doctorX)
 		}
 		
-		if (!tamaDoctorDao.contains(doctorYId)){
+		if (!doctorDao.contains(doctorYId)){
 			Doctor doctorY = new Doctor(
 					id: doctorYId,
 					clinicId:CLINIC_ID,
 					name:"Doctor Y"
 					)
-			tamaDoctorDao.add(doctorY)
+			doctorDao.add(doctorY)
 		}
 		
-		if (!tamaPatientDao.contains(patientId)) {
+		if (!PatientDAO.contains(patientId)) {
 			Patient patient = new Patient(
 				id:patientId,
 				clinicPatientId:"1234",

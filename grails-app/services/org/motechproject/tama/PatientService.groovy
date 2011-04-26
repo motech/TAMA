@@ -24,56 +24,56 @@ class PatientService {
 
     def listPatients() {
 		//TODO: add pagination support
-		return tamaPatientDao.getAll()
+		return patientDao.getAll()
     }
 	
 	def getPatient(String id){
-		return tamaPatientDao.get(id)
+		return patientDao.get(id)
 	}
 	
 	def createPatient(Patient patient){
 		if (!patient.id) {
 			patient.id = generateId()
 		}
-		tamaPatientDao.add(patient)
+		patientDao.add(patient)
 		
 		log.info("Created ${patient}")
 
 		// Create Care Schedule and add Appointments to Patient database
-		appointmentScheduleService.createCareSchedule(patient, new Date()).each { tamaAppointmentDao.add(it) }
+		appointmentScheduleService.createCareSchedule(patient, new Date()).each { appointmentsDao.add(it) }
 		
-		Clinic clinic = tamaClinicDao.get(patient.clinicId)
-		Doctor doctor = tamaDoctorDao.get(patient.doctorId)
+		Clinic clinic = clinicDao.get(patient.clinicId)
+		Doctor doctor = doctorDao.get(patient.doctorId)
 		
 		return patient
 	}
 	
 	def updatePatient(Patient patient){
-		tamaPatientDao.update(patient)
+		patientDao.update(patient)
 		
 		log.debug("Updated ${patient}")
 		
-		Clinic clinic = tamaClinicDao.get(patient.clinicId)
-		Doctor doctor = tamaDoctorDao.get(patient.doctorId)
+		Clinic clinic = clinicDao.get(patient.clinicId)
+		Doctor doctor = doctorDao.get(patient.doctorId)
 		
 		return patient
 	}
 
 	def deletePatient(Patient patient){
-		tamaAppointmentDao.findByPatientId(patient.id).each { tamaAppointmentDao.remove(it)   }
-		tamaPatientDao.remove(patient)
+		appointmentsDao.findByPatientId(patient.id).each { appointmentsDao.remove(it)   }
+		patientDao.remove(patient)
 
 		log.info("Deleted ${patient}")
 	}
 	
 	def findPatientByClinicPatientId(String clinicId, String clinicPatientId) {
-		return tamaPatientDao.findByClinicPatientId(clinicId, clinicPatientId);
+		return patientDao.findByClinicPatientId(clinicId, clinicPatientId);
 	}
 	
 	//FIXME: temporary workaround due to the limitation of IVR URL length. we should remove this once we can use UUID
 	private String generateId(){
 		def id
-		def patients = tamaPatientDao.getAll()
+		def patients = patientDao.getAll()
 		if (patients) {
 			try{
 				def maxId = Integer.parseInt(patients.last().id)

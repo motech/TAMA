@@ -1,29 +1,20 @@
 package org.motechproject.tama
 
-import java.util.List
-import org.motechproject.appointmentreminder.model.Patient
-import org.motechproject.appointmentreminder.model.Preferences
-import org.motechproject.appointmentreminder.model.Doctor
-import org.motechproject.appointmentreminder.model.Clinic
-import org.motechproject.appointmentreminder.model.Appointment
-import org.motechproject.tama.Appointment as TamaAppointment
-import org.motechproject.tama.dao.AppointmentDao as TamaAppointmentDao
-import org.motechproject.tama.Clinic as TamaClinic
-import org.motechproject.tama.Doctor as TamaDoctor
-import org.motechproject.tama.Patient as TamaPatient
-import org.motechproject.tama.PatientPreferences as TamaPreferences
-import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
+import org.apache.commons.lang.time.DateUtils
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.motechproject.appointments.api.dao.AppointmentsDAO
+import org.motechproject.appointments.api.model.Appointment
 import org.motechproject.eventgateway.EventGateway
 import org.motechproject.model.MotechEvent
-import org.apache.commons.lang.time.DateUtils;
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
-
+import org.motechproject.tama.dao.PatientDAO
+import org.motechproject.tama.model.Patient
+import org.motechproject.tama.model.Preferences
 
 class AppointmentReminderService {
 
     static transactional = false
-	def TamaAppointmentDao tamaAppointmentDao
-    def ARPatientDAO appointmentReminderPatientDAO
+	def AppointmentsDAO appointmentsDao
+    def PatientDAO patientDAO
     def EventGateway eventGateway
     def PatientService patientService
 	def config = ConfigurationHolder.config
@@ -34,10 +25,9 @@ class AppointmentReminderService {
 
 	def enableAppointmentReminder(Preferences preferences, List<Appointment> appointments) {
 		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
-		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
+		Patient patient = patientDAO.get(preferences.patientId)
         patient.preferences = preferences
         scheduleIvrCall(patient, preferences);
-		appointmentReminderPatientDAO.update(patient)
 		schedulePatientAppointmentReminders (appointments)
 		log.info("Completed the enabling of appointment reminder for patient id = " + preferences.patientId)
 	}
@@ -45,10 +35,10 @@ class AppointmentReminderService {
 	def disableAppointmentReminder(Preferences preferences) {
 		log.info("Attempting to disable appointment reminder for patient id = " + preferences.patientId)
 		unschedulePatientAppointmentReminders (preferences.patientId)
-		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
+		Patient patient = patientDAO.get(preferences.patientId)
         patient.preferences = preferences
 		unscheduleIvrCall(patient, preferences);
-		appointmentReminderPatientDAO.update(patient)
+		patientDAO.update(patient)
 		log.info("Completed the disabling of appointment reminders for patient id = " + preferences.patientId)
 	}
 
@@ -56,9 +46,9 @@ class AppointmentReminderService {
 	 * Add a patient's preferences
 	 */
 	def addPreferences(Preferences preferences) {
-		Patient patient = appointmentReminderPatientDAO.get(preferences.patientId)
+		Patient patient = patientDAO.get(preferences.patientId)
 		patient.preferences = preferences
-		appointmentReminderPatientDAO.update (patient)
+		patientDAO.update (patient)
 	}
 
 	/**
@@ -66,7 +56,7 @@ class AppointmentReminderService {
 	 */
 	def addAppointments(List<Appointment> appointments) {
 		for(Appointment appointment in appointments) {
-			appointmentReminderPatientDAO.addAppointment(appointment);
+			appointmentsDao.addAppointment(appointment);
 		}
 	}
 
@@ -123,7 +113,7 @@ class AppointmentReminderService {
             String jobId = UUID.randomUUID().toString()
             it.reminderScheduledJobId = jobId
 
-            appointmentReminderPatientDAO.addAppointment(it)
+            appointmentsDao.addAppointment(it)
 
             String subject = config.tama.appointmentreminder.event.schedule.subject
             String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
@@ -147,7 +137,7 @@ class AppointmentReminderService {
 
         log.info("Unscheduling appointment reminders for the patient ID: " + patientId)
 
-
+        // Todo
         appointmentReminderPatientDAO.get(patientId).appointments.each {
 
             String subject = config.tama.appointmentreminder.event.unschedule.subject
@@ -160,91 +150,17 @@ class AppointmentReminderService {
             eventGateway.sendEventMessage(motechEvent)
 
              log.info("Removing from the Appointment Reminder database appointment reminder: " + it)
-            appointmentReminderPatientDAO.removeAppointment(it)
+            appointmentsDao.removeAppointment(it)
         }
     }
-	
-	/**
-	 * Convert a Tama Patient into an Appointment Reminder Patient
-	 * @param patient TAMA patient object
-	 * @param clinic TAMA clinic object
-	 * @param doctor TAMA doctor
-	 * @return Appointment Reminder Patient object
-	 */
-	def convertToAppointmentReminderPatient(TamaPatient patient, TamaClinic clinic, TamaDoctor doctor){
-		Clinic arClinic = new Clinic(id:clinic.id, name:clinic.name)
-		Doctor arDoctor = new Doctor(id:doctor.id, name:doctor.name, clinic:arClinic)
-		
-		Patient arPatient = new Patient(
-			id:patient.id,
-			clinicPatientId:patient.clinicPatientId,
-			gender:patient.gender.toString(),
-			clinic:arClinic,
-			doctor:arDoctor,
-			phoneNumber:patient.phoneNumber
-			)
-		
-		return arPatient
-	}
-	
-	/**
-	 * Convert from org.motech.tama.Appointment to org.motechproject.appointmentreminder.model.Appointment
-	 * @param appointments A list of TAMA Appointment objects
-	 * @return A list of Appointment Reminder Appointment Objects
-	 */
-	def convertToAppointmentReminderAppointments(List<TamaAppointment> appointments) {
-		List<Appointment> arAppointments = new ArrayList<Appointment>()
-		for(TamaAppointment a in appointments) {
-			// exclude initial registration appointment
-			if(a.followup!=TamaAppointment.Followup.REGISTERED) {
-				arAppointments.add ( new Appointment(id:a.id, patientId:a.patientId, reminderWindowStart: a.reminderWindowStart, 
-					reminderWindowEnd:a.reminderWindowEnd, date: a.date) )
-			}
-		}
-		
-		return arAppointments
-	}
-	
-	/**
-	 * Convert the TAMA Patient Preferences into Appointment Reminder Preferences
-	 * @param preferences TAMA Patient Preferences
-	 * @param patientId Patient Id
-	 * @return Appointment Reminder Preferences
-	 */
-	def convertToAppointmentReminderPreferences(TamaPreferences preferences, String patientId) {
-		return new Preferences(enabled: preferences.appointmentReminderEnabled, patientId:patientId, bestTimeToCallHour: preferences.bestTimeToCallHour, bestTimeToCallMinute:preferences.bestTimeToCallMinute)
-	}
-	
-	/**
-	 * AR service methods to save appointment date
-	 * @param appointmentId
-	 * @param date
-	 * @return
-	 */
-	def saveAppointmentDate(String appointmentId, Date date){
-		TamaAppointment appointment = tamaAppointmentDao.get(appointmentId);
-		appointment.date = date;
-		saveAppointmentDate(appointment)
-	}
-	
-	/**
-	 * @param appointmentId
-	 * @return
-	 */
-	def deleteAppointmentDate(String appointmentId){
-		TamaAppointment appointment = tamaAppointmentDao.get(appointmentId);
-		appointment.date = null;
-		saveAppointmentDate(appointment)
-	}
-		
+
+
 	/**
 	 * Implement AR service methods to save appointment date (no need to unschedule previous appointment since scheduler automatically does this by JobID)
 	 * @param appointment
 	 * @return
 	 */
-	def saveAppointmentDate(TamaAppointment appointment) {
-		// update appointment objects
-		tamaAppointmentDao.update(appointment)
+	def saveAppointmentDate(Appointment appointment) {
 		
 		//FIXME: would not schedule appointments when appointment reminder is enabled later
 		if (appointmentReminderPatientDAO.contains(appointment.id)){

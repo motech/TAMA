@@ -1,16 +1,10 @@
 package org.motechproject.tama
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool.Config;
-import org.codehaus.groovy.grails.commons.ConfigurationHolder;
-import org.motechproject.tama.dao.AppointmentDao;
-import org.motechproject.tama.Patient;
+import org.apache.commons.lang.time.DateUtils
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import org.motechproject.appointments.api.dao.AppointmentsDAO
+import org.motechproject.appointments.api.model.Appointment
+import org.motechproject.tama.model.Patient
 
 /**
  * Service responsible for generation of appointment schedule
@@ -19,7 +13,7 @@ import org.motechproject.tama.Patient;
  */
 class AppointmentScheduleService {
 	static transactional = false
-	def AppointmentDao tamaAppointmentDao
+	def AppointmentsDAO appointmentsDao
 	def config = ConfigurationHolder.config
 	/**
 	 * N is constant used to determine the start of the window (Start = End - N)

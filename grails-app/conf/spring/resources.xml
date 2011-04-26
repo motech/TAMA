@@ -49,40 +49,21 @@
 
  	<context:annotation-config />
 	
-	<bean id="tamaClinicDatabase" class="org.ektorp.impl.StdCouchDbConnector">
-		<constructor-arg value="tama_clinics" />
+	<bean id="tamaDatabase" class="org.ektorp.impl.StdCouchDbConnector">
+		<constructor-arg value="tama" />
 		<constructor-arg ref="couchDbInstance" />
 	</bean>
 	
-	<bean id="tamaPatientDatabase" class="org.ektorp.impl.StdCouchDbConnector">
-		<constructor-arg value="tama_patients" />
-		<constructor-arg ref="couchDbInstance" />
-	</bean>	
+	<bean id="clinicDao" class="org.motechproject.tama.api.dao.impl.ClinicDAOImpl" />
+	<bean id="patientDao" class="org.motechproject.tama.api.dao.impl.PatientDAOImpl" />
+	<bean id="doctorDao" class="org.motechproject.tama.DoctorDAOImpl" />
 
-	<bean id="tamaDoctorDatabase" class="org.ektorp.impl.StdCouchDbConnector">
-		<constructor-arg value="tama_doctors" />
-		<constructor-arg ref="couchDbInstance" />
-	</bean>	
+	<bean id="preferencesDao" class="org.motechproject.tama.api.dao.impl.PreferencesDAOImpl" />
+	<bean id="appointmentsDao" class="org.motechproject.appointments.api.dao.impl.AppointmentCouchDBDAOImpl" />
 
-	<bean id="tamaPatientPreferenceDatabase" class="org.ektorp.impl.StdCouchDbConnector">
-		<constructor-arg value="tama_patient_preferences" />
-		<constructor-arg ref="couchDbInstance" />
-	</bean>	
-	
-	<bean id="tamaClinicDao" class="org.motechproject.tama.dao.couchdb.ClinicDaoImpl" />
-	<bean id="tamaPatientDao" class="org.motechproject.tama.dao.couchdb.PatientDaoImpl" />
-	<bean id="tamaDoctorDao" class="org.motechproject.tama.dao.couchdb.DoctorDaoImpl" />
-
-	<bean id="tamaPatientPreferencesDao" class="org.motechproject.tama.dao.couchdb.PatientPreferencesDaoImpl" />
-	<bean id="tamaAppointmentDao" class="org.motechproject.tama.dao.couchdb.AppointmentDaoImpl" />
-	
-	
-	<bean id="appointmentReminderDatabase" class="org.ektorp.impl.StdCouchDbConnector">
-		<constructor-arg value="appointment_reminder" />
+    <bean id="appointmentsDatabase" class="org.ektorp.impl.StdCouchDbConnector">
+		<constructor-arg value="motech-appointments" />
 		<constructor-arg ref="couchDbInstance" />
 	</bean>
-	
-	<bean id="appointmentReminderPatientDAO" class="org.motechproject.appointmentreminder.dao.couchdb.PatientDAOImpl"/>
-	
-	
+
 </beans>

@@ -1,18 +1,18 @@
 package org.motechproject.tama
 
-import org.motechproject.tama.dao.DoctorDao;
+import org.motechproject.tama.dao.DoctorDAO
 
 class DoctorService {
 
     static transactional = false
 
-	def DoctorDao tamaDoctorDao
+	def DoctorDAO doctorDao
 	
     def findDoctorsByClinicId(String clinicId) {
-		return tamaDoctorDao.findByClinicId(clinicId);
+		return doctorDao.findByClinicId(clinicId);
     }
 	
 	def findDoctorById(String id){
-		return tamaDoctorDao.get(id)
+		return doctorDao.get(id)
 	}
 }

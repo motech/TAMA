@@ -35,7 +35,7 @@ class AppointmentScheduleService {
                 visit.visitDate = registrationDate
                 visit.title = it
 
-                visitDao.add(visit)
+                visitDao.addVisit(visit)
 			} else {
                 Appointment appointment = new Appointment()
                 appointment.externalId = patientId
@@ -46,11 +46,11 @@ class AppointmentScheduleService {
 
                 cal.add(Calendar.DATE, it.days);
 				appointment.setDueDate(cal.getTime());
+
+                appointmentsDao.addAppointment(appointment)
+
+                appointment
 			}
-
-            appointmentsDao.add(appointment)
-
-			appointment
 		}
 	}
 

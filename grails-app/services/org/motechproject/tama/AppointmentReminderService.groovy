@@ -6,11 +6,10 @@ import org.motechproject.appointments.api.dao.AppointmentsDAO
 import org.motechproject.appointments.api.dao.RemindersDAO
 import org.motechproject.appointments.api.model.Appointment
 import org.motechproject.appointments.api.model.Reminder
-import org.motechproject.eventgateway.EventGateway
+import org.motechproject.event.EventRelay
 import org.motechproject.model.MotechEvent
 import org.motechproject.tama.api.dao.PatientDAO
 import org.motechproject.tama.api.model.Patient
-import org.motechproject.tama.api.model.Preferences
 
 class AppointmentReminderService {
 
@@ -18,7 +17,7 @@ class AppointmentReminderService {
 	def AppointmentsDAO appointmentsDao
     def RemindersDAO remindersDao
     def PatientDAO patientDAO
-    def EventGateway eventGateway
+    def EventRelay eventRelay
 	def config = ConfigurationHolder.config
 
     // Method should take into account events in the past.  No need to create reminders for them (however it doesn't matter
@@ -69,7 +68,7 @@ class AppointmentReminderService {
 		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
 
 		log.info("Sending message to schedule IVR Call: " + motechEvent)
-		eventGateway.sendEventMessage(motechEvent)
+		eventRelay.sendEventMessage(motechEvent)
 	}
 	
 	
@@ -87,7 +86,7 @@ class AppointmentReminderService {
 		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
 
 		log.info("Sending message to unschedule IVR Call: " + motechEvent)
-		eventGateway.sendEventMessage(motechEvent)
+		eventRelay.sendEventMessage(motechEvent)
 	}
 
     private unschedulePatientAppointmentReminders(String patientId) {

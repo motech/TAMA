@@ -1,5 +1,4 @@
-
-<%@ page import="org.motechproject.tama.Appointment; org.motechproject.tama.Patient" %>
+<%@ page import="org.motechproject.appointments.api.model.Appointment; org.motechproject.tama.api.model.Patient" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -49,10 +48,12 @@
                         
                             --%>
                             
-                            <g:sortableColumn property="followup" title="${message(code: 'appointment.followup.label', default: 'Followup')}" />
+                            <g:sortableColumn property="followup" title="${message(code: 'appointment.title.label', default: 'Followup')}" />
+<%--
                             <g:sortableColumn property="reminderWindowStart" title="${message(code: 'appointment.reminderWindowStart.label', default: 'Window Starts')}" />
                             <g:sortableColumn property="reminderWindowEnd" title="${message(code: 'appointment.reminderWindowEnd.label', default: 'Window Ends')}" />
-                            <g:sortableColumn property="date" title="${message(code: 'appointment.date.label', default: 'Appointment Set For')}" />
+--%>
+                            <g:sortableColumn property="date" title="${message(code: 'appointment.scheduledDate.label', default: 'Appointment Set For')}" />
                         
                         </tr>
                     </thead>
@@ -66,105 +67,106 @@
                         
                             --%>
 
-            				<td>${fieldValue(bean: appointmentInstance, field: "followup")}</td>
+            				<td>${fieldValue(bean: appointmentInstance, field: "title")}</td>
+<%--
                             <td><g:formatDate date="${appointmentInstance.reminderWindowStart}" /></td>
                             <td><g:formatDate date="${appointmentInstance.reminderWindowEnd}" /></td>
+--%>
                             <td>
-                            <g:if test="${appointmentInstance.followup.equals(Appointment.Followup.REGISTERED)}">
-                            	-
-                            </g:if>
-                            <g:else>
-	                            <div class="schedule-container">
-	                            	<g:if test="${appointmentInstance.date}">
-			                            <g:set var="textValue" value="${formatDate(date:appointmentInstance.date)}" />
-			                            <g:set var="deleteShowHide" value=""/>
-									</g:if>
-									<g:else>
-			                            <g:set var="textValue" value="Schedule it now" />
-			                            <g:set var="deleteShowHide" value="hide"/>
-									</g:else>
-									<input id="text-${appointmentInstance.id}" type="text" value="${textValue}"  class="schedule"/>
-									<input id="prev-${appointmentInstance.id}" type="hidden" value="${textValue}"  class="schedule"/>
-									<a id="save-${appointmentInstance.id}" class="save hide"> </a>
-									<a id="delete-${appointmentInstance.id}" class="delete ${deleteShowHide}"> </a>
-									
-									<div id="confirm-${appointmentInstance.id}" title="${appointmentInstance.followup}"></div>
-									
-									<script type="text/javascript">
-									$(function() {
-										$("#text-${appointmentInstance.id}").datepicker({
-											changeMonth: true,
-											changeYear: true,
-											dateFormat: DATE_FORMAT,
-											//minDate: 0,
-											minDate:"${formatDate(date:appointmentInstance.reminderWindowStart)}",
-											maxDate:"${formatDate(date:appointmentInstance.reminderWindowEnd)}",
-											onSelect:function(dateText, inst) {
-												$("#save-${appointmentInstance.id}").removeClass("hide");
-												$("#delete-${appointmentInstance.id}").removeClass("hide");
-											}
-										});
+                            <div class="schedule-container">
+                                <g:if test="${appointmentInstance.scheduledDate}">
+                                    <g:set var="textValue" value="${formatDate(date:appointmentInstance.scheduledDate)}" />
+                                    <g:set var="deleteShowHide" value=""/>
+                                </g:if>
+                                <g:else>
+                                    <g:set var="textValue" value="Schedule it now" />
+                                    <g:set var="deleteShowHide" value="hide"/>
+                                </g:else>
+                                <input id="text-${appointmentInstance.id}" type="text" value="${textValue}"  class="schedule"/>
+                                <input id="prev-${appointmentInstance.id}" type="hidden" value="${textValue}"  class="schedule"/>
+                                <a id="save-${appointmentInstance.id}" class="save hide"> </a>
+                                <a id="delete-${appointmentInstance.id}" class="delete ${deleteShowHide}"> </a>
 
-										$("#delete-${appointmentInstance.id}").click(function(){
-											if (!$("#save-${appointmentInstance.id}").hasClass("hide")){
-												$("#save-${appointmentInstance.id}").addClass("hide");
-												if ($("#prev-${appointmentInstance.id}").val() == "Schedule it now"){
-													$("#delete-${appointmentInstance.id}").addClass("hide");
-												}
-												$("#text-${appointmentInstance.id}").val($("#prev-${appointmentInstance.id}").val());
-											} else {
-												$("#confirm-${appointmentInstance.id}").html("Are you sure you want to cancel this patient's appointment on " + $("#text-${appointmentInstance.id}").val() + "?")
-												$("#confirm-${appointmentInstance.id}").dialog("open");
-											}
-											return false;
-										});
+                                <div id="confirm-${appointmentInstance.id}" title="${appointmentInstance.title}"></div>
 
-										$("#save-${appointmentInstance.id}").click(function(){
-											$.post("${createLink(action:'saveAppointmentDate')}", 
-													{id:'${appointmentInstance.id}', 
-													 date:$("#text-${appointmentInstance.id}").val()},
-													 function(data){
-														 if (data == 'true'){
-														 	$("#save-${appointmentInstance.id}").addClass("hide");
-														 	//update the prev- so that we can use it for reset
-														 	$("#prev-${appointmentInstance.id}").val($("#text-${appointmentInstance.id}").val());
-														 	showMessage("${appointmentInstance.followup} is set for " + $("#text-${appointmentInstance.id}").val() + ".");
-														 }
-													 }
-											);
-											return false;
-										});										
+                                <script type="text/javascript">
+                                $(function() {
+                                    $("#text-${appointmentInstance.id}").datepicker({
+                                        changeMonth: true,
+                                        changeYear: true,
+                                        dateFormat: DATE_FORMAT,
+                                        //minDate: 0,
+<%--
+                                        minDate:"${formatDate(date:appointmentInstance.reminderWindowStart)}",
+                                        maxDate:"${formatDate(date:appointmentInstance.reminderWindowEnd)}",
+--%>
+                                        minDate:"${formatDate(date:appointmentInstance.scheduledDate)}",
+                                        maxDate:"${formatDate(date:appointmentInstance.scheduledDate)}",
+                                        onSelect:function(dateText, inst) {
+                                            $("#save-${appointmentInstance.id}").removeClass("hide");
+                                            $("#delete-${appointmentInstance.id}").removeClass("hide");
+                                        }
+                                    });
 
-										$("#confirm-${appointmentInstance.id}").dialog({
-											resizable: false,
-											height:140,
-											modal: true,
-											autoOpen: false,
-											buttons: {
-												"Yes, cancel it": function() {
-													$( this ).dialog( "close" );
-													$.post("${createLink(action:'deleteAppointmentDate')}", 
-															{id:'${appointmentInstance.id}'},
-															 function(data){
-																 if (data == 'true'){
-																 	$("#delete-${appointmentInstance.id}").addClass("hide");
-																 	$("#text-${appointmentInstance.id}").val("Schedule it now");
-																 	//update the prev- so that we can use it for reset
-																 	$("#prev-${appointmentInstance.id}").val("Schedule it now");
-																 	showMessage("${appointmentInstance.followup} is cancelled.");
-																 }
-															 }
-													);
-												},
-												"No, keep it": function() {
-													$( this ).dialog( "close" );
-												}
-											}
-										});
-									});
-									</script>
-								</div>
-							</g:else>
+                                    $("#delete-${appointmentInstance.id}").click(function(){
+                                        if (!$("#save-${appointmentInstance.id}").hasClass("hide")){
+                                            $("#save-${appointmentInstance.id}").addClass("hide");
+                                            if ($("#prev-${appointmentInstance.id}").val() == "Schedule it now"){
+                                                $("#delete-${appointmentInstance.id}").addClass("hide");
+                                            }
+                                            $("#text-${appointmentInstance.id}").val($("#prev-${appointmentInstance.id}").val());
+                                        } else {
+                                            $("#confirm-${appointmentInstance.id}").html("Are you sure you want to cancel this patient's appointment on " + $("#text-${appointmentInstance.id}").val() + "?")
+                                            $("#confirm-${appointmentInstance.id}").dialog("open");
+                                        }
+                                        return false;
+                                    });
+
+                                    $("#save-${appointmentInstance.id}").click(function(){
+                                        $.post("${createLink(action:'saveAppointmentDate')}",
+                                                {id:'${appointmentInstance.id}',
+                                                 date:$("#text-${appointmentInstance.id}").val()},
+                                                 function(data){
+                                                     if (data == 'true'){
+                                                        $("#save-${appointmentInstance.id}").addClass("hide");
+                                                        //update the prev- so that we can use it for reset
+                                                        $("#prev-${appointmentInstance.id}").val($("#text-${appointmentInstance.id}").val());
+                                                        showMessage("${appointmentInstance.title} is set for " + $("#text-${appointmentInstance.id}").val() + ".");
+                                                     }
+                                                 }
+                                        );
+                                        return false;
+                                    });
+
+                                    $("#confirm-${appointmentInstance.id}").dialog({
+                                        resizable: false,
+                                        height:140,
+                                        modal: true,
+                                        autoOpen: false,
+                                        buttons: {
+                                            "Yes, cancel it": function() {
+                                                $( this ).dialog( "close" );
+                                                $.post("${createLink(action:'deleteAppointmentDate')}",
+                                                        {id:'${appointmentInstance.id}'},
+                                                         function(data){
+                                                             if (data == 'true'){
+                                                                $("#delete-${appointmentInstance.id}").addClass("hide");
+                                                                $("#text-${appointmentInstance.id}").val("Schedule it now");
+                                                                //update the prev- so that we can use it for reset
+                                                                $("#prev-${appointmentInstance.id}").val("Schedule it now");
+                                                                showMessage("${appointmentInstance.title} is cancelled.");
+                                                             }
+                                                         }
+                                                );
+                                            },
+                                            "No, keep it": function() {
+                                                $( this ).dialog( "close" );
+                                            }
+                                        }
+                                    });
+                                });
+                                </script>
+                            </div>
                             </td>
                         
                         </tr>

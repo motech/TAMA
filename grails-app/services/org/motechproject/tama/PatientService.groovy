@@ -40,7 +40,7 @@ class PatientService {
 		log.info("Created ${patient}")
 
 		// Create Care Schedule and add Appointments to Patient database
-		appointmentScheduleService.createCareSchedule(patient, new Date()).each { appointmentsDao.add(it) }
+		appointmentScheduleService.createCareSchedule(patient, new Date())
 		
 		Clinic clinic = clinicDao.get(patient.clinicId)
 		Doctor doctor = doctorDao.get(patient.doctorId)
@@ -60,7 +60,7 @@ class PatientService {
 	}
 
 	def deletePatient(Patient patient){
-		appointmentsDao.findByPatientId(patient.id).each { appointmentsDao.remove(it)   }
+		appointmentsDao.findByPatientId(patient.id).each { appointmentsDao.removeAppointment(it)   }
 		patientDao.remove(patient)
 
 		log.info("Deleted ${patient}")

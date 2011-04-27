@@ -54,7 +54,7 @@ class PatientController {
     def show = {
 		def clinicId = session.clinicId
 		def clinicPatientId = params.id
-		def patientInstance = patientService.findPatientByClinicPatientId(clinicId, clinicPatientId)
+		def patientInstance = patientService.findPatientByClinicIdPatientId(clinicId, clinicPatientId)
 		if (!patientInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'patient.label', default: 'Patient'), params.clinicPatientId])}"
             redirect(action: "list")
@@ -68,7 +68,7 @@ class PatientController {
     def edit = {
 		def clinicId = session.clinicId
 		def clinicPatientId = params.clinicPatientId
-		def patientInstance = patientService.findPatientByClinicPatientId(clinicId, clinicPatientId)
+		def patientInstance = patientService.findPatientByClinicIdPatientId(clinicId, clinicPatientId)
         if (!patientInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'patient.label', default: 'Patient'), params.clinicPatientId])}"
             redirect(action: "list")
@@ -119,7 +119,7 @@ class PatientController {
     def delete = {
 		def clinicId = session.clinicId
 		def clinicPatientId = params.clinicPatientId
-		def patientInstance = patientService.findPatientByClinicPatientId(clinicId, clinicPatientId)
+		def patientInstance = patientService.findPatientByClinicIdPatientId(clinicId, clinicPatientId)
         if (patientInstance) {
 			patientService.deletePatient(patientInstance)
 			flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'patient.label', default: 'Patient'), params.clinicPatientId])}"

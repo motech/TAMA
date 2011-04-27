@@ -1,6 +1,6 @@
 package org.motechproject.tama
 
-import org.motechproject.tama.dao.DoctorDAO
+import org.motechproject.tama.api.dao.DoctorDAO
 
 class DoctorService {
 

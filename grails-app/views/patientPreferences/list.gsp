@@ -1,5 +1,4 @@
-
-<%@ page import="org.motechproject.tama.PatientPreferences" %>
+<%@ page import="org.motechproject.tama.api.model.Preferences" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

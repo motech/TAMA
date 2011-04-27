@@ -2,14 +2,14 @@ package org.motechproject.tama
 
 import org.motechproject.appointments.api.dao.AppointmentsDAO
 import org.motechproject.appointments.api.model.Appointment
-import org.motechproject.tama.dao.ClinicDAO
-import org.motechproject.tama.dao.DoctorDAO
-import org.motechproject.tama.dao.PatientDAO
-import org.motechproject.tama.dao.PreferencesDAO
-import org.motechproject.tama.model.Patient
-import org.motechproject.tama.model.Preferences
+import org.motechproject.tama.api.dao.ClinicDAO
+import org.motechproject.tama.api.dao.DoctorDAO
+import org.motechproject.tama.api.dao.PatientDAO
+import org.motechproject.tama.api.dao.PreferencesDAO
+import org.motechproject.tama.api.model.Patient
+import org.motechproject.tama.api.model.Preferences
 
-class PatientPreferencesService {
+class PreferencesService {
 
     static transactional = false
 
@@ -25,7 +25,7 @@ class PatientPreferencesService {
 	 * @param patientPreferences object to be stored
 	 * @return stored object with populated id
 	 */
-	def createPatientPreferences(Preferences patientPreferences) {
+	def createPreferences(Preferences patientPreferences) {
 		preferencesDao.add(patientPreferences)
 		moduleManagement (null, patientPreferences)
 		return patientPreferences
@@ -36,7 +36,7 @@ class PatientPreferencesService {
 	 * @param patientPreferences object to be updated
 	 * @return updated object
 	 */
-	def updatePatientPreferences(Preferences patientPreferences) {
+	def updatePreferences(Preferences patientPreferences) {
 		Preferences previousPrefs = preferencesDao.get(patientPreferences.id)
 		preferencesDao.update(patientPreferences)
 		moduleManagement (previousPrefs, patientPreferences)
@@ -49,8 +49,8 @@ class PatientPreferencesService {
 	 * @param clinicPatientId the clinic id of the patient
 	 * @return An instance of the requested PatientPreferences object
 	 */
-    def findByClinicPatientId(String clinicId, String clinicPatientId) {
-		return preferencesDao.findByClinicPatientId(clinicId, clinicPatientId)
+    def findByClinicIdPatientId(String clinicId, String clinicPatientId) {
+		return preferencesDao.findByClinicIdPatientId(clinicId, clinicPatientId)
     }
 	
 	/**
@@ -111,17 +111,22 @@ class PatientPreferencesService {
 	private void enableAppointmentReminder(Preferences previous, Preferences updated) {
 		// - Schedule appointment reminders
 		Patient patient = patientDao.findByClinicPatientId(updated.clinicId, updated.clinicPatientId)
-		
+        patient.preferences = updated
+
 		List<Appointment> appointments = appointmentsDao.findByPatientId (patient.id)
 
-		appointmentReminderService.enableAppointmentReminder(Preferences, updated)
+		appointmentReminderService.enableAppointmentReminder(patient, appointments)
 
+        patientDao.update(patient)
 	}
 	
 	private void disableAppointmentReminder(Preferences previous, Preferences updated) {
-		// - Unschedule appointment reminders for all appointments to occur in the future (eg if they enable it after 2 appointments we won't schedule old appointments)
 		Patient patient = patientDao.findByClinicPatientId(updated.clinicId, updated.clinicPatientId)
-		appointmentReminderService.disableAppointmentReminder(updated)
+        patient.preferences
+
+		appointmentReminderService.disableAppointmentReminder(patient)
+
+        patientDao.update(patient)
 	}
 	
 }

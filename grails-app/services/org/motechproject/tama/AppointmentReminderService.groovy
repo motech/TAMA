@@ -3,61 +3,45 @@ package org.motechproject.tama
 import org.apache.commons.lang.time.DateUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import org.motechproject.appointments.api.dao.AppointmentsDAO
+import org.motechproject.appointments.api.dao.RemindersDAO
 import org.motechproject.appointments.api.model.Appointment
+import org.motechproject.appointments.api.model.Reminder
 import org.motechproject.eventgateway.EventGateway
 import org.motechproject.model.MotechEvent
-import org.motechproject.tama.dao.PatientDAO
-import org.motechproject.tama.model.Patient
-import org.motechproject.tama.model.Preferences
+import org.motechproject.tama.api.dao.PatientDAO
+import org.motechproject.tama.api.model.Patient
+import org.motechproject.tama.api.model.Preferences
 
 class AppointmentReminderService {
 
     static transactional = false
 	def AppointmentsDAO appointmentsDao
+    def RemindersDAO remindersDao
     def PatientDAO patientDAO
     def EventGateway eventGateway
-    def PatientService patientService
 	def config = ConfigurationHolder.config
-	/**
-	 * M is constant used to determine the start of the actual appointment window (Start = End - M)
-	 */
-	private int M = config.tama.m;
 
-	def enableAppointmentReminder(Preferences preferences, List<Appointment> appointments) {
+    // Method should take into account events in the past.  No need to create reminders for them (however it doesn't matter
+    // since they will not fire
+	def enableAppointmentReminder(Patient patient, List<Appointment> appointments) {
 		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
-		Patient patient = patientDAO.get(preferences.patientId)
-        patient.preferences = preferences
-        scheduleIvrCall(patient, preferences);
-		schedulePatientAppointmentReminders (appointments)
+
+        scheduleIvrCall(patient)
+		schedulePatientAppointmentReminders(appointments)
+
 		log.info("Completed the enabling of appointment reminder for patient id = " + preferences.patientId)
 	}
 
-	def disableAppointmentReminder(Preferences preferences) {
+	def disableAppointmentReminder(Patient patient) {
 		log.info("Attempting to disable appointment reminder for patient id = " + preferences.patientId)
+
 		unschedulePatientAppointmentReminders (preferences.patientId)
-		Patient patient = patientDAO.get(preferences.patientId)
-        patient.preferences = preferences
-		unscheduleIvrCall(patient, preferences);
+
+		unscheduleIvrCall(patient);
+
 		patientDAO.update(patient)
+
 		log.info("Completed the disabling of appointment reminders for patient id = " + preferences.patientId)
-	}
-
-	/**
-	 * Add a patient's preferences
-	 */
-	def addPreferences(Preferences preferences) {
-		Patient patient = patientDAO.get(preferences.patientId)
-		patient.preferences = preferences
-		patientDAO.update (patient)
-	}
-
-	/**
-	 * Add a set of appointments
-	 */
-	def addAppointments(List<Appointment> appointments) {
-		for(Appointment appointment in appointments) {
-			appointmentsDao.addAppointment(appointment);
-		}
 	}
 
 	/**
@@ -65,8 +49,9 @@ class AppointmentReminderService {
 	 * @param preferences
 	 * @return
 	 */
-	def scheduleIvrCall(Patient patient, Preferences preferences) {
-		preferences.ivrCallJobId = UUID.randomUUID().toString()
+	def scheduleIvrCall(Patient patient) {
+		patient.preferences.ivrCallJobId = UUID.randomUUID().toString()
+
 		String subject = config.tama.outbox.event.schedule.execution
 		String phoneNumberKey =  config.tama.outbox.event.phonenumber.key
 		String partyIDKey = config.tama.outbox.event.partyid.key
@@ -93,7 +78,7 @@ class AppointmentReminderService {
 	 * @param preferences
 	 * @return
 	 */
-	def unscheduleIvrCall(Patient patient, Preferences preferences) {
+	def unscheduleIvrCall(Patient patient) {
 		String subject = config.tama.outbox.event.unschedule.execution
 		String jobIdKey = config.tama.outbox.event.schedule.jobid.key;
 
@@ -105,97 +90,82 @@ class AppointmentReminderService {
 		eventGateway.sendEventMessage(motechEvent)
 	}
 
-    def schedulePatientAppointmentReminders(List<Appointment> appointments) {
-
-        appointments.each {
-
-
-            String jobId = UUID.randomUUID().toString()
-            it.reminderScheduledJobId = jobId
-
-            appointmentsDao.addAppointment(it)
-
-            String subject = config.tama.appointmentreminder.event.schedule.subject
-            String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
-            String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
-            String jobIdKey = config.motech.scheduler.event.type.schedule.jobid.key;
-
-            Map eventParameters = new HashMap()
-            eventParameters.put(patientIdKey, it.patientId);
-            eventParameters.put(appointmentIdKey, it.id);
-            eventParameters.put(jobIdKey, jobId);
-
-            MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
-
-            log.info("Sending message to schedule appointment reminder: " + it + " job ID: " + jobId)
-            eventGateway.sendEventMessage(motechEvent)
-        }
-
-    }
-
     private unschedulePatientAppointmentReminders(String patientId) {
 
         log.info("Unscheduling appointment reminders for the patient ID: " + patientId)
 
-        // Todo
-        appointmentReminderPatientDAO.get(patientId).appointments.each {
-
-            String subject = config.tama.appointmentreminder.event.unschedule.subject
-
-            Map eventParameters = new HashMap()
-            eventParameters.put(config.motech.scheduler.event.type.schedule.jobid.key, it.reminderScheduledJobId);
-            MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
-
-            log.info("Sending message to unschedule appointment reminder: " + it + " job ID: " + it.reminderScheduledJobId)
-            eventGateway.sendEventMessage(motechEvent)
-
-             log.info("Removing from the Appointment Reminder database appointment reminder: " + it)
-            appointmentsDao.removeAppointment(it)
+        // This implementation assumes that no other module is creating reminders against appointments.  If someone
+        // is then instead of deleting all reminders and resetting them we would need to hold references so we can
+        // disable/delete just ours
+        remindersDao.getReminders(appointment.id).each {
+            remindersDao.removeReminder(it)
         }
     }
 
-
-	/**
-	 * Implement AR service methods to save appointment date (no need to unschedule previous appointment since scheduler automatically does this by JobID)
-	 * @param appointment
+    /**
+	 * service methods to save appointment date
+	 * @param appointmentId
+	 * @param date
 	 * @return
 	 */
-	def saveAppointmentDate(Appointment appointment) {
-		
-		//FIXME: would not schedule appointments when appointment reminder is enabled later
-		if (appointmentReminderPatientDAO.contains(appointment.id)){
-			Appointment arAppointment = appointmentReminderPatientDAO.getAppointment(appointment.id)
-			arAppointment.date = appointment.date
-			
-			// check to see if we should schedule concrete appointment (handles create/delete cases)
-			if (appointment.date) {
-				// set window using M
-				arAppointment.reminderWindowStart = DateUtils.addDays(appointment.date, -M)	
-				arAppointment.reminderWindowEnd = appointment.date
-			} else {
-				// set window using care schedule
-				arAppointment.reminderWindowStart = appointment.reminderWindowStart
-				arAppointment.reminderWindowEnd = appointment.reminderWindowEnd
-			}
-			
-			appointmentReminderPatientDAO.updateAppointment(arAppointment)
-			
-			// fire off message to AR Handler
-			String eventType = config.tama.appointmentreminder.event.schedule.subject
-			String patientIdKey =  config.tama.appointmentreminder.event.type.schedule.patientid.key
-			String appointmentIdKey = config.tama.appointmentreminder.event.type.schedule.appointmentid.key
-			String jobIdKey = config.tama.appointmentreminder.event.type.schedule.jobid.key
+	def saveAppointmentScheduledDate(String appointmentId, Date date){
+		Appointment appointment = appointmentsDao.get(appointmentId);
+		appointment.scheduledDate = date;
 
-			Map eventParameters = new HashMap()
-			eventParameters.put(patientIdKey, appointment.patientId);
-			eventParameters.put(appointmentIdKey, appointment.id);
-			eventParameters.put(jobIdKey, arAppointment.reminderScheduledJobId);
+        appointmentsDao.update(appointment)
+   	}
 
-			MotechEvent motechEvent = new MotechEvent(eventType, eventParameters);
-	
-			log.info("Sending message to schedule appointment reminder: " + arAppointment + " job ID: " + arAppointment.reminderScheduledJobId)
-			eventGateway.sendEventMessage(motechEvent)
-		}
-	}
 
+    def schedulePatientAppointmentReminders(List<Appointment> appointments) {
+        appointments.each {
+            createRemindersForAppointment(it)
+        }
+    }
+
+    def createRemindersForAppointment(Appointment appointment) {
+
+        // If we have a scheduled date then we want to base our reminders off of that date.  If we do not
+        // then we want to use the due date.  We also will use a different window for scheduled v. unscheduled
+        // appointments
+        //
+        // This implementation assumes that no other module is creating reminders against appointments.  If someone
+        // is then instead of deleting all reminders and resetting them we would need to hold references so we can
+        // disable/delete just ours
+        remindersDao.getReminders(appointment.id).each {
+            remindersDao.removeReminder(it)
+        }
+
+        if (appointment.scheduledDate) {
+            /**
+             * M is constant used to determine the start of the window (Start = End - N)
+             */
+            createReminderForAppointment(appointment.id, appointment.scheduledDate, config.tama.m, 0)
+        } else {
+            /**
+             * N is constant used to determine the start of the window (Start = End - N)
+             */
+            createReminderForAppointment(appointment.id, appointment.dueDate, config.tama.n, 0)
+        }
+    }
+
+    private def createReminderForAppointment(String appointmentId, Date date, int beforeOffset, int afterOffset) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(DateUtils.truncate(date, Calendar.DATE));
+
+        Reminder reminder = new Reminder()
+        reminder.appointmentId = appointmentId
+
+        cal.add(Calendar.DATE, afterOffset)
+        reminder.endDate = cal.getTime()
+
+        cal.add(Calendar.DATE, -afterOffset);
+        cal.add(Calendar.DATE, -beforeOffset);
+        reminder.startDate = cal.getTime();
+
+        reminder.units = Reminder.intervalUnits.DAYS
+        // todo make repeatCount optional
+        reminder.repeatCount = (reminder.endDate.getTime() - reminder.startDate.getTime()) / 86400000
+
+        remindersDao.add(reminder)
+    }
 }

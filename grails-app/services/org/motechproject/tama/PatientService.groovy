@@ -2,12 +2,12 @@ package org.motechproject.tama
 
 import org.apache.commons.logging.LogFactory
 import org.motechproject.appointments.api.dao.AppointmentsDAO
-import org.motechproject.tama.dao.ClinicDAO
-import org.motechproject.tama.dao.DoctorDAO
-import org.motechproject.tama.dao.PatientDAO
-import org.motechproject.tama.model.Patient
-import org.motechproject.tama.model.Clinic
-import org.motechproject.tama.model.Doctor
+import org.motechproject.tama.api.dao.ClinicDAO
+import org.motechproject.tama.api.dao.DoctorDAO
+import org.motechproject.tama.api.dao.PatientDAO
+import org.motechproject.tama.api.model.Patient
+import org.motechproject.tama.api.model.Clinic
+import org.motechproject.tama.api.model.Doctor
 
 class PatientService {
 
@@ -66,8 +66,8 @@ class PatientService {
 		log.info("Deleted ${patient}")
 	}
 	
-	def findPatientByClinicPatientId(String clinicId, String clinicPatientId) {
-		return patientDao.findByClinicPatientId(clinicId, clinicPatientId);
+	def findPatientByClinicIdPatientId(String clinicId, String clinicPatientId) {
+		return patientDao.findByClinicIdPatientId(clinicId, clinicPatientId);
 	}
 	
 	//FIXME: temporary workaround due to the limitation of IVR URL length. we should remove this once we can use UUID

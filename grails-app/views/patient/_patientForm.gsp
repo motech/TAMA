@@ -1,4 +1,4 @@
-<%@ page import="org.motechproject.tama.Patient;org.motechproject.tama.Gender" %>
+<%@ page import="org.motechproject.tama.api.model.Patient" %>
 <div class="dialog">
 	<script type="text/javascript">
 		$(function(){
@@ -64,7 +64,7 @@
 				<td valign="top"
 					class="value ${hasErrors(bean: patientInstance, field: 'gender', 'errors')}">
 					<g:select name="gender" value="${patientInstance?.gender}"
-						from="${Gender.values()}" optionKey="key" /></td>
+						from="${Patient.Gender.values()}" optionKey="text" /></td>
 			</tr>
 
 			<tr class="prop">

@@ -2,7 +2,7 @@ package org.motechproject.tama
 
 import grails.test.*
 
-class PatientPreferencesServiceTests extends GrailsUnitTestCase {
+class PreferencesServiceTests extends GrailsUnitTestCase {
     protected void setUp() {
         super.setUp()
     }

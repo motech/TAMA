@@ -1,13 +1,14 @@
 import org.motechproject.tama.PatientService
 
-import org.motechproject.tama.dao.ClinicDAO
-import org.motechproject.tama.dao.DoctorDAO
-import org.motechproject.tama.dao.PatientDAO
-import org.motechproject.tama.model.Clinic
-import org.motechproject.tama.model.Doctor
-import org.motechproject.tama.model.Patient
-import org.motechproject.tama.model.Patient.InterventionProgram
-import org.motechproject.tama.model.Patient.Status
+import org.motechproject.tama.api.model.Patient.Gender
+import org.motechproject.tama.api.dao.ClinicDAO
+import org.motechproject.tama.api.dao.DoctorDAO
+import org.motechproject.tama.api.dao.PatientDAO
+import org.motechproject.tama.api.model.Clinic
+import org.motechproject.tama.api.model.Doctor
+import org.motechproject.tama.api.model.Patient
+import org.motechproject.tama.api.model.Patient.InterventionProgram
+import org.motechproject.tama.api.model.Patient.Status
 
 class BootStrap {
 
@@ -50,7 +51,7 @@ class BootStrap {
 			doctorDao.add(doctorY)
 		}
 		
-		if (!PatientDAO.contains(patientId)) {
+		if (!patientDao.contains(patientId)) {
 			Patient patient = new Patient(
 				id:patientId,
 				clinicPatientId:"1234",

@@ -1,6 +1,6 @@
 selenium {
-	browser = "*firefox"
-	//browser = "*googlechrome"
+	//browser = "*firefox"
+	browser = "*googlechrome"
 
 	/*
 	 slow = false									// true to run tests in slow resources mode

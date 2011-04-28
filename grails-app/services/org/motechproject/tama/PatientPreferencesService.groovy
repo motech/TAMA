@@ -6,6 +6,9 @@ import org.motechproject.tama.dao.PatientPreferencesDao
 import org.motechproject.tama.AppointmentReminderService
 import org.motechproject.tama.dao.ClinicDao
 import org.motechproject.tama.dao.DoctorDao
+import org.motechproject.tama.model.PatientPreferences
+import org.motechproject.tama.model.Patient
+import org.motechproject.tama.model.Appointment
 import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
 import org.motechproject.appointmentreminder.model.Doctor as ARDoctor
 import org.motechproject.appointmentreminder.model.Patient as ARPatient

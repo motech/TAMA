@@ -1,7 +1,6 @@
 package org.motechproject.tama
 
-import org.motechproject.tama.PatientPreferences
-
+import org.motechproject.tama.model.PatientPreferences
 
 class PatientPreferencesController {
 

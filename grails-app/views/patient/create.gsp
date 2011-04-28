@@ -1,4 +1,4 @@
-<%@ page import="org.motechproject.tama.Patient;org.motechproject.tama.Gender" %>
+<%@ page import="org.motechproject.tama.model.Patient;org.motechproject.tama.model.Gender" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

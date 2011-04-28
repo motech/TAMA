@@ -3,6 +3,7 @@ package org.motechproject.tama
 import grails.converters.JSON
 
 import org.motechproject.tama.dao.AppointmentDao
+import org.motechproject.tama.model.Appointment
 
 class AppointmentController {
 

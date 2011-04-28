@@ -10,7 +10,11 @@ import org.motechproject.tama.dao.ClinicDao;
 import org.motechproject.tama.dao.DoctorDao;
 import org.motechproject.tama.dao.PatientDao;
 import org.motechproject.appointmentreminder.model.Appointment
-import org.motechproject.tama.Appointment as TamaAppointment
+import org.motechproject.tama.model.Appointment as TamaAppointment
+import org.motechproject.tama.model.Clinic
+import org.motechproject.tama.model.Patient
+import org.motechproject.tama.model.Doctor
+import org.motechproject.tama.model.Gender
 import grails.test.*
 
 class AppointmentReminderServiceTests extends GroovyTestCase {
@@ -27,10 +31,10 @@ class AppointmentReminderServiceTests extends GroovyTestCase {
 	 */
 	private int M = config.tama.m;
 
-	static CLINIC_ID = "1234-test-clinic"
-	static DOCTOR_ID = "1234-test-doctor"
-	static PATIENT_ID = "1234-test-patient-id"
-	static CLINIC_PATIENT_ID = "1234-test-clinic-patient-id"
+	static CLINIC_ID = UUID.randomUUID().toString();
+	static DOCTOR_ID = UUID.randomUUID().toString();
+	static PATIENT_ID = UUID.randomUUID().toString();
+	static CLINIC_PATIENT_ID = UUID.randomUUID().toString();
 
 	def clinic
 	def doctor

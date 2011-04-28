@@ -9,6 +9,10 @@ import org.motechproject.tama.dao.AppointmentDao
 import org.motechproject.tama.dao.ClinicDao
 import org.motechproject.tama.dao.DoctorDao
 import org.motechproject.tama.dao.PatientDao
+import org.motechproject.tama.model.Patient
+import org.motechproject.tama.model.Clinic
+import org.motechproject.tama.model.Doctor
+
 
 class PatientService {
 
@@ -34,7 +38,7 @@ class PatientService {
 	}
 	
 	def createPatient(Patient patient){
-		if (!patient.id) {
+		if (patient.id == null) {
 			patient.id = generateId()
 		}
 		tamaPatientDao.add(patient)

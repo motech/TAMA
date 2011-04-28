@@ -1,5 +1,5 @@
 
-<%@ page import="org.motechproject.tama.Appointment; org.motechproject.tama.Patient" %>
+<%@ page import="org.motechproject.tama.model.Appointment; org.motechproject.tama.model.Patient" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

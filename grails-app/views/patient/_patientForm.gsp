@@ -1,4 +1,4 @@
-<%@ page import="org.motechproject.tama.Patient;org.motechproject.tama.Gender" %>
+<%@ page import="org.motechproject.tama.model.Patient;org.motechproject.tama.model.Gender" %>
 <div class="dialog">
 	<script type="text/javascript">
 		$(function(){

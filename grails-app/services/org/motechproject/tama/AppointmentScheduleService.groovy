@@ -10,7 +10,8 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool.Config;
 import org.codehaus.groovy.grails.commons.ConfigurationHolder;
 import org.motechproject.tama.dao.AppointmentDao;
-import org.motechproject.tama.Patient;
+import org.motechproject.tama.model.Patient;
+import org.motechproject.tama.model.Appointment;
 
 /**
  * Service responsible for generation of appointment schedule

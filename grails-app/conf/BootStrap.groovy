@@ -1,10 +1,10 @@
-import org.motechproject.tama.Clinic
-import org.motechproject.tama.Doctor
-import org.motechproject.tama.Gender
-import org.motechproject.tama.InterventionProgram
-import org.motechproject.tama.Patient
+import org.motechproject.tama.model.Clinic
+import org.motechproject.tama.model.Doctor
+import org.motechproject.tama.model.Gender
+import org.motechproject.tama.model.InterventionProgram
+import org.motechproject.tama.model.Patient
 import org.motechproject.tama.PatientService
-import org.motechproject.tama.Status
+import org.motechproject.tama.model.Status
 import org.motechproject.tama.dao.ClinicDao
 import org.motechproject.tama.dao.DoctorDao
 import org.motechproject.tama.dao.PatientDao

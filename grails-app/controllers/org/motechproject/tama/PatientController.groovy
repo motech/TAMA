@@ -2,6 +2,7 @@ package org.motechproject.tama
 
 import org.motechproject.tama.util.CustomPropertyEditorRegistrar
 import org.slf4j.LoggerFactory
+import org.motechproject.tama.model.Patient
 
 class PatientController {
 

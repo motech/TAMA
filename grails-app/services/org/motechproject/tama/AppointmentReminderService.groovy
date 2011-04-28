@@ -6,12 +6,12 @@ import org.motechproject.appointmentreminder.model.Preferences
 import org.motechproject.appointmentreminder.model.Doctor
 import org.motechproject.appointmentreminder.model.Clinic
 import org.motechproject.appointmentreminder.model.Appointment
-import org.motechproject.tama.Appointment as TamaAppointment
+import org.motechproject.tama.model.Appointment as TamaAppointment
 import org.motechproject.tama.dao.AppointmentDao as TamaAppointmentDao
-import org.motechproject.tama.Clinic as TamaClinic
-import org.motechproject.tama.Doctor as TamaDoctor
-import org.motechproject.tama.Patient as TamaPatient
-import org.motechproject.tama.PatientPreferences as TamaPreferences
+import org.motechproject.tama.model.Clinic as TamaClinic
+import org.motechproject.tama.model.Doctor as TamaDoctor
+import org.motechproject.tama.model.Patient as TamaPatient
+import org.motechproject.tama.model.PatientPreferences as TamaPreferences
 import org.motechproject.appointmentreminder.dao.PatientDAO as ARPatientDAO
 import org.motechproject.eventgateway.EventGateway
 import org.motechproject.model.MotechEvent

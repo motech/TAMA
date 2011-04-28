@@ -22,25 +22,26 @@ class AppointmentReminderService {
 
     // Method should take into account events in the past.  No need to create reminders for them (however it doesn't matter
     // since they will not fire
-	def enableAppointmentReminder(Patient patient, List<Appointment> appointments) {
-		log.info("Attempting to enable appointment reminder for patient id = " + preferences.patientId)
+	def enableAppointmentReminder(Patient patient) {
+		log.info("Attempting to enable appointment reminder for patient id = " + patient.clinicPatientId)
+
+        List<Appointment> appointments = appointmentsDao.findByExternalId(patient.id)
 
         scheduleIvrCall(patient)
 		schedulePatientAppointmentReminders(appointments)
 
-		log.info("Completed the enabling of appointment reminder for patient id = " + preferences.patientId)
+		log.info("Completed the enabling of appointment reminder for patient id = " + patient.clinicPatientId)
 	}
 
 	def disableAppointmentReminder(Patient patient) {
-		log.info("Attempting to disable appointment reminder for patient id = " + preferences.patientId)
+		log.info("Attempting to disable appointment reminder for patient id = " + patient.clinicPatientId)
 
-		unschedulePatientAppointmentReminders (preferences.patientId)
+        List<Appointment> appointments = appointmentsDao.findByExternalId(patient.id)
 
+		unschedulePatientAppointmentReminders(appointments)
 		unscheduleIvrCall(patient);
 
-		patientDAO.update(patient)
-
-		log.info("Completed the disabling of appointment reminders for patient id = " + preferences.patientId)
+		log.info("Completed the disabling of appointment reminders for patient id = " + patient.clinicPatientId)
 	}
 
 	/**
@@ -60,10 +61,10 @@ class AppointmentReminderService {
 
 		Map eventParameters = new HashMap()
 		eventParameters.put(phoneNumberKey, patient.phoneNumber);
-		eventParameters.put(partyIDKey, preferences.patientId);
-		eventParameters.put(jobIdKey, preferences.ivrCallJobId);
-		eventParameters.put(bestHourKey, preferences.bestTimeToCallHour);
-		eventParameters.put(bestMinuteKey, preferences.bestTimeToCallMinute);
+		eventParameters.put(partyIDKey, patient.clinicPatientId);
+		eventParameters.put(jobIdKey, patient.preferences.ivrCallJobId);
+		eventParameters.put(bestHourKey, patient.preferences.bestTimeToCallHour);
+		eventParameters.put(bestMinuteKey, patient.preferences.bestTimeToCallMinute);
 		
 		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
 
@@ -82,22 +83,25 @@ class AppointmentReminderService {
 		String jobIdKey = config.tama.outbox.event.schedule.jobid.key;
 
 		Map eventParameters = new HashMap()
-		eventParameters.put(jobIdKey, preferences.ivrCallJobId);
+		eventParameters.put(jobIdKey, patient.preferences.ivrCallJobId);
 		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
 
 		log.info("Sending message to unschedule IVR Call: " + motechEvent)
 		eventRelay.sendEventMessage(motechEvent)
 	}
 
-    private unschedulePatientAppointmentReminders(String patientId) {
-
-        log.info("Unscheduling appointment reminders for the patient ID: " + patientId)
+    private unschedulePatientAppointmentReminders(List<Appointment> appointments) {
 
         // This implementation assumes that no other module is creating reminders against appointments.  If someone
         // is then instead of deleting all reminders and resetting them we would need to hold references so we can
         // disable/delete just ours
-        remindersDao.getReminders(appointment.id).each {
-            remindersDao.removeReminder(it)
+
+        if (appointments.size() > 0) {
+            def appointment = appointments.get(0)
+
+            remindersDao.findByExternalId(appointment.externalId).each {
+                remindersDao.removeReminder(it)
+            }
         }
     }
 
@@ -108,10 +112,10 @@ class AppointmentReminderService {
 	 * @return
 	 */
 	def saveAppointmentScheduledDate(String appointmentId, Date date){
-		Appointment appointment = appointmentsDao.get(appointmentId);
+		Appointment appointment = appointmentsDao.getAppointment(appointmentId);
 		appointment.scheduledDate = date;
 
-        appointmentsDao.update(appointment)
+        appointmentsDao.updateAppointment(appointment)
    	}
 
 
@@ -130,7 +134,7 @@ class AppointmentReminderService {
         // This implementation assumes that no other module is creating reminders against appointments.  If someone
         // is then instead of deleting all reminders and resetting them we would need to hold references so we can
         // disable/delete just ours
-        remindersDao.getReminders(appointment.id).each {
+        remindersDao.findByAppointmentId(appointment.id).each {
             remindersDao.removeReminder(it)
         }
 
@@ -138,20 +142,21 @@ class AppointmentReminderService {
             /**
              * M is constant used to determine the start of the window (Start = End - N)
              */
-            createReminderForAppointment(appointment.id, appointment.scheduledDate, config.tama.m, 0)
+            createReminderForAppointment(appointment.externalId, appointment.id, appointment.scheduledDate, config.tama.m, 0)
         } else {
             /**
              * N is constant used to determine the start of the window (Start = End - N)
              */
-            createReminderForAppointment(appointment.id, appointment.dueDate, config.tama.n, 0)
+            createReminderForAppointment(appointment.externalId, appointment.id, appointment.dueDate, config.tama.n, 0)
         }
     }
 
-    private def createReminderForAppointment(String appointmentId, Date date, int beforeOffset, int afterOffset) {
+    private def createReminderForAppointment(String externalId, String appointmentId, Date date, int beforeOffset, int afterOffset) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(DateUtils.truncate(date, Calendar.DATE));
 
         Reminder reminder = new Reminder()
+        reminder.externalId = externalId
         reminder.appointmentId = appointmentId
 
         cal.add(Calendar.DATE, afterOffset)
@@ -165,6 +170,6 @@ class AppointmentReminderService {
         // todo make repeatCount optional
         reminder.repeatCount = (reminder.endDate.getTime() - reminder.startDate.getTime()) / 86400000
 
-        remindersDao.add(reminder)
+        remindersDao.addReminder(reminder)
     }
 }

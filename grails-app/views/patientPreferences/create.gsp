@@ -1,4 +1,4 @@
-<%@ page import="org.motechproject.tama.api.model.Preferences" %>
+<%@ page import="org.motechproject.tama.api.model.Patient; org.motechproject.tama.api.model.Preferences" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -8,8 +8,8 @@
     </head>
     <body>
         <div class="body">
-            <h1>Patient ${patientPreferencesInstance?.clinicPatientId}</h1>
-            <g:render template="/include/tabs" model="${['clinicPatientId': patientPreferencesInstance.clinicPatientId]}"  />
+            <h1>Patient ${patient.clinicPatientId}</h1>
+            <g:render template="/include/tabs" model="${['clinicPatientId': patient.clinicPatientId]}"  />
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
@@ -20,7 +20,7 @@
             </g:hasErrors>
             <h2>Patient Preferences</h2>
             <g:form action="save" >
-            	<g:hiddenField name="clinicPatientId" value="${patientPreferencesInstance.clinicPatientId}" />
+            	<g:hiddenField name="clinicPatientId" value="${patient.clinicPatientId}" />
                 <div class="dialog">
                 	<div class="fieldgroup">
 	                	<h3>Which types of calls would the patient like to receive:</h3>

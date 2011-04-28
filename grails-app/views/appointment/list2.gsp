@@ -1,4 +1,4 @@
-<%@ page import="org.motechproject.appointments.api.model.Appointment; org.motechproject.tama.api.model.Patient" %>
+<%@ page import="org.motechproject.appointments.api.model.Appointment; org.motechproject.appointments.api.model.Reminder; org.motechproject.appointments.api.model.Visit; org.motechproject.tama.api.model.Patient" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -41,42 +41,52 @@
             <div id="visit-list" class="list">
                 <table>
                     <thead>
-                        <tr><%--
-                        
-                            <g:sortableColumn property="id" title="${message(code: 'appointment.id.label', default: 'Id')}" />
-                            <g:sortableColumn property="patientId" title="${message(code: 'appointment.patientId.label', default: 'Patient Id')}" />
-                        
-                            --%>
-                            
+                        <tr>
                             <g:sortableColumn property="followup" title="${message(code: 'appointment.title.label', default: 'Followup')}" />
-                            <g:sortableColumn property="reminderWindowStart" title="${message(code: 'appointment.reminderWindowStart.label', default: 'Window Starts')}" />
-                            <g:sortableColumn property="reminderWindowEnd" title="${message(code: 'appointment.reminderWindowEnd.label', default: 'Window Ends')}" />
+                            <g:sortableColumn property="reminderWindowStart" title="${message(code: 'appointment.reminderWindowStart.label', default: 'Reminders Start')}" />
+                            <g:sortableColumn property="reminderWindowEnd" title="${message(code: 'appointment.reminderWindowEnd.label', default: 'Reminders End')}" />
+                            <g:sortableColumn property="date" title="${message(code: 'appointment.dueDate.label', default: 'Appointment Due Date')}" />
                             <g:sortableColumn property="date" title="${message(code: 'appointment.scheduledDate.label', default: 'Appointment Set For')}" />
-                        
+                            <g:sortableColumn property="date" title="${message(code: 'appointment.visitDate.label', default: 'Visit Date')}" />
                         </tr>
                     </thead>
                     <tbody>
+                    <tr class="odd">
+                        <td>Registration</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <g:if test="${visit?.visitDate}">
+                            <td><g:formatDate date="${visit.visitDate}" /></td>
+                        </g:if>
+                        <g:else>
+                            <td></td>
+                        </g:else>
+                    </tr>
                     <g:each in="${appointmentInstanceList}" status="i" var="appointmentInstance">
-                        <g:set var="windowStart" value="${appointmentInstance.dueDate.minus(7)}" />
-                        <g:set var="windowEnd" value="${appointmentInstance.dueDate}" />
+                        <g:set var="windowStart" value="" />
+                        <g:set var="windowEnd" value="" />
 
                         <g:each in="${remindersList}" var="reminder">
-                            <g:if test="${reminder && appointmentInstance.id == reminder.appointmentId}">
-                                <g:set var="windowStart" value="${reminder.startDate}" />
-                                <g:set var="windowEnd" value="${reminder.endDate}" />
+                            <g:logMsg level="debug">Testing ${appointmentInstance.id} and ${reminder.appointmentId}</g:logMsg>
+                            <g:if test="${appointmentInstance.id == reminder.appointmentId}">
+                                <g:set var="windowStart" value="${formatDate(date:reminder.startDate)}" />
+                                <g:set var="windowEnd" value="${formatDate(date:reminder.endDate)}" />
                             </g:if>
                         </g:each>
 
-                        <tr class="${(i % 2) == 0 ? 'odd' : 'even'}"><%--
-                        
-                            <td><g:link action="show" id="${appointmentInstance.id}">${fieldValue(bean: appointmentInstance, field: "id")}</g:link></td>
-                        
-                            <td>${fieldValue(bean: patientInstance, field: "clinicPatientId")}</td>
-                        
-                            --%>
+                        <g:each in="${visitList}" var="v">
+                            <g:if test="${appointmentInstance.id == v.appointmentId && v.visitDate}">
+                                <g:set var="visitDate" value="${formatDate(date:v.visitDate)}" />
+                            </g:if>
+                        </g:each>
+
+                        <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
 
             				<td>${fieldValue(bean: appointmentInstance, field: "title")}</td>
-                            <td><g:formatDate date="${windowStart}" /></td>
+                            <td>${windowStart}</td>
+                            <td>${windowEnd}</td>
                             <td><g:formatDate date="${appointmentInstance.dueDate}" /></td>
                             <td>
                             <div class="schedule-container">
@@ -102,8 +112,8 @@
                                         changeYear: true,
                                         dateFormat: DATE_FORMAT,
                                         //minDate: 0,
-                                        minDate:"${formatDate(date:windowStart)}",
-                                        maxDate:"${formatDate(date:windowEnd)}",
+                                        minDate:"${windowStart}",
+                                        maxDate:"${windowEnd}",
                                         onSelect:function(dateText, inst) {
                                             $("#save-${appointmentInstance.id}").removeClass("hide");
                                             $("#delete-${appointmentInstance.id}").removeClass("hide");
@@ -170,7 +180,8 @@
                                 </script>
                             </div>
                             </td>
-                        
+                            <td>${visitDate}</td>
+
                         </tr>
                     </g:each>
                     </tbody>

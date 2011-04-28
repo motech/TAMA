@@ -5,8 +5,8 @@ import org.motechproject.tama.api.model.Preferences
 class PatientPreferencesController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	PreferencesService preferencesService
 	PatientService patientService
+    PreferencesService preferencesService
 	
     def index = {
         redirect(action: "create", params: params)
@@ -14,55 +14,56 @@ class PatientPreferencesController {
 
     def create = {
 		// Check that the patient exists (not url hacking)
-		def patientInstance = patientService.findPatientByClinicIdPatientId(session.clinicId, params.id)
+		def patient = patientService.findPatientByClinicIdPatientId(session.clinicId, params.id)
 		
-		if (!patientInstance) {
+		if (!patient) {
 			flash.message = "${message(code: 'patient.notfound', args: [], defaultMessage: 'Patient Not Found')}"
 			redirect(controller: "patient", action: "index" )
 		} else {
 
 			// Retrieve the patient preferences if any
-	        def preferencesInstance = preferencesService.findByClinicPatientId(session.clinicId, params.id)
+	        def preferencesInstance = patient.preferences
 			if (preferencesInstance == null) {
 				preferencesInstance = new Preferences()
-				preferencesInstance.clinicId = session.clinicId // Set the clinic Id
-				preferencesInstance.clinicPatientId = params.id // Set the patient Id
+                patient.preferences = preferencesInstance
+
+                patientService.updatePatient(patient)
 			}
-	        return [patientPreferencesInstance: preferencesInstance]
+	        return [patientPreferencesInstance: preferencesInstance, patient: patient]
 		}
     }
 
     def save = {
 		// Check that the patient exists (not url hacking)
-		def patientInstance = patientService.findPatientByClinicIdPatientId(session.clinicId, params.clinicPatientId)
+		def patient = patientService.findPatientByClinicIdPatientId(session.clinicId, params.clinicPatientId)
 		
-		if (!patientInstance) {
+		if (!patient) {
 			flash.message = "${message(code: 'patient.notfound', args: [], defaultMessage: 'Patient Not Found')}"
 			redirect(controller: "patient", action: "index" )
 		} else {
-			Preferences preferencesInstance = preferencesService.findByClinicIdPatientId(session.clinicId, params.clinicPatientId)
+
+            def preferencesInstance = patient.preferences
 			if (preferencesInstance == null) {
 				preferencesInstance = new Preferences()
 				
-				// Set provided patient & clinic ids
-				preferencesInstance.clinicId = session.clinicId
-				preferencesInstance.clinicPatientId = params.clinicPatientId
+                patient.preferences = preferencesInstance
 			}
 			
 			// Copy over preferences
 			preferencesInstance.appointmentReminderEnabled = (params.appointmentReminderEnabled != null ? params.appointmentReminderEnabled : Boolean.FALSE)
 			preferencesInstance.bestTimeToCallHour =  new Integer(params.bestTimeToCallHour)
 			preferencesInstance.bestTimeToCallMinute =  new Integer(params.bestTimeToCallMinute)
-	
+
+            preferencesService.preferencesUpdated(patient)
+
 			// Check if we are doing a create or an update
-			if ( (preferencesInstance.id == null && preferencesService.createPreferences( preferencesInstance )) ||
-				 (preferencesInstance.id != null && preferencesService.updatePreferences( preferencesInstance )) ) {
+			if (patientService.updatePatient(patient)) {
 	
-	            flash.message = "${message(code: 'preferences.updated')}"
-	            redirect(action: "create", id: preferencesService.clinicPatientId)
+	            flash.message = "${message(code: 'preferences.updated', args: [], defaultMessage: 'Preferences Updated')}"
+	            redirect(action: "create", id: patient.id)
 	        }
 	        else {
-	            render(view: "create", model: [patientPreferencesInstance: preferencesInstance])
+	            render(view: "create", model: [patientPreferencesInstance: preferencesInstance, patient: patient])
 	        }
 		}
     }

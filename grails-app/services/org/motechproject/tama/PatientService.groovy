@@ -52,10 +52,7 @@ class PatientService {
 		patientDao.update(patient)
 		
 		log.debug("Updated ${patient}")
-		
-		Clinic clinic = clinicDao.get(patient.clinicId)
-		Doctor doctor = doctorDao.get(patient.doctorId)
-		
+
 		return patient
 	}
 

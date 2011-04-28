@@ -60,7 +60,6 @@
 	<bean id="clinicDao" class="org.motechproject.tama.api.dao.impl.ClinicDAOImpl" />
 	<bean id="patientDao" class="org.motechproject.tama.api.dao.impl.PatientDAOImpl" />
 	<bean id="doctorDao" class="org.motechproject.tama.api.dao.impl.DoctorDAOImpl" />
-	<bean id="preferencesDao" class="org.motechproject.tama.api.dao.impl.PreferencesDAOImpl" />
 
     <bean id="appointmentsDatabase" class="org.ektorp.impl.StdCouchDbConnector">
 		<constructor-arg value="motech-appointments" />
@@ -68,6 +67,7 @@
 	</bean>
 
     <bean id="appointmentsDao" class="org.motechproject.appointments.api.dao.impl.AppointmentsCouchDBDAOImpl" />
-    <bean id="visitDao" class="org.motechproject.appointments.api.dao.impl.VisitsCouchDBDAOImpl" />
+    <bean id="remindersDao" class="org.motechproject.appointments.api.dao.impl.RemindersCouchDBDAOImpl" />
+    <bean id="visitsDao" class="org.motechproject.appointments.api.dao.impl.VisitsCouchDBDAOImpl" />
 
 </beans>

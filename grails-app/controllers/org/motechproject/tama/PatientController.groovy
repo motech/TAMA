@@ -39,7 +39,8 @@ class PatientController {
         def patient = new Patient()
 		bindData(patient, params)
 		patient.clinicId=session.clinicId
-
+		patient.registrationDate=new Date()
+		
 		//TODO: add error handling
         if (patientService.createPatient(patient)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'patient.label', default: 'Patient'), patient.clinicPatientId])}"

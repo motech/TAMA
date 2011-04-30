@@ -60,6 +60,7 @@ class BootStrap {
 				phoneNumber:"6046894123",
 				interventionProgram: InterventionProgram.PROGRAM,
 				dateOfBirth: new Date(),
+				registrationDate: new Date(),
 				status:Status.ACTIVE
 				)
 			patientService.createPatient(patient)

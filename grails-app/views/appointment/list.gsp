@@ -59,6 +59,8 @@
                     <g:each in="${appointmentInstanceList}" status="i" var="appointmentInstance">
                         <g:set var="windowStart" value="${appointmentInstance.dueDate.minus(7)}" />
                         <g:set var="windowEnd" value="${appointmentInstance.dueDate}" />
+                        <g:set var="datePickerStart" value="${windowStart}" />
+                        <g:set var="datePickerEnd" value="${windowEnd}" />
 
                         <g:each in="${remindersList}" var="reminder">
                             <g:if test="${reminder && appointmentInstance.id == reminder.appointmentId}">
@@ -102,8 +104,8 @@
                                         changeYear: true,
                                         dateFormat: DATE_FORMAT,
                                         //minDate: 0,
-                                        minDate:"${formatDate(date:windowStart)}",
-                                        maxDate:"${formatDate(date:windowEnd)}",
+                                        minDate:"${formatDate(date:datePickerStart)}",
+                                        maxDate:"${formatDate(date:datePickerEnd)}",
                                         onSelect:function(dateText, inst) {
                                             $("#save-${appointmentInstance.id}").removeClass("hide");
                                             $("#delete-${appointmentInstance.id}").removeClass("hide");

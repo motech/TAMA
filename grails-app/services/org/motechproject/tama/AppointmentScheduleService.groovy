@@ -17,7 +17,7 @@ import org.motechproject.tama.api.model.Patient
 class AppointmentScheduleService {
 	static transactional = false
 	def AppointmentsDAO appointmentsDao
-    def VisitsDAO visitDao
+    def VisitsDAO visitsDao
 
 	def config = ConfigurationHolder.config
 
@@ -35,7 +35,7 @@ class AppointmentScheduleService {
                 visit.visitDate = registrationDate
                 visit.title = it
 
-                visitDao.addVisit(visit)
+                visitsDao.addVisit(visit)
 			} else {
                 Appointment appointment = new Appointment()
                 appointment.externalId = patientId

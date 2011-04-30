@@ -68,15 +68,15 @@ class AppointmentController {
 	 * ajax call to save/fix an appointment
 	 */
     def saveAppointmentDate = {
-		appointmentReminderService.saveAppointmentScheduledDate(params.id, new Date(params.date))
-
-        // If reminders are enabled I need to update them
         Appointment appointment = appointmentsDao.getAppointment(params.id)
+        appointment.scheduledDate = new Date(params.date)
         Patient patient = patientDao.get(appointment.externalId)
 
         if (patient.preferences && patient.preferences.appointmentReminderEnabled) {
             appointmentReminderService.createRemindersForAppointment(appointment)
         }
+
+        appointmentsDao.updateAppointment(appointment)
 
 		//error handling
 		render Boolean.TRUE;

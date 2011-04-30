@@ -105,19 +105,6 @@ class AppointmentReminderService {
         }
     }
 
-    /**
-	 * service methods to save appointment date
-	 * @param appointmentId
-	 * @param date
-	 * @return
-	 */
-	def saveAppointmentScheduledDate(String appointmentId, Date date){
-		Appointment appointment = appointmentsDao.getAppointment(appointmentId);
-		appointment.scheduledDate = date;
-
-        appointmentsDao.updateAppointment(appointment)
-   	}
-
 
     def schedulePatientAppointmentReminders(List<Appointment> appointments) {
         appointments.each {

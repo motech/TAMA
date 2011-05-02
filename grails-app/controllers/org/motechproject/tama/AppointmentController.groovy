@@ -1,8 +1,8 @@
 package org.motechproject.tama
 
-import org.motechproject.appointments.api.dao.AppointmentsDAO
-import org.motechproject.appointments.api.dao.RemindersDAO
-import org.motechproject.appointments.api.dao.VisitsDAO
+import org.motechproject.appointments.api.AppointmentService
+import org.motechproject.appointments.api.ReminderService
+import org.motechproject.appointments.api.VisitService
 import org.motechproject.appointments.api.model.Appointment
 import org.motechproject.tama.api.dao.PatientDAO
 import org.motechproject.tama.api.model.Patient
@@ -11,10 +11,10 @@ class AppointmentController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-    def AppointmentsDAO appointmentsDao
-    def VisitsDAO visitsDao
-    def RemindersDAO remindersDao
-    def PatientDAO patientDao
+    def AppointmentService appointmentService
+    def VisitService visitService
+    def ReminderService reminderService
+
 	def PatientService patientService
 	def AppointmentScheduleService appointmentScheduleService
 	def AppointmentReminderService appointmentReminderService
@@ -30,7 +30,7 @@ class AppointmentController {
 		def clinicPatientId = params.id
 		def patient = patientService.findPatientByClinicIdPatientId(clinicId, clinicPatientId)
 		def appointments = appointmentScheduleService.findByPatient(patient)
-        def reminders = remindersDao.findByExternalId(patient.id)
+        def reminders = reminderService.findByExternalId(patient.id)
 
         // I need to give more thought to a datastructure here.  Bascially the UI wants to display a window, but if
         // there are no reminders then there really isn't a window.  I don't want to put this logic in the gsp, but
@@ -46,8 +46,8 @@ class AppointmentController {
 		def patient = patientService.findPatientByClinicIdPatientId(clinicId, clinicPatientId)
 
 		def appointments = appointmentScheduleService.findByPatient(patient)
-        def reminders = remindersDao.findByExternalId(patient.id)
-        def visits = visitsDao.findByExternalId(patient.id)
+        def reminders = reminderService.findByExternalId(patient.id)
+        def visits = visitService.findByExternalId(patient.id)
 
         log.debug("Loaded " + reminders.size() + " reminders.")
         log.debug("Loaded " + visits.size() + " visits.")
@@ -68,15 +68,15 @@ class AppointmentController {
 	 * ajax call to save/fix an appointment
 	 */
     def saveAppointmentDate = {
-        Appointment appointment = appointmentsDao.getAppointment(params.id)
+        Appointment appointment = appointmentService.getAppointment(params.id)
         appointment.scheduledDate = new Date(params.date)
-        Patient patient = patientDao.get(appointment.externalId)
+        Patient patient = patientService.getPatient(appointment.externalId)
 
         if (patient.preferences && patient.preferences.appointmentReminderEnabled) {
             appointmentReminderService.createRemindersForAppointment(appointment)
         }
 
-        appointmentsDao.updateAppointment(appointment)
+        appointmentService.updateAppointment(appointment)
 
 		//error handling
 		render Boolean.TRUE;
@@ -86,15 +86,15 @@ class AppointmentController {
 	 * ajax call to delete a fixed appointment
 	 */
     def deleteAppointmentDate = {
-        Appointment appointment = appointmentsDao.getAppointment(params.id)
+        Appointment appointment = appointmentService.getAppointment(params.id)
         appointment.scheduledDate = null
-        Patient patient = patientDao.get(appointment.externalId)
+        Patient patient = patientService.getPatient(appointment.externalId)
 
         if (patient.preferences && patient.preferences.appointmentReminderEnabled) {
             appointmentReminderService.createRemindersForAppointment(appointment)
         }
 
-        appointmentsDao.updateAppointment(appointment)
+        appointmentService.updateAppointment(appointment)
 
     	render Boolean.TRUE;
     }

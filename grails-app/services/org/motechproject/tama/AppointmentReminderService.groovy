@@ -2,21 +2,20 @@ package org.motechproject.tama
 
 import org.apache.commons.lang.time.DateUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import org.motechproject.appointments.api.dao.AppointmentsDAO
-import org.motechproject.appointments.api.dao.RemindersDAO
+import org.motechproject.appointments.api.AppointmentService
+import org.motechproject.appointments.api.ReminderService
 import org.motechproject.appointments.api.model.Appointment
 import org.motechproject.appointments.api.model.Reminder
 import org.motechproject.event.EventRelay
 import org.motechproject.model.MotechEvent
-import org.motechproject.tama.api.dao.PatientDAO
 import org.motechproject.tama.api.model.Patient
 
 class AppointmentReminderService {
 
     static transactional = false
-	def AppointmentsDAO appointmentsDao
-    def RemindersDAO remindersDao
-    def PatientDAO patientDAO
+	def AppointmentService appointmentService
+    def ReminderService reminderService
+
     def EventRelay eventRelay
 	def config = ConfigurationHolder.config
 
@@ -25,7 +24,7 @@ class AppointmentReminderService {
 	def enableAppointmentReminder(Patient patient) {
 		log.info("Attempting to enable appointment reminder for patient id = " + patient.clinicPatientId)
 
-        List<Appointment> appointments = appointmentsDao.findByExternalId(patient.id)
+        List<Appointment> appointments = appointmentService.findByExternalId(patient.id)
 
         scheduleIvrCall(patient)
 		schedulePatientAppointmentReminders(appointments)
@@ -36,7 +35,7 @@ class AppointmentReminderService {
 	def disableAppointmentReminder(Patient patient) {
 		log.info("Attempting to disable appointment reminder for patient id = " + patient.clinicPatientId)
 
-        List<Appointment> appointments = appointmentsDao.findByExternalId(patient.id)
+        List<Appointment> appointments = appointmentService.findByExternalId(patient.id)
 
 		unschedulePatientAppointmentReminders(appointments)
 		unscheduleIvrCall(patient);
@@ -99,8 +98,8 @@ class AppointmentReminderService {
         if (appointments.size() > 0) {
             def appointment = appointments.get(0)
 
-            remindersDao.findByExternalId(appointment.externalId).each {
-                remindersDao.removeReminder(it)
+            reminderService.findByExternalId(appointment.externalId).each {
+                reminderService.removeReminder(it)
             }
         }
     }
@@ -121,8 +120,8 @@ class AppointmentReminderService {
         // This implementation assumes that no other module is creating reminders against appointments.  If someone
         // is then instead of deleting all reminders and resetting them we would need to hold references so we can
         // disable/delete just ours
-        remindersDao.findByAppointmentId(appointment.id).each {
-            remindersDao.removeReminder(it)
+        reminderService.findByAppointmentId(appointment.id).each {
+            reminderService.removeReminder(it)
         }
 
         if (appointment.scheduledDate) {
@@ -154,9 +153,11 @@ class AppointmentReminderService {
         reminder.startDate = cal.getTime();
 
         reminder.units = Reminder.intervalUnits.DAYS
-        // todo make repeatCount optional
-        reminder.repeatCount = (reminder.endDate.getTime() - reminder.startDate.getTime()) / 86400000
+        reminder.intervalCount = 1
 
-        remindersDao.addReminder(reminder)
+        // todo make repeatCount optional
+//        reminder.repeatCount = (reminder.endDate.getTime() - reminder.startDate.getTime()) / 86400000
+
+        reminderService.addReminder(reminder)
     }
 }

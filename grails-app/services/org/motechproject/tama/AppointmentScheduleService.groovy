@@ -2,8 +2,8 @@ package org.motechproject.tama
 
 import org.apache.commons.lang.time.DateUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import org.motechproject.appointments.api.dao.AppointmentsDAO
-import org.motechproject.appointments.api.dao.VisitsDAO
+import org.motechproject.appointments.api.AppointmentService
+import org.motechproject.appointments.api.VisitService
 import org.motechproject.appointments.api.model.Appointment
 import org.motechproject.appointments.api.model.Visit
 import org.motechproject.tama.api.model.AppointmentSchedule
@@ -16,8 +16,8 @@ import org.motechproject.tama.api.model.Patient
  */
 class AppointmentScheduleService {
 	static transactional = false
-	def AppointmentsDAO appointmentsDao
-    def VisitsDAO visitsDao
+	def AppointmentService appointmentService
+    def VisitService visitService
 
 	def config = ConfigurationHolder.config
 
@@ -35,7 +35,7 @@ class AppointmentScheduleService {
                 visit.visitDate = registrationDate
                 visit.title = it
 
-                visitsDao.addVisit(visit)
+                visitService.addVisit(visit)
 			} else {
                 Appointment appointment = new Appointment()
                 appointment.externalId = patientId
@@ -47,7 +47,7 @@ class AppointmentScheduleService {
                 cal.add(Calendar.DATE, it.days);
 				appointment.setDueDate(cal.getTime());
 
-                appointmentsDao.addAppointment(appointment)
+                appointmentService.addAppointment(appointment)
 
                 appointment
 			}
@@ -65,6 +65,6 @@ class AppointmentScheduleService {
 	}
 
 	def findByPatient(Patient patient) {
-		return appointmentsDao.findByExternalId(patient.id)
+		return appointmentService.findByExternalId(patient.id)
 	}
 }

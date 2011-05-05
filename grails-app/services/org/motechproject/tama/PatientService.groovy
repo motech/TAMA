@@ -1,13 +1,12 @@
 package org.motechproject.tama
 
 import org.apache.commons.logging.LogFactory
-import org.motechproject.appointments.api.dao.AppointmentsDAO
-import org.motechproject.tama.api.dao.ClinicDAO
-import org.motechproject.tama.api.dao.DoctorDAO
+import org.motechproject.appointments.api.AppointmentService
+import org.motechproject.appointments.api.ReminderService
+import org.motechproject.appointments.api.VisitService
 import org.motechproject.tama.api.dao.PatientDAO
 import org.motechproject.tama.api.model.Patient
-import org.motechproject.tama.api.model.Clinic
-import org.motechproject.tama.api.model.Doctor
+
 class PatientService {
 
     static transactional = false
@@ -15,9 +14,9 @@ class PatientService {
 	static final log = LogFactory.getLog(this)
 	
 	def PatientDAO patientDao
-	def DoctorDAO doctorDao
-	def ClinicDAO clinicDao
-	def AppointmentsDAO appointmentsDao
+	def AppointmentService appointmentService
+    def VisitService visitService
+    def ReminderService reminderService
 	
 	def AppointmentScheduleService appointmentScheduleService
 
@@ -39,10 +38,7 @@ class PatientService {
 		log.info("Created ${patient}")
 
 		// Create Care Schedule and add Appointments to Patient database
-		appointmentScheduleService.createCareSchedule(patient, new Date())
-		
-		Clinic clinic = clinicDao.get(patient.clinicId)
-		Doctor doctor = doctorDao.get(patient.doctorId)
+		appointmentScheduleService.createCareSchedule(patient.id, new Date())
 		
 		return patient
 	}
@@ -56,7 +52,10 @@ class PatientService {
 	}
 
 	def deletePatient(Patient patient){
-		appointmentsDao.findByPatientId(patient.id).each { appointmentsDao.removeAppointment(it)   }
+		appointmentService.findByExternalId(patient.id).each { appointmentService.removeAppointment(it)   }
+        visitService.findByExternalId(patient.id).each { visitService.removeVisit(it)   }
+        reminderService.findByAppointmentId(patient.id).each { reminderService.removeVisit(it)   }
+
 		patientDao.remove(patient)
 
 		log.info("Deleted ${patient}")

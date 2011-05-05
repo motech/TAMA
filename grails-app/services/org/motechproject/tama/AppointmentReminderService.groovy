@@ -126,7 +126,7 @@ class AppointmentReminderService {
 
         if (appointment.scheduledDate) {
             /**
-             * M is constant used to determine the start of the window (Start = End - N)
+             * M is constant used to determine the start of the window (Start = End - M)
              */
             createReminderForAppointment(appointment.externalId, appointment.id, appointment.scheduledDate, config.tama.m, 0)
         } else {

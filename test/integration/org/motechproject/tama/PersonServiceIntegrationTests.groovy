@@ -8,6 +8,10 @@ import org.motechproject.tama.dao.AppointmentDao;
 import org.motechproject.tama.dao.ClinicDao
 import org.motechproject.tama.dao.DoctorDao
 import org.motechproject.tama.dao.PatientDao
+import org.motechproject.tama.model.Patient
+import org.motechproject.tama.model.Clinic
+import org.motechproject.tama.model.Doctor
+import org.motechproject.tama.model.Gender
 
 class PersonServiceIntegrationTests extends GroovyTestCase  {
 
@@ -19,10 +23,10 @@ class PersonServiceIntegrationTests extends GroovyTestCase  {
 	def PatientDao tamaPatientDao
 	def AppointmentDao tamaAppointmentDao
 
-	static CLINIC_ID = "1234-test-clinic"
-	static DOCTOR_ID = "1234-test-doctor"
-	static PATIENT_ID = "1234-test-patient-id"
-	static CLINIC_PATIENT_ID = "1234-test-clinic-patient-id"
+	static CLINIC_ID = UUID.randomUUID().toString();
+	static DOCTOR_ID = UUID.randomUUID().toString();
+	static PATIENT_ID = UUID.randomUUID().toString();
+	static CLINIC_PATIENT_ID = UUID.randomUUID().toString();
 
 	def clinic
 	def doctor

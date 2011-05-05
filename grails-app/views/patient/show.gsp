@@ -1,4 +1,3 @@
-
 <%@ page import="org.motechproject.tama.api.model.Patient" %>
 <html>
     <head>

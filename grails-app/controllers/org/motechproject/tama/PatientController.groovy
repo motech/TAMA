@@ -4,6 +4,7 @@ import org.motechproject.tama.util.CustomPropertyEditorRegistrar
 
 import org.motechproject.tama.api.model.Patient
 import org.slf4j.LoggerFactory
+import org.motechproject.tama.model.Patient
 
 class PatientController {
 
@@ -40,7 +41,8 @@ class PatientController {
         def patient = new Patient()
 		bindData(patient, params)
 		patient.clinicId=session.clinicId
-
+		patient.registrationDate=new Date()
+		
 		//TODO: add error handling
         if (patientService.createPatient(patient)) {
             flash.message = "${message(code: 'default.created.message', args: [message(code: 'patient.label', default: 'Patient'), patient.clinicPatientId])}"

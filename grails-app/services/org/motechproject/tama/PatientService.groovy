@@ -8,7 +8,6 @@ import org.motechproject.tama.api.dao.PatientDAO
 import org.motechproject.tama.api.model.Patient
 import org.motechproject.tama.api.model.Clinic
 import org.motechproject.tama.api.model.Doctor
-
 class PatientService {
 
     static transactional = false

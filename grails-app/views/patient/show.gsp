@@ -34,7 +34,7 @@
                         <tr class="prop">
                             <td valign="top" class="name"><g:message code="patient.gender.label" default="Gender" /></td>
                             
-                            <td valign="top" class="value">${patientInstance?.gender.text}</td>
+                            <td valign="top" class="value">${patientInstance?.gender?.text}</td>
                             
                         </tr>
 

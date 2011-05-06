@@ -1,4 +1,4 @@
-<%@ page import="org.motechproject.appointments.api.model.Appointment; org.motechproject.tama.api.model.Patient" %>
+<%@ page import="org.motechproject.appointments.api.model.Appointment; org.motechproject.appointments.api.model.Reminder; org.motechproject.tama.api.model.Patient" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

@@ -38,7 +38,10 @@ class PatientController {
 
     def save = {
         def patient = new Patient()
-		bindData(patient, params)
+		log.debug("Saving ${params}")
+        bindData(patient, params)
+
+        patient.gender = Patient.Gender.fromString(params.gender)
 		patient.clinicId=session.clinicId
 		patient.registrationDate=new Date()
 		
@@ -83,6 +86,7 @@ class PatientController {
     def update = {
 		def patientInstance = new Patient()
 		bindData(patientInstance, params)
+        patientInstance.gender = Patient.Gender.fromString(params.gender)
 		patientInstance.clinicId=session.clinicId
 		patientService.updatePatient(patientInstance)
 		flash.message = "${message(code: 'default.updated.message', args: [message(code: 'patient.label', default: 'Patient'), patientInstance.clinicPatientId])}"

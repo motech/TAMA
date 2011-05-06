@@ -30,9 +30,6 @@ class PatientService {
 	}
 	
 	def createPatient(Patient patient){
-		if (!patient.id) {
-			patient.id = generateId()
-		}
 		patientDao.add(patient)
 		
 		log.info("Created ${patient}")
@@ -63,20 +60,5 @@ class PatientService {
 	
 	def findPatientByClinicIdPatientId(String clinicId, String clinicPatientId) {
 		return patientDao.findByClinicIdPatientId(clinicId, clinicPatientId);
-	}
-	
-	//FIXME: temporary workaround due to the limitation of IVR URL length. we should remove this once we can use UUID
-	private String generateId(){
-		def id
-		def patients = patientDao.getAll()
-		if (patients) {
-			try{
-				def maxId = Integer.parseInt(patients.last().id)
-				id = (++maxId)+""
-			}catch(Exception e){}
-		} else {
-			id = "1"
-		}
-		return id
 	}
 }

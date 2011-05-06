@@ -41,7 +41,7 @@
 	                    
 	                        <td>${fieldValue(bean: patientInstance, field: "phoneNumber")}</td>
 	                        
-	                        <td>${fieldValue(bean: patientInstance, field: "gender")}</td>
+	                        <td>${patientInstance?.gender.text}</td>
 
 	                        <td><g:formatDate date="${patientInstance.dateOfBirth}" /></td>
 	                    

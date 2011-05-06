@@ -64,7 +64,7 @@
 				<td valign="top"
 					class="value ${hasErrors(bean: patientInstance, field: 'gender', 'errors')}">
 					<g:select name="gender" value="${patientInstance?.gender}"
-						from="${Patient.Gender.values()}" optionKey="text" /></td>
+						from="${Patient.Gender.values()}" optionValue="text" /></td>
 			</tr>
 
 			<tr class="prop">

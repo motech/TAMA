@@ -53,6 +53,8 @@ class PatientPreferencesController {
 			preferencesInstance.appointmentReminderEnabled = (params.appointmentReminderEnabled != null ? params.appointmentReminderEnabled : Boolean.FALSE)
 			preferencesInstance.bestTimeToCallHour =  new Integer(params.bestTimeToCallHour)
 			preferencesInstance.bestTimeToCallMinute =  new Integer(params.bestTimeToCallMinute)
+			preferencesInstance.language = Preferences.Language.valueOf(params.language)
+			def lang = params.language
 
             preferencesService.preferencesUpdated(patient)
 

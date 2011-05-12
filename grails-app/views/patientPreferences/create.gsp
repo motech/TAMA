@@ -38,7 +38,24 @@
 	                        
 	                        </tbody>
 	                    </table>
+	                    
                     </div>
+                	<div class="fieldgroup">
+	                	<h3>Language Preference:</h3>
+	                    <table class="innerTable" cellpadding="0" cellspacing="0">
+	                        <tbody>
+								<tr class="prop">
+									<td valign="top" class="name"><label for="language"><g:message
+												code="patientPreferences.language.label" default="Language" /></label></td>
+									<td valign="top"
+										class="value ${hasErrors(bean: patientPreferencesInstance, field: 'language', 'errors')}">
+										<g:select name="language" value="${patientPreferencesInstance?.language}"
+											from="${Preferences.Language.values()}" optionValue="text" /></td>
+								</tr>
+	                        </tbody>
+	                    </table>
+	                    
+                    </div>                    
                 	<div class="fieldgroup">
 	                	<h3>When is the most convenient time for the patient to receive calls from the IVR?</h3>
 	                	<div>Please explain to the patient that TAMA is not a person, just a computer system, so it can call the patient at any time day or night, whenever it is most convenient to the patient.</div>

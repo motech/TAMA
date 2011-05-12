@@ -57,6 +57,7 @@ class AppointmentReminderService {
 		String jobIdKey = config.tama.outbox.event.schedule.jobid.key;
 		String bestHourKey = config.tama.outbox.event.besttimetocallhour.key
 		String bestMinuteKey = config.tama.outbox.event.besttimetocallminute.key
+		String languageKey = config.tama.outbox.event.language.key
 
 		Map eventParameters = new HashMap()
 		eventParameters.put(phoneNumberKey, patient.phoneNumber);
@@ -64,6 +65,7 @@ class AppointmentReminderService {
 		eventParameters.put(jobIdKey, patient.preferences.ivrCallJobId);
 		eventParameters.put(bestHourKey, patient.preferences.bestTimeToCallHour);
 		eventParameters.put(bestMinuteKey, patient.preferences.bestTimeToCallMinute);
+		eventParameters.put(languageKey, patient.preferences.language.name());
 		
 		MotechEvent motechEvent = new MotechEvent(subject, eventParameters);
 

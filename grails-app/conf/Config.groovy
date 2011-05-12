@@ -68,6 +68,7 @@ tama.outbox.event.besttimetocallminute.key = "CallMinute"
 tama.outbox.event.phonenumber.key = "PhoneNumber"
 tama.outbox.event.partyid.key = "PartyID"
 tama.outbox.event.schedule.jobid.key = "JobID"
+tama.outbox.event.language.key = "Language"
 
 
 // Until spring security is integrated we need to assume that the clinic id 

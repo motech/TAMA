@@ -61,7 +61,7 @@ class AppointmentReminderService {
 
 		Map eventParameters = new HashMap()
 		eventParameters.put(phoneNumberKey, patient.phoneNumber);
-		eventParameters.put(partyIDKey, patient.clinicPatientId);
+		eventParameters.put(partyIDKey, patient.id);
 		eventParameters.put(jobIdKey, patient.preferences.ivrCallJobId);
 		eventParameters.put(bestHourKey, patient.preferences.bestTimeToCallHour);
 		eventParameters.put(bestMinuteKey, patient.preferences.bestTimeToCallMinute);
